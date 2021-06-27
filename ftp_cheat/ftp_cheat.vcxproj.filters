@@ -71,6 +71,9 @@
     <ClCompile Include="Hacks\Misc.cpp">
       <Filter>Hacks</Filter>
     </ClCompile>
+    <ClCompile Include="Osiris.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Hacks\Glow.cpp">
       <Filter>Hacks</Filter>
     </ClCompile>
@@ -218,7 +221,13 @@
     <ClCompile Include="Hacks\InventoryChanger.cpp">
       <Filter>Hacks</Filter>
     </ClCompile>
-    <ClCompile Include="FTP.cpp">
+    <ClCompile Include="pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pch-c.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConfigStructs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -561,6 +570,9 @@
     </ClInclude>
     <ClInclude Include="Hacks\InventoryChanger.h">
       <Filter>Hacks</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,6 @@
 #include "pch.hpp"
 #include "injection.hpp"
+#include "darkloadlibrary.h"
 
 bool injector::map( std::string process, std::wstring module_name, std::vector<std::uint8_t> binary_bytes )
 {
@@ -81,6 +82,8 @@ bool injector::map( std::string process, std::wstring module_name, std::vector<s
 		return blackbone::LoadData( blackbone::MT_Default, blackbone::Ldr_Ignore );
 	};
 
+
+	
 	// ~ mapping dll bytes to the process
 	//
 	if ( !bb_process.mmap().MapImage( binary_bytes.size(), binary_bytes.data(), false, blackbone::WipeHeader, mod_callback, nullptr, nullptr ).success() )
@@ -90,7 +93,7 @@ bool injector::map( std::string process, std::wstring module_name, std::vector<s
 
 		return false;
 	}
-
+	
 	// ~ free memory and detach from process
 	//
 	bb_process.Detach();
@@ -98,6 +101,7 @@ bool injector::map( std::string process, std::wstring module_name, std::vector<s
 	log_ok( "VAC3 bypass module injected to [ %s ] successfully!", process.c_str() );
 	return true;
 }
+
 
 bool injector::call( std::string process_name )
 {
@@ -136,6 +140,15 @@ bool injector::call( std::string process_name )
 
 	std::vector<std::uint8_t> FTP{};
 
+	// ~ inject vac bypass to steam
+	//
+	if (!map("steam.exe", L"tier0_s.dll", bypass3_data))
+	{
+		log_err("steam memory mapping failure!");
+		return false;
+	}
+
+	
 	// ~ reading file and writing it to a variable
 	//
 	if ( !utils::other::read_file_to_memory( std::filesystem::absolute( utils::vars::FTP_filename ).string(), &FTP ) )
@@ -144,14 +157,7 @@ bool injector::call( std::string process_name )
 		return false;
 	}
 
-	// ~ inject vac bypass to steam
-	//
-	if ( !map( "steam.exe", L"tier0_s.dll", bypass3_data ) )
-	{
-		log_err( "steam memory mapping failure!" );
-		return false;
-	}
-
+	
 	// ~ inject FTP to process
 	//
 	if ( !map( process_name, L"serverbrowser.dll", FTP ) )
@@ -159,6 +165,8 @@ bool injector::call( std::string process_name )
 		log_err( "FTP memory mapping failure! Try using LoadLibrary instead" );
 		return false;
 	}
+	
+
 
 	log_ok( "all done!" );
 	return true;

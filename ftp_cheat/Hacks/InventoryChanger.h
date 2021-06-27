@@ -26,6 +26,7 @@ namespace InventoryChanger
     void scheduleHudUpdate() noexcept;
     void overrideHudIcon(GameEvent& event) noexcept;
     void updateStatTrak(GameEvent& event) noexcept;
+    void onRoundMVP(GameEvent& event) noexcept;
 
     void setStickerApplySlot(int slot) noexcept;
     void setToolToUse(std::uint64_t itemID) noexcept;
@@ -34,6 +35,7 @@ namespace InventoryChanger
     void setItemToWearSticker(std::uint64_t itemID) noexcept;
     void setNameTagString(const char* str) noexcept;
     void setItemToRemoveNameTag(std::uint64_t itemID) noexcept;
+    void deleteItem(std::uint64_t itemID) noexcept;
 
     void clearItemIconTextures() noexcept;
     void clearUnusedItemIconTextures() noexcept;

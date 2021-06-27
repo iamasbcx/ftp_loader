@@ -48,7 +48,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)CHEAT DEBUG</OutDir>
     <IntDir>$(SolutionDir)CHEAT DEBUG\obj\</IntDir>
-    <IncludePath>$(SolutionDir)ftp_loader\Blackbone Static Library\src;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\Aubrey\Desktop\coding\ftp_loader\ftp_loader\DarkLoadLibrary\include;$(SolutionDir)ftp_loader\Blackbone Static Library\src;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)ftp_loader\Blackbone Static Library\build\Win32\Debug;D:\Libs\blackbone\lib\debug;$(LibraryPath)</LibraryPath>
     <TargetName>FTP LOADER</TargetName>
   </PropertyGroup>
