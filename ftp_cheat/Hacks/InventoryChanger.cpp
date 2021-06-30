@@ -1019,17 +1019,6 @@ static void applyKnife(CSPlayerInventory& localInventory, Entity* local) noexcep
         weapon->itemIDLow() = std::uint32_t(soc->itemID & 0xFFFFFFFF);
         weapon->entityQuality() = 3;
 
-        /* Let the game fill this for us from SOC
-        const auto& dynamicData = dynamicSkinData[item.getDynamicDataIndex()];
-
-        const auto attributeList = weapon->econItemView().getAttributeList();
-        memory->setOrAddAttributeValueByName(attributeList, "set item texture prefab", static_cast<float>(itemData.id));
-        memory->setOrAddAttributeValueByName(attributeList, "set item texture wear", dynamicData.wear);
-        memory->setOrAddAttributeValueByName(attributeList, "set item texture seed", static_cast<float>(dynamicData.seed));
-
-        if (dynamicData.nameTag.length() < 32)
-            std::strncpy(weapon->customName(), dynamicData.nameTag.c_str(), 32);
-        */
 
         if (definitionIndex != item.get().weaponID) {
             definitionIndex = item.get().weaponID;
@@ -1096,38 +1085,18 @@ static void applyWeapons(CSPlayerInventory& localInventory, Entity* local) noexc
         if (!soc || !wasItemCreatedByFTP(soc->itemID))
             continue;
 
+        /*
         const auto& item = inventory[static_cast<std::size_t>(soc->itemID - BASE_ITEMID)];
         if (!item.isSkin())
             return;
-
+            
         const auto& itemData = StaticData::paintKits()[item.get().dataIndex];
+        */
 
         weapon->accountID() = localInventory.getAccountID();
         weapon->itemIDHigh() = std::uint32_t(soc->itemID >> 32);
         weapon->itemIDLow() = std::uint32_t(soc->itemID & 0xFFFFFFFF);
 
-        /* Let the game fill this for us from SOC
-        const auto& dynamicData = dynamicSkinData[item.getDynamicDataIndex()];
-        if (dynamicData.isSouvenir)
-            weapon->entityQuality() = 12;
-
-        const auto attributeList = weapon->econItemView().getAttributeList();
-        memory->setOrAddAttributeValueByName(attributeList, "set item texture prefab", static_cast<float>(itemData.id));
-        memory->setOrAddAttributeValueByName(attributeList, "set item texture wear", dynamicData.wear);
-        memory->setOrAddAttributeValueByName(attributeList, "set item texture seed", static_cast<float>(dynamicData.seed));
-
-        if (dynamicData.nameTag.length() < 32)
-            std::strncpy(weapon->customName(), dynamicData.nameTag.c_str(), 32);
-
-        for (std::size_t j = 0; j < dynamicData.stickers.size(); ++j) {
-            const auto& sticker = dynamicData.stickers[j];
-            if (sticker.stickerID == 0)
-                continue;
-
-            memory->setOrAddAttributeValueByName(attributeList, ("sticker slot " + std::to_string(j) + " id").c_str(), sticker.stickerID);
-            memory->setOrAddAttributeValueByName(attributeList, ("sticker slot " + std::to_string(j) + " wear").c_str(), sticker.wear);
-        }
-        */
     }
 }
 
