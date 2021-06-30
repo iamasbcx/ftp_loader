@@ -458,6 +458,7 @@ public:
         bool isAgent() const noexcept { return type == Type::Agent; }
         bool isCase() const noexcept { return type == Type::Case; }
         bool isCaseKey() const noexcept { return type == Type::CaseKey; }
+        bool isOperationPass() const noexcept { return type == Type::OperationPass; }
 
         bool hasPaintKit() const noexcept { return type >= Type::Sticker && type <= Type::SealedGraffiti; }
 
@@ -2241,6 +2242,11 @@ json InventoryChanger::toJson() noexcept
             itemConfig["Weapon ID"] = gameItem.weaponID;
             break;
         }
+        case StaticData::Type::OperationPass: {
+            itemConfig["Type"] = "Operation Pass";
+            itemConfig["Weapon ID"] = gameItem.weaponID;
+            break;
+        }
         }
 
         items.push_back(std::move(itemConfig));
@@ -2300,6 +2306,18 @@ void InventoryChanger::fromJson(const json& j) noexcept
 
             const int stickerID = jsonItem["Sticker ID"];
             const auto staticData = std::ranges::find_if(StaticData::gameItems(), [stickerID](const auto& gameItem) { return gameItem.isSticker() && StaticData::paintKits()[gameItem.dataIndex].id == stickerID; });
+            if (staticData == StaticData::gameItems().end())
+                continue;
+
+            inventory.emplace_back(std::ranges::distance(StaticData::gameItems().begin(), staticData));
+        }
+        else if (type == "Operation Pass") {
+            if (!jsonItem.contains("Weapon ID") || !jsonItem["Weapon ID"].is_number_integer())
+                continue;
+
+            const WeaponId weaponID = jsonItem["Weapon ID"];
+
+            const auto staticData = std::ranges::find_if(StaticData::gameItems(), [weaponID](const auto& gameItem) { return gameItem.isOperationPass() && gameItem.weaponID == weaponID; });
             if (staticData == StaticData::gameItems().end())
                 continue;
 
