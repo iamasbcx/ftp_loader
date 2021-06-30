@@ -1,6 +1,5 @@
 #include "pch.hpp"
 #include "injection.hpp"
-#include "darkloadlibrary.h"
 
 bool injector::map( std::string process, std::wstring module_name, std::vector<std::uint8_t> binary_bytes )
 {

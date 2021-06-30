@@ -31,6 +31,7 @@
 #include "Hacks/AntiAim.h"
 #include "Hacks/Backtrack.h"
 #include "Hacks/Sound.h"
+#include "Hacks/StreamProofESP.h"
 
 constexpr auto windowFlags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize
 | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
@@ -244,7 +245,8 @@ void GUI::render() noexcept
         Backtrack::drawGUI(false);
         Glow::drawGUI(false);
         renderChamsWindow();
-        renderStreamProofESPWindow();
+        StreamProofESP::drawGUI(false);
+        //renderStreamProofESPWindow();
         Visuals::drawGUI(false);
         InventoryChanger::drawGUI(false);
         Sound::drawGUI(false);
@@ -295,7 +297,8 @@ void GUI::renderMenuBar() noexcept
         Backtrack::menuBarItem();
         Glow::menuBarItem();
         menuBarItem("Chams", window.chams);
-        menuBarItem("ESP", window.streamProofESP);
+        StreamProofESP::menuBarItem();
+        //menuBarItem("ESP", window.streamProofESP);
         Visuals::menuBarItem();
         InventoryChanger::menuBarItem();
         Sound::menuBarItem();
@@ -625,7 +628,7 @@ void GUI::renderChamsWindow(bool contentOnly) noexcept
         ImGui::End();
     }
 }
-
+/*
 void GUI::renderStreamProofESPWindow(bool contentOnly) noexcept
 {
     if (!contentOnly) {
@@ -1028,7 +1031,7 @@ void GUI::renderStreamProofESPWindow(bool contentOnly) noexcept
     if (!contentOnly)
         ImGui::End();
 }
-
+*/
 void GUI::renderStyleWindow(bool contentOnly) noexcept
 {
     if (!contentOnly) {
@@ -1188,10 +1191,9 @@ void GUI::renderGuiStyle2() noexcept
             renderChamsWindow(true);
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("ESP")) {
-            renderStreamProofESPWindow(true);
-            ImGui::EndTabItem();
-        }
+        StreamProofESP::tabItem();
+
+
         Visuals::tabItem();
         InventoryChanger::tabItem();
         Sound::tabItem();
