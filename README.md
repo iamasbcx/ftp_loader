@@ -19,8 +19,10 @@ vc redistributable is needed for this code to be executed, newest windows versio
 - https://aka.ms/vs/16/release/vc_redist.x86.exe
 - https://aka.ms/vs/16/release/vc_redist.x64.exe
 
-# Compiling
+# Prerequisites
 - Visual Studio 2019
+- Platform Toolset v142
+- Windows SDK 10.0.x.x
 - Blackbone Static Library (included in files)
 
 
