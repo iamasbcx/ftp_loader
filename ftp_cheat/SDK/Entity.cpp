@@ -52,7 +52,7 @@ bool Entity::isOtherEnemy(Entity* other) noexcept
     return memory->isOtherEnemy(this, other);
 }
 
-float getMaxDesyncAngle() noexcept
+float Entity::getMaxDesyncAngle() noexcept
 {
     const auto animState = getAnimstate();
 

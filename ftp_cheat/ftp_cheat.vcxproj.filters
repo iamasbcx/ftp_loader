@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
@@ -36,10 +32,14 @@
     <Filter Include="Resources\Shaders">
       <UniqueIdentifier>{6f1f2a48-d1e6-4e87-b967-4b7e41157a5b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FTP">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GUI.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>FTP</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui.cpp">
       <Filter>imgui</Filter>
@@ -60,19 +60,19 @@
       <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="Hooks.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>FTP</Filter>
     </ClCompile>
     <ClCompile Include="Memory.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>FTP</Filter>
     </ClCompile>
     <ClCompile Include="Config.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>FTP</Filter>
     </ClCompile>
     <ClCompile Include="Hacks\Misc.cpp">
       <Filter>Hacks</Filter>
     </ClCompile>
     <ClCompile Include="Osiris.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>FTP</Filter>
     </ClCompile>
     <ClCompile Include="Hacks\Glow.cpp">
       <Filter>Hacks</Filter>
@@ -87,7 +87,7 @@
       <Filter>Hacks</Filter>
     </ClCompile>
     <ClCompile Include="Netvars.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>FTP</Filter>
     </ClCompile>
     <ClCompile Include="Hacks\Visuals.cpp">
       <Filter>Hacks</Filter>
@@ -102,7 +102,7 @@
       <Filter>Hacks</Filter>
     </ClCompile>
     <ClCompile Include="imguiCustom.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>FTP</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui_stdlib.cpp">
       <Filter>imgui</Filter>
@@ -114,7 +114,7 @@
       <Filter>SDK</Filter>
     </ClCompile>
     <ClCompile Include="EventListener.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>FTP</Filter>
     </ClCompile>
     <ClCompile Include="SDK\Entity.cpp">
       <Filter>SDK</Filter>
@@ -147,22 +147,22 @@
       <Filter>SDK</Filter>
     </ClCompile>
     <ClCompile Include="GameData.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>FTP</Filter>
     </ClCompile>
     <ClCompile Include="Hacks\StreamProofESP.cpp">
       <Filter>Hacks</Filter>
     </ClCompile>
     <ClCompile Include="Helpers.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>FTP</Filter>
     </ClCompile>
     <ClCompile Include="InputUtil.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>FTP</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui_tables.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>FTP</Filter>
     </ClCompile>
     <ClCompile Include="freetype\src\autofit\autofit.c">
       <Filter>freetype</Filter>
@@ -222,13 +222,13 @@
       <Filter>Hacks</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>FTP</Filter>
     </ClCompile>
     <ClCompile Include="pch-c.c">
-      <Filter>Source Files</Filter>
+      <Filter>FTP</Filter>
     </ClCompile>
     <ClCompile Include="ConfigStructs.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>FTP</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
