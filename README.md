@@ -11,8 +11,9 @@
 # [Download](https://github.com/n0verify/ftp_loader/releases/tag/1.1/)
 
 # Credits
-- b1scoito (https://github.com/b1scoito/)
-- DarthTon https://github.com/DarthTon/Blackbone)
+- [b1scoito](https://github.com/b1scoito/)
+- [DarthTon](https://github.com/DarthTon/Blackbone)
+- [Daniel Krupiński](https://github.com/danielkrupinski)
 
 # Doesn't open
 vc redistributable is needed for this code to be executed, newest windows versions already comes with these.
