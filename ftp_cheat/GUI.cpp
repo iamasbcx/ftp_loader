@@ -199,7 +199,14 @@ GUI::GUI() noexcept
     ImGui::StyleColorsDark();
     ImGuiStyle& style = ImGui::GetStyle();
 
-    style.ScrollbarSize = 9.0f;
+    style.ScrollbarSize = 10.0f;
+    style.WindowRounding = 5.0f;
+    style.GrabRounding = 5.0f;
+    style.ScrollbarRounding = 5.0f;
+    style.FrameRounding = 5.0f;
+    style.WindowTitleAlign = ImVec2(0.5f, 0.5f);
+
+    //style.ScrollbarSize = 9.0f;
 
     ImGuiIO& io = ImGui::GetIO();
     io.IniFilename = nullptr;
@@ -264,6 +271,7 @@ void GUI::updateColors() const noexcept
     case 0: ImGui::StyleColorsDark(); break;
     case 1: ImGui::StyleColorsLight(); break;
     case 2: ImGui::StyleColorsClassic(); break;
+    case 3: ImGui::StyleColorsGold(); break;
     }
 }
 
@@ -1044,11 +1052,11 @@ void GUI::renderStyleWindow(bool contentOnly) noexcept
     ImGui::PushItemWidth(150.0f);
     if (ImGui::Combo("Menu style", &config->style.menuStyle, "Classic\0One window\0"))
         window = { };
-    if (ImGui::Combo("Menu colors", &config->style.menuColors, "Dark\0Light\0Classic\0Custom\0"))
+    if (ImGui::Combo("Menu colors", &config->style.menuColors, "Dark\0Light\0Classic\0Gold\0Custom\0"))
         updateColors();
     ImGui::PopItemWidth();
 
-    if (config->style.menuColors == 3) {
+    if (config->style.menuColors == 4) {
         ImGuiStyle& style = ImGui::GetStyle();
         for (int i = 0; i < ImGuiCol_COUNT; i++) {
             if (i && i & 3) ImGui::SameLine(220.0f * (i & 3));
@@ -1173,7 +1181,7 @@ void GUI::renderConfigWindow(bool contentOnly) noexcept
 
 void GUI::renderGuiStyle2() noexcept
 {
-    ImGui::Begin("FTP", nullptr, windowFlags | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize);
+    ImGui::Begin("FTP", nullptr, windowFlags | ImGuiWindowFlags_AlwaysAutoResize);
 
     if (ImGui::BeginTabBar("TabBar", ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_FittingPolicyScroll | ImGuiTabBarFlags_NoTooltip)) {
         if (ImGui::BeginTabItem("Aimbot")) {
