@@ -33,6 +33,7 @@
 #include "../SDK/NetworkStringTable.h"
 #include "../SDK/Surface.h"
 #include "../SDK/ViewRenderBeams.h"
+#include "../SDK/Utils.h"
 
 #include <stdio.h>
 #include <string>
@@ -314,6 +315,8 @@ struct VisualsConfig {
     float hitEffectTime{ 0.6f };
     int hitMarker{ 0 };
     float hitMarkerTime{ 0.6f };
+    bool rainbowCrosshair{ false };
+    float rainbowCrosshairSpeed{ 1.0f };
     BulletTracers bulletTracers;
     ColorToggle molotovHull{ 1.0f, 0.27f, 0.0f, 0.3f };
 
@@ -383,6 +386,8 @@ static void from_json(const json& j, VisualsConfig& v)
     read(j, "Hit effect time", v.hitEffectTime);
     read(j, "Hit marker", v.hitMarker);
     read(j, "Hit marker time", v.hitMarkerTime);
+    read(j, "Rainbow crosshair", v.rainbowCrosshair);
+    read(j, "Rainbow crosshair speed", v.rainbowCrosshairSpeed);
     read<value_t::object>(j, "Color correction", v.colorCorrection);
     read<value_t::object>(j, "Bullet Tracers", v.bulletTracers);
     read<value_t::object>(j, "Molotov Hull", v.molotovHull);
@@ -444,6 +449,8 @@ static void to_json(json& j, const VisualsConfig& o)
     WRITE("Hit marker", hitMarker);
     WRITE("Hit marker time", hitMarkerTime);
     WRITE("Color correction", colorCorrection);
+    WRITE("Rainbow crosshair", rainbowCrosshair);
+    WRITE("Rainbow crosshair speed", rainbowCrosshairSpeed);
     WRITE("Bullet Tracers", bulletTracers);
     WRITE("Molotov Hull", molotovHull);
 }
@@ -821,6 +828,46 @@ void Visuals::skybox(FrameStage stage) noexcept
     }
 }
 
+void Visuals::rainbowCrosshair() noexcept
+{
+    const auto red = interfaces->cvar->findVar("cl_crosshaircolor_r");
+    const auto green = interfaces->cvar->findVar("cl_crosshaircolor_g");
+    const auto blue = interfaces->cvar->findVar("cl_crosshaircolor_b");
+    const auto color = interfaces->cvar->findVar("cl_crosshaircolor");
+
+    auto [r, g, b] = rainbowColor(visualsConfig.rainbowCrosshairSpeed);
+    r *= 255;
+    g *= 255;
+    b *= 255;
+
+    static bool enabled = false;
+    static float backupR;
+    static float backupG;
+    static float backupB;
+    static int backupColor;
+
+    if (config->visuals.rainbowCrosshair) {
+        red->setValue(r);
+        green->setValue(g);
+        blue->setValue(b);
+        color->setValue(5);
+        enabled = true;
+    }
+    else {
+        if (enabled) {
+            red->setValue(backupR);
+            green->setValue(backupG);
+            blue->setValue(backupB);
+            color->setValue(backupColor);
+        }
+        backupR = red->getFloat();
+        backupG = green->getFloat();
+        backupB = blue->getFloat();
+        backupColor = color->getInt();
+        enabled = false;
+    }
+}
+
 void Visuals::bulletTracer(GameEvent& event) noexcept
 {
     if (!visualsConfig.bulletTracers.enabled)
@@ -1059,6 +1106,12 @@ void Visuals::drawGUI(bool contentOnly) noexcept
     ImGui::SliderFloat("Hit effect time", &visualsConfig.hitEffectTime, 0.1f, 1.5f, "%.2fs");
     ImGui::Combo("Hit marker", &visualsConfig.hitMarker, "None\0Default (Cross)\0");
     ImGui::SliderFloat("Hit marker time", &visualsConfig.hitMarkerTime, 0.1f, 1.5f, "%.2fs");
+    ImGui::Checkbox("Rainbow crosshair", &visualsConfig.rainbowCrosshair);
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100.0f);
+    visualsConfig.rainbowCrosshairSpeed = std::clamp(visualsConfig.rainbowCrosshairSpeed, 0.0f, 25.0f);
+    ImGui::InputFloat("Speed", &visualsConfig.rainbowCrosshairSpeed, 0.1f, 0.15f, "%.2f");
+    ImGui::PopItemWidth();
     ImGuiCustom::colorPicker("Bullet Tracers", visualsConfig.bulletTracers.asColor4().color.data(), &visualsConfig.bulletTracers.asColor4().color[3], nullptr, nullptr, &visualsConfig.bulletTracers.enabled);
     ImGuiCustom::colorPicker("Molotov Hull", visualsConfig.molotovHull);
 

@@ -888,6 +888,7 @@ static void __STDCALL frameStageNotify(LINUX_ARGS(void* thisptr,) FrameStage sta
         Visuals::applyZoom(stage);
         Misc::fixAnimationLOD(stage);
         Backtrack::update(stage);
+        Visuals::rainbowCrosshair();
     }
     InventoryChanger::run(stage);
 
