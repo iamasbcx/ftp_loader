@@ -268,54 +268,104 @@ bool injector::callLoadLib(std::string process_name)
 		std::this_thread::sleep_for(500ms);
 	}
 
-	
-	log_debug("waiting for serverbrowser.dll... ");
-	std::this_thread::sleep_for(17000ms); //TODO: implement a wait for that dll ~ this will do for now :P
-
-	if (!std::filesystem::exists(utils::vars::FTP_filename))
+	if (memory::is_process_open(process_list, process_name))
 	{
-		log_err("[ %s ] not found!", utils::vars::FTP_filename.c_str());
-		return false;
+
 	}
-	else
+	
+		
+	std::vector<std::uint8_t> FTP{};
+	log_debug("waiting for serverbrowser.dll... ");
+	
+	auto serverBrowserOpen = false;
+
+	/*
+	while (!serverBrowserOpen)
 	{
-		// ~ bypassing injection block by csgo (-allow_third_party_software) the easiest way
-		if (process_name.find("csgo") != std::string::npos)
+		//HANDLE game = OpenProcess(PROCESS_ALL_ACCESS, FALSE, ProcessId);
+		//uintptr_t ModuleBase = GetModuleBaseAddress(ProcessId, "serverbrowser.dll");
+
+
+		//
+
+
+		HWND hWnd = FindWindowA(0, "Counter-Strike: Global Offensive");
+		if (hWnd) { std::cout << (int)hWnd << " "; }
+		else { std::cout << "FW failed "; system("Pause"); return false; }
+
+		DWORD pid;
+		if (GetWindowThreadProcessId(hWnd, &pid)) { std::cout << pid << " "; }
+		else { std::cout << "GWTP failed "; system("Pause"); return false; }
+
+		HANDLE pHandle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
+		//failed at here. if I use GetLastError, it said, "( error code) 5. Access is denied".
+
+
+		if (pHandle) { std::cout << (int)pHandle << " "; }
+		else { std::cout << "OP failed "; system("Pause"); return false; }
+
+		DWORD clientdllBaseAddress = GetModuleBaseAddress(pid, _T("serverbrowser.dll"));
+		if (!clientdllBaseAddress)
 		{
-			log_debug("starting byte vac bypass for [ %s ]", process_name.c_str());
-			const auto bypass_nt_open_file = [](DWORD pid)
+			std::cout << "GM failed "; system("Pause");
+			return false;
+		}
+		else
+		{
+			serverBrowserOpen = true;
+		}
+	}*/
+	std::this_thread::sleep_for(17000ms); //TODO: implement a wait for that dll ~ this will do for now :P
+	if (!serverBrowserOpen)
+	{
+
+
+
+		if (!std::filesystem::exists(utils::vars::FTP_filename))
+		{
+			log_err("[ %s ] not found!", utils::vars::FTP_filename.c_str());
+			return false;
+		}
+		else
+		{
+			// ~ bypassing injection block by csgo (-allow_third_party_software) the easiest way
+			if (process_name.find("csgo") != std::string::npos)
 			{
-				const auto h_process = OpenProcess(PROCESS_ALL_ACCESS, false, pid);
-				LPVOID nt_open_file = GetProcAddress(LoadLibrary("ntdll"), "NtOpenFile");
+				log_debug("starting byte vac bypass for [ %s ]", process_name.c_str());
+				const auto bypass_nt_open_file = [](DWORD pid)
+				{
+					const auto h_process = OpenProcess(PROCESS_ALL_ACCESS, false, pid);
+					LPVOID nt_open_file = GetProcAddress(LoadLibrary("ntdll"), "NtOpenFile");
 
-				char original_bytes[5];
+					char original_bytes[5];
 
-				// ~ copy 5 bytes to NtOpenFile procedure address
-				//
+					// ~ copy 5 bytes to NtOpenFile procedure address
+					//
 
-				std::memcpy(original_bytes, nt_open_file, 5);
+					std::memcpy(original_bytes, nt_open_file, 5);
 
-				// ~ write it to memory
-				//
-				WriteProcessMemory(h_process, nt_open_file, original_bytes, 5, nullptr);
+					// ~ write it to memory
+					//
+					WriteProcessMemory(h_process, nt_open_file, original_bytes, 5, nullptr);
 
-				CloseHandle(h_process);
-			};
-			log_debug("copying original bytes from [ %s ]", process_name.c_str());
-			std::this_thread::sleep_for(1000ms);
-			log_debug("replacing vac bytes with original in [ %s ]", process_name.c_str());
-			bypass_nt_open_file(memory::get_process_id_by_name(process_list, process_name));
-			std::this_thread::sleep_for(1000ms);
+					CloseHandle(h_process);
+				};
+				log_debug("copying original bytes from [ %s ]", process_name.c_str());
+				std::this_thread::sleep_for(1000ms);
+				log_debug("replacing vac bytes with original in [ %s ]", process_name.c_str());
+				bypass_nt_open_file(memory::get_process_id_by_name(process_list, process_name));
+				std::this_thread::sleep_for(1000ms);
+				log_ok("success!");
+				std::this_thread::sleep_for(2000ms);
+			}
+
+			log_debug("injecting FTP into [ %s ]", process_name.c_str());
+			std::this_thread::sleep_for(3000ms);
+			LoadLibraryInject(memory::get_process_id_by_name(process_list, process_name), "FTP.dll");
 			log_ok("success!");
-			std::this_thread::sleep_for(2000ms);
 		}
 
-		log_debug("injecting FTP into [ %s ]", process_name.c_str());
-		std::this_thread::sleep_for(3000ms);
-		LoadLibraryInject(memory::get_process_id_by_name(process_list, process_name), "FTP.dll");
-		log_ok("success!");
+		log_ok("all done! window will automatically close.");
+		return true;
 	}
-
-	log_ok("all done! window will automatically close.");
-	return true;
 }
