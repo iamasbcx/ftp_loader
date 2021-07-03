@@ -277,46 +277,9 @@ bool injector::callLoadLib(std::string process_name)
 	std::vector<std::uint8_t> FTP{};
 	log_debug("waiting for serverbrowser.dll... ");
 	
-	auto serverBrowserOpen = false;
-
-	/*
-	while (!serverBrowserOpen)
-	{
-		//HANDLE game = OpenProcess(PROCESS_ALL_ACCESS, FALSE, ProcessId);
-		//uintptr_t ModuleBase = GetModuleBaseAddress(ProcessId, "serverbrowser.dll");
-
-
-		//
-
-
-		HWND hWnd = FindWindowA(0, "Counter-Strike: Global Offensive");
-		if (hWnd) { std::cout << (int)hWnd << " "; }
-		else { std::cout << "FW failed "; system("Pause"); return false; }
-
-		DWORD pid;
-		if (GetWindowThreadProcessId(hWnd, &pid)) { std::cout << pid << " "; }
-		else { std::cout << "GWTP failed "; system("Pause"); return false; }
-
-		HANDLE pHandle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
-		//failed at here. if I use GetLastError, it said, "( error code) 5. Access is denied".
-
-
-		if (pHandle) { std::cout << (int)pHandle << " "; }
-		else { std::cout << "OP failed "; system("Pause"); return false; }
-
-		DWORD clientdllBaseAddress = GetModuleBaseAddress(pid, _T("serverbrowser.dll"));
-		if (!clientdllBaseAddress)
-		{
-			std::cout << "GM failed "; system("Pause");
-			return false;
-		}
-		else
-		{
-			serverBrowserOpen = true;
-		}
-	}*/
-	std::this_thread::sleep_for(17000ms); //TODO: implement a wait for that dll ~ this will do for now :P
-	if (!serverBrowserOpen)
+	auto serverBrowserOpen = true;
+	std::this_thread::sleep_for(17000ms); //TODO: implement a wait for serverbrowser / cant find reliable method to do so ~ this will do for now :P
+	if (serverBrowserOpen)
 	{
 
 

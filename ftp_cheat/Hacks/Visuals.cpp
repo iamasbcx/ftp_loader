@@ -846,7 +846,7 @@ void Visuals::rainbowCrosshair() noexcept
     static float backupB;
     static int backupColor;
 
-    if (config->visuals.rainbowCrosshair) {
+    if (visualsConfig.rainbowCrosshair) {
         red->setValue(r);
         green->setValue(g);
         blue->setValue(b);
