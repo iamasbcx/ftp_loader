@@ -61,6 +61,7 @@ public:
     HookType surface;
     HookType viewRender;
     HookType svCheats;
+    HookType fileSystem;
 private:
 #ifdef _WIN32
     HMODULE moduleHandle;
