@@ -11,16 +11,19 @@
 # [Download](https://github.com/n0verify/ftp_loader/releases/tag/1.1/)
 
 # Credits
-- b1scoito (https://github.com/b1scoito/)
-- DarthTon https://github.com/DarthTon/Blackbone)
+- [b1scoito](https://github.com/b1scoito/)
+- [DarthTon](https://github.com/DarthTon/Blackbone)
+- [Daniel Krupiński](https://github.com/danielkrupinski)
 
 # Doesn't open
 vc redistributable is needed for this code to be executed, newest windows versions already comes with these.
 - https://aka.ms/vs/16/release/vc_redist.x86.exe
 - https://aka.ms/vs/16/release/vc_redist.x64.exe
 
-# Compiling
+# Prerequisites
 - Visual Studio 2019
+- Platform Toolset v142
+- Windows SDK 10.0.x.x
 - Blackbone Static Library (included in files)
 
 
