@@ -202,6 +202,17 @@ void AntiAim::run(UserCmd* cmd, const Vector& previousViewAngles, const Vector& 
         if (!localPlayer)
             return;
 
+        const auto activeWeapon = localPlayer->getActiveWeapon();
+
+        if (!activeWeapon)
+            return;
+
+        if (!activeWeapon->isGrenade() && cmd->buttons & (UserCmd::IN_ATTACK | UserCmd::IN_ATTACK2))
+            return;
+
+        if (localPlayer->throwing(cmd))
+            return;
+
         if (antiAimConfig.pitch && cmd->viewangles.x == currentViewAngles.x)
             cmd->viewangles.x = antiAimConfig.pitchAngle;
 
