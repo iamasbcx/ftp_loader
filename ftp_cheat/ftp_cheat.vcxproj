@@ -194,6 +194,7 @@
   <ItemGroup>
     <ClInclude Include="Config.h" />
     <ClInclude Include="ConfigStructs.h" />
+    <ClInclude Include="def.h" />
     <ClInclude Include="EventListener.h" />
     <ClInclude Include="fnv.h" />
     <ClInclude Include="freetype\freetype\config\ftmodule.h" />
@@ -211,6 +212,7 @@
     <ClInclude Include="Hacks\StreamProofESP.h" />
     <ClInclude Include="Hacks\Triggerbot.h" />
     <ClInclude Include="Hacks\Visuals.h" />
+    <ClInclude Include="VMProtectSDK.h" />
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="Hooks\MinHook.h" />
     <ClInclude Include="Hooks\VmtHook.h" />
@@ -306,6 +308,7 @@
     <ClInclude Include="SDK\WeaponSystem.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="xorstr.hpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\default_vs.hlsl">

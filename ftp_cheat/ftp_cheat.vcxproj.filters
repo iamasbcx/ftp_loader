@@ -36,6 +36,9 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="VMP">
+      <UniqueIdentifier>{7e944dd3-325b-4dd6-8db7-9db548bd79f4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GUI.cpp">
@@ -573,6 +576,15 @@
     </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VMProtectSDK.h">
+      <Filter>VMP</Filter>
+    </ClInclude>
+    <ClInclude Include="def.h">
+      <Filter>VMP</Filter>
+    </ClInclude>
+    <ClInclude Include="xorstr.hpp">
+      <Filter>VMP</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
