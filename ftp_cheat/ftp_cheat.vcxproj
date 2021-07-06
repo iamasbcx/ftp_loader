@@ -363,7 +363,7 @@
     <IncludePath>$(ProjectDir)\freetype;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)</IncludePath>
     <OutDir>$(SolutionDir)CHEAT DEBUG</OutDir>
     <TargetName>FTP</TargetName>
-    <LibraryPath>C:\Users\Aubrey\Desktop\coding\ftp_loader\ftp_cheat\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)ftp_cheat\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>

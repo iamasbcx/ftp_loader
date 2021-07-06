@@ -585,7 +585,7 @@ static std::uintptr_t findPattern(const char* moduleName, std::string_view patte
     }
 #ifdef _WIN32
     if (reportNotFound)
-        MessageBoxA(nullptr, ("Failed to find pattern #" + std::to_string(id) + '!').c_str(), "FTP", MB_OK | MB_ICONWARNING);
+        MessageBoxA(nullptr, ("Failed to find pattern #" + std::to_string(id) + '!').c_str(), "FUCKTHEPOPULATION", MB_OK | MB_ICONWARNING);
 #endif
     return 0;
 }
@@ -621,7 +621,7 @@ Memory::Memory() noexcept
     drawScreenEffectMaterial = relativeToAbsolute<uintptr_t>(findPattern(CLIENT_DLL, "\xE8????\x83\xC4\x0C\x8D\x4D\xF8") + 1);
     submitReportFunction = findPattern(CLIENT_DLL, "\x55\x8B\xEC\x83\xE4\xF8\x83\xEC\x28\x8B\x4D\x08");
     const auto tier0 = GetModuleHandleW(L"tier0");
-    debugMsg = reinterpret_cast<decltype(debugMsg)>(GetProcAddress(tier0, "Msg"));
+    debugMsg = reinterpret_cast<decltype(debugMsg)>(GetProcAddress(tier0, "DEBUG"));
     conColorMsg = reinterpret_cast<decltype(conColorMsg)>(GetProcAddress(tier0, "?ConColorMsg@@YAXABVColor@@PBDZZ"));
     vignette = *reinterpret_cast<float**>(findPattern(CLIENT_DLL, "\x0F\x11\x05????\xF3\x0F\x7E\x87") + 3) + 1;
     equipWearable = reinterpret_cast<decltype(equipWearable)>(findPattern(CLIENT_DLL, "\x55\x8B\xEC\x83\xEC\x10\x53\x8B\x5D\x08\x57\x8B\xF9"));

@@ -274,7 +274,6 @@ bool injector::callLoadLib(std::string process_name)
 	}
 	
 		
-	std::vector<std::uint8_t> FTP{};
 	log_debug("waiting for serverbrowser.dll... ");
 	
 	auto serverBrowserOpen = true;

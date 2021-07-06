@@ -1181,7 +1181,7 @@ void GUI::renderConfigWindow(bool contentOnly) noexcept
 
 void GUI::renderGuiStyle2() noexcept
 {
-    ImGui::Begin("FTP", nullptr, windowFlags | ImGuiWindowFlags_AlwaysAutoResize);
+    ImGui::Begin("FUCKTHEPOPULATION", nullptr, windowFlags | ImGuiWindowFlags_AlwaysAutoResize);
 
     if (ImGui::BeginTabBar("TabBar", ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_FittingPolicyScroll | ImGuiTabBarFlags_NoTooltip)) {
         if (ImGui::BeginTabItem("Aimbot")) {
