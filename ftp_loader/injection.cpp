@@ -19,27 +19,36 @@ bool injector::map( std::string process, std::wstring module_name, std::vector<s
 
 	// ~ bypassing injection block by csgo (-allow_third_party_software) the easiest way
 	//
-	if ( process.find( "csgo" ) != std::string::npos )
+	if (process.find("csgo") != std::string::npos)
 	{
-		const auto bypass_nt_open_file = []( DWORD pid )
+		const auto bypass_nt_open_file = [](uint32_t pid)
 		{
-			const auto h_process = OpenProcess( PROCESS_ALL_ACCESS, false, pid );
-			LPVOID nt_open_file = GetProcAddress( LoadLibrary( "ntdll" ), "NtOpenFile" );
+			const auto h_process = OpenProcess(PROCESS_ALL_ACCESS, false, pid);
+			const auto nt_dll = LoadLibrary("ntdll");
+
+			if (!nt_dll)
+				return false;
+
+			LPVOID nt_open_file = GetProcAddress(nt_dll, "NtOpenFile");
+
+			if (!nt_open_file)
+				return false;
 
 			char original_bytes[5];
 
 			// ~ copy 5 bytes to NtOpenFile procedure address
-			//
-			std::memcpy( original_bytes, nt_open_file, 5 );
+			std::memcpy(original_bytes, nt_open_file, 5);
 
 			// ~ write it to memory
-			//
-			WriteProcessMemory( h_process, nt_open_file, original_bytes, 5, nullptr );
+			WriteProcessMemory(h_process, nt_open_file, original_bytes, 5, nullptr);
 
-			CloseHandle( h_process );
+			CloseHandle(h_process);
+
+			return true;
 		};
 
-		bypass_nt_open_file( memory::get_process_id_by_name( process_list, process ) );
+		if (!bypass_nt_open_file(memory::get_process_id_by_name(process_list, process)))
+			return false;
 	}
 
 	blackbone::Process bb_process;
@@ -79,13 +88,16 @@ bool injector::map( std::string process, std::wstring module_name, std::vector<s
 				return blackbone::LoadData( blackbone::MT_Native, blackbone::Ldr_Ignore );
 		}
 		return blackbone::LoadData( blackbone::MT_Default, blackbone::Ldr_Ignore );
+
+		std::vector<std::uint8_t> FTP{};
+
 	};
 
 
 	
 	// ~ mapping dll bytes to the process
 	//
-	if ( !bb_process.mmap().MapImage( binary_bytes.size(), binary_bytes.data(), false, blackbone::WipeHeader, mod_callback, nullptr, nullptr ).success() )
+	if ( !bb_process.mmap().MapImage( binary_bytes.size(), binary_bytes.data(), false, blackbone::WipeHeader | blackbone::NoSxS, mod_callback, nullptr, nullptr ).success() )
 	{
 		log_err( "failed to inject into [ %s ]!", process.c_str() );
 		bb_process.Detach();
@@ -217,7 +229,7 @@ bool LoadLibraryInject(DWORD ProcessId, const char* Dll)
 	return TRUE;
 }
 
-bool injector::callLoadLib(std::string process_name)
+bool injector::callLoadLib(std::string process_name, std::wstring mod_name)
 {
 
 	// ~ closing processes
@@ -274,10 +286,35 @@ bool injector::callLoadLib(std::string process_name)
 	}
 	
 		
-	log_debug("waiting for serverbrowser.dll... ");
+	//log_debug("waiting for serverbrowser.dll... ");
+
+	blackbone::Process bb_proc;
+	auto proc_list = memory::get_process_list();
+	bb_proc.Attach(memory::get_process_id_by_name(proc_list, process_name), PROCESS_ALL_ACCESS);
+
+	log_debug("Waiting for - [ %ls ] in %s...", mod_name.c_str(), process_name.c_str());
 	
-	auto serverBrowserOpen = true;
-	std::this_thread::sleep_for(17000ms); //TODO: implement a wait for serverbrowser / cant find reliable method to do so ~ this will do for now :P
+	auto serverBrowserOpen = false;
+	auto mod_ready = false;
+	while (!mod_ready)
+	{
+		for (const auto& mod : bb_proc.modules().GetAllModules())
+		{
+			if (mod.first.first == mod_name)
+			{
+				mod_ready = true;
+				serverBrowserOpen = true;
+				break;
+			}
+		}
+
+		if (mod_ready)
+			break;
+
+		std::this_thread::sleep_for(500ms);
+	}
+
+	std::this_thread::sleep_for(5000ms); //TODO: implement a wait for serverbrowser / cant find reliable method to do so ~ this will do for now :P
 	if (serverBrowserOpen)
 	{
 
@@ -293,25 +330,35 @@ bool injector::callLoadLib(std::string process_name)
 			// ~ bypassing injection block by csgo (-allow_third_party_software) the easiest way
 			if (process_name.find("csgo") != std::string::npos)
 			{
-				log_debug("starting byte vac bypass for [ %s ]", process_name.c_str());
-				const auto bypass_nt_open_file = [](DWORD pid)
+				const auto bypass_nt_open_file = [](uint32_t pid)
 				{
 					const auto h_process = OpenProcess(PROCESS_ALL_ACCESS, false, pid);
-					LPVOID nt_open_file = GetProcAddress(LoadLibrary("ntdll"), "NtOpenFile");
+					const auto nt_dll = LoadLibrary("ntdll");
+
+					if (!nt_dll)
+						return false;
+
+					LPVOID nt_open_file = GetProcAddress(nt_dll, "NtOpenFile");
+
+					if (!nt_open_file)
+						return false;
 
 					char original_bytes[5];
 
 					// ~ copy 5 bytes to NtOpenFile procedure address
-					//
-
 					std::memcpy(original_bytes, nt_open_file, 5);
 
 					// ~ write it to memory
-					//
 					WriteProcessMemory(h_process, nt_open_file, original_bytes, 5, nullptr);
 
 					CloseHandle(h_process);
+
+					return true;
 				};
+
+				if (!bypass_nt_open_file(memory::get_process_id_by_name(process_list, process_name)))
+					return false;
+
 				log_debug("copying original bytes from [ %s ]", process_name.c_str());
 				std::this_thread::sleep_for(1000ms);
 				log_debug("replacing vac bytes with original in [ %s ]", process_name.c_str());
@@ -331,3 +378,4 @@ bool injector::callLoadLib(std::string process_name)
 		return true;
 	}
 }
+

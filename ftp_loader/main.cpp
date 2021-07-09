@@ -27,18 +27,20 @@ int WINAPI WinMain( _In_ HINSTANCE hInstance,
 	std::cout << "|   __|  |  |   --|    -| | | |     |   __|   __|  |  |   __|  |  |  |__|     | | | |-   -|  |  | | | |" << std::endl;
 	std::cout << "|__|  |_____|_____|__|__| |_| |__|__|_____|__|  |_____|__|  |_____|_____|__|__| |_| |_____|_____|_|___|" << std::endl;
 	std::cout << "~ developed by n0verify and b1scoito. Thank you DarthTon for making BlackBone memory hacking library." << std::endl;
-	log_debug("Injection Method:");
 	log_debug("1 ) LoadLibrary");
 	log_debug("2 ) ManualMap");
+	log_prompt("Injection Method: ");
 	std::cin >> methhead;
+	std::cin.clear();
 	std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
-	log_debug("Type csgo to start injection :");
+	log_prompt("Type csgo to start injection :");
 	std::cin >> proc_name;
+	std::cin.clear();
 	std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
 
 	if (methhead == "1"| methhead == "loadlibrary" | methhead == "LoadLibrary" | methhead == "ll")
 	{
-		if (!g_injector.callLoadLib(proc_name))
+		if (!g_injector.callLoadLib(proc_name, L"serverbrowser.dll"))
 		{
 			return EXIT_FAILURE;
 		}

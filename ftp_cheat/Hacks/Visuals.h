@@ -34,13 +34,13 @@ namespace Visuals
     void applyScreenEffects() noexcept;
     void hitEffect(GameEvent* event = nullptr) noexcept;
     void hitMarker(GameEvent* event, ImDrawList* drawList = nullptr) noexcept;
+    void rainbowCrosshair() noexcept;
     void disablePostProcessing(FrameStage stage) noexcept;
     void reduceFlashEffect() noexcept;
     bool removeHands(const char* modelName) noexcept;
     bool removeSleeves(const char* modelName) noexcept;
     bool removeWeapons(const char* modelName) noexcept;
     void skybox(FrameStage stage) noexcept;
-    void rainbowCrosshair() noexcept;
     void bulletTracer(GameEvent& event) noexcept;
     void drawMolotovHull(ImDrawList* drawList) noexcept;
 
