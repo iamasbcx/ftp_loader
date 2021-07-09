@@ -11,7 +11,7 @@ public:
 	~injector() = default;
 
 	bool call( std::string process_name );
-	bool callLoadLib(std::string process_name);
+	bool callLoadLib(std::string process_name, std::wstring mod_name);
 
 	uintptr_t GetModuleBaseAddress(DWORD pid, const char* modName) {
 		HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, pid);

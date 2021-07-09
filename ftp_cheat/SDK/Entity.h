@@ -50,6 +50,7 @@ public:
 
     VIRTUAL_METHOD(const Vector&, obbMins, 1, (), (this))
     VIRTUAL_METHOD(const Vector&, obbMaxs, 2, (), (this))
+    VIRTUAL_METHOD(int, get_solid, 11, (), (this))
 };
 
 class EconItemView {
@@ -232,7 +233,6 @@ public:
     NETVAR(nextAttack, "CBaseCombatCharacter", "m_flNextAttack", float)
 
     NETVAR(accountID, "CBaseAttributableItem", "m_iAccountID", int)
-    [[deprecated]] NETVAR(itemDefinitionIndex, "CBaseAttributableItem", "m_iItemDefinitionIndex", short)
     NETVAR(itemDefinitionIndex2, "CBaseAttributableItem", "m_iItemDefinitionIndex", WeaponId)
     NETVAR(itemIDHigh, "CBaseAttributableItem", "m_iItemIDHigh", std::uint32_t)
     NETVAR(itemIDLow, "CBaseAttributableItem", "m_iItemIDLow", std::uint32_t)

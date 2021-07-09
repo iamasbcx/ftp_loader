@@ -5,10 +5,11 @@
 enum class msg_type_t: std::uint32_t
 {
 	LNONE = 0,
-	LSUCCESS = 10,	/* green */
 	LDEBUG = 9,		/* blue */
-	LWARN = 14,		/* yellow */
-	LERROR = 12		/* red */
+	LSUCCESS = 10,	/* green */
+	LERROR = 12,	/* red */
+	LPROMPT = 11,	/* pink */
+	LWARN = 14		/* yellow */
 };
 
 inline std::ostream& operator<< ( std::ostream& os, const msg_type_t type )
@@ -18,6 +19,7 @@ inline std::ostream& operator<< ( std::ostream& os, const msg_type_t type )
 	case msg_type_t::LSUCCESS:	return os << ">>";
 	case msg_type_t::LDEBUG:	return os << "..";
 	case msg_type_t::LWARN:		return os << "**";
+	case msg_type_t::LPROMPT:	return os << ">";
 	case msg_type_t::LERROR:	return os << "!!";
 	default: return os << "";
 	}
@@ -86,7 +88,10 @@ public:
 		else
 			SetConsoleTextAttribute( h_console, 15 /* white */ );
 
-		std::cout << formated << "\n";
+		if (type == msg_type_t::LPROMPT)
+			std::cout << formated;
+		else
+			std::cout << formated << "\n";
 	}
 };
 
@@ -95,4 +100,5 @@ inline auto g_logger = logger( "-> fuckthepopulation loader" );
 #define log_ok(...) g_logger.print( msg_type_t::LSUCCESS, __FUNCTION__, __VA_ARGS__ )
 #define log_debug(...) g_logger.print( msg_type_t::LDEBUG, __FUNCTION__, __VA_ARGS__ )
 #define log_warn(...) g_logger.print( msg_type_t::LWARN, __FUNCTION__, __VA_ARGS__ )
+#define log_prompt(...) g_logger.print( msg_type_t::LPROMPT, __FUNCTION__, __VA_ARGS__ )
 #define log_err(...) g_logger.print( msg_type_t::LERROR, __FUNCTION__, __VA_ARGS__ )

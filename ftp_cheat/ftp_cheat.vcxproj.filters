@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
@@ -32,17 +36,16 @@
     <Filter Include="Resources\Shaders">
       <UniqueIdentifier>{6f1f2a48-d1e6-4e87-b967-4b7e41157a5b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FTP">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="InventoryChanger">
+      <UniqueIdentifier>{2d9b89c7-c323-4423-a60d-412e3bd1637f}</UniqueIdentifier>
     </Filter>
     <Filter Include="VMP">
-      <UniqueIdentifier>{7e944dd3-325b-4dd6-8db7-9db548bd79f4}</UniqueIdentifier>
+      <UniqueIdentifier>{a1c91c91-b2bb-45ab-9723-17201b5bae1d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GUI.cpp">
-      <Filter>FTP</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui.cpp">
       <Filter>imgui</Filter>
@@ -63,19 +66,19 @@
       <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="Hooks.cpp">
-      <Filter>FTP</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Memory.cpp">
-      <Filter>FTP</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Config.cpp">
-      <Filter>FTP</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Hacks\Misc.cpp">
       <Filter>Hacks</Filter>
     </ClCompile>
-    <ClCompile Include="Osiris.cpp">
-      <Filter>FTP</Filter>
+    <ClCompile Include="FTP.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Hacks\Glow.cpp">
       <Filter>Hacks</Filter>
@@ -90,7 +93,7 @@
       <Filter>Hacks</Filter>
     </ClCompile>
     <ClCompile Include="Netvars.cpp">
-      <Filter>FTP</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Hacks\Visuals.cpp">
       <Filter>Hacks</Filter>
@@ -105,7 +108,7 @@
       <Filter>Hacks</Filter>
     </ClCompile>
     <ClCompile Include="imguiCustom.cpp">
-      <Filter>FTP</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui_stdlib.cpp">
       <Filter>imgui</Filter>
@@ -117,7 +120,7 @@
       <Filter>SDK</Filter>
     </ClCompile>
     <ClCompile Include="EventListener.cpp">
-      <Filter>FTP</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SDK\Entity.cpp">
       <Filter>SDK</Filter>
@@ -150,22 +153,22 @@
       <Filter>SDK</Filter>
     </ClCompile>
     <ClCompile Include="GameData.cpp">
-      <Filter>FTP</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Hacks\StreamProofESP.cpp">
       <Filter>Hacks</Filter>
     </ClCompile>
     <ClCompile Include="Helpers.cpp">
-      <Filter>FTP</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="InputUtil.cpp">
-      <Filter>FTP</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui_tables.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
-      <Filter>FTP</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="freetype\src\autofit\autofit.c">
       <Filter>freetype</Filter>
@@ -221,17 +224,23 @@
     <ClCompile Include="Hacks\Sound.cpp">
       <Filter>Hacks</Filter>
     </ClCompile>
-    <ClCompile Include="Hacks\InventoryChanger.cpp">
-      <Filter>Hacks</Filter>
-    </ClCompile>
     <ClCompile Include="pch.cpp">
-      <Filter>FTP</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pch-c.c">
-      <Filter>FTP</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ConfigStructs.cpp">
-      <Filter>FTP</Filter>
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InventoryChanger\InventoryChanger.cpp">
+      <Filter>InventoryChanger</Filter>
+    </ClCompile>
+    <ClCompile Include="InventoryChanger\StaticData.cpp">
+      <Filter>InventoryChanger</Filter>
+    </ClCompile>
+    <ClCompile Include="InventoryChanger\Inventory.cpp">
+      <Filter>InventoryChanger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -571,19 +580,28 @@
     <ClInclude Include="SDK\Inconstructible.h">
       <Filter>SDK</Filter>
     </ClInclude>
-    <ClInclude Include="Hacks\InventoryChanger.h">
-      <Filter>Hacks</Filter>
-    </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="VMProtectSDK.h">
-      <Filter>VMP</Filter>
+    <ClInclude Include="InventoryChanger\InventoryChanger.h">
+      <Filter>InventoryChanger</Filter>
     </ClInclude>
-    <ClInclude Include="def.h">
-      <Filter>VMP</Filter>
+    <ClInclude Include="InventoryChanger\StaticData.h">
+      <Filter>InventoryChanger</Filter>
+    </ClInclude>
+    <ClInclude Include="InventoryChanger\Inventory.h">
+      <Filter>InventoryChanger</Filter>
+    </ClInclude>
+    <ClInclude Include="BSPFlags.h">
+      <Filter>SDK</Filter>
     </ClInclude>
     <ClInclude Include="xorstr.hpp">
+      <Filter>VMP</Filter>
+    </ClInclude>
+    <ClInclude Include="VMP\VMProtectSDK.h">
+      <Filter>VMP</Filter>
+    </ClInclude>
+    <ClInclude Include="VMP\def.h">
       <Filter>VMP</Filter>
     </ClInclude>
   </ItemGroup>

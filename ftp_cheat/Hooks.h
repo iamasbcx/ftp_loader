@@ -53,6 +53,7 @@ public:
     HookType client;
     HookType clientMode;
     HookType engine;
+    HookType fileSystem;
     HookType inventory;
     HookType inventoryManager;
     HookType modelRender;
@@ -61,7 +62,6 @@ public:
     HookType surface;
     HookType viewRender;
     HookType svCheats;
-    HookType fileSystem;
 private:
 #ifdef _WIN32
     HMODULE moduleHandle;

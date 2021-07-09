@@ -4,6 +4,7 @@
 
 #include "Inconstructible.h"
 #include "Pad.h"
+#include "Entity.h"
 #include "UtlVector.h"
 #include "VirtualMethod.h"
 
@@ -94,8 +95,6 @@ struct StickerKit {
     UtlString inventoryImage;
 };
 
-enum class Team;
-
 union AttributeDataUnion {
     float asFloat;
     std::uint32_t asUint32;
@@ -112,8 +111,8 @@ static_assert(sizeof(StaticAttrib) == WIN32_LINUX(12, 24));
 struct EconTool {
     INCONSTRUCTIBLE(EconTool)
 
-        PAD(sizeof(std::uintptr_t))
-        const char* typeName;
+    PAD(sizeof(std::uintptr_t))
+    const char* typeName;
 };
 
 class EconItemDefinition {
