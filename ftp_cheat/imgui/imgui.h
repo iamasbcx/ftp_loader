@@ -285,6 +285,7 @@ namespace ImGui
     IMGUI_API const char*   GetVersion();                               // get the compiled version string e.g. "1.80 WIP" (essentially the value for IMGUI_VERSION from the compiled version of imgui.cpp)
 
     // Styles
+    IMGUI_API void          StyleColorsFTP(ImGuiStyle* dst = NULL);    //FTP MAIN:)
     IMGUI_API void          StyleColorsGold(ImGuiStyle* dst = NULL);    //MY GOLD STYLE :)
     IMGUI_API void          StyleColorsDark(ImGuiStyle* dst = NULL);    // new, recommended style (default)
     IMGUI_API void          StyleColorsLight(ImGuiStyle* dst = NULL);   // best used with borders and a custom, thicker font

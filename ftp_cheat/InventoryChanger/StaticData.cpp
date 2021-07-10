@@ -249,8 +249,6 @@ private:
     void initSortedVectors() noexcept
     {
         for (std::size_t i = 0; i < _gameItems.size(); ++i) {
-            if (const auto& item = _gameItems[i]; item.isSticker() || item.isPatch() || item.isGraffiti())
-                _stickersSorted.push_back(i);
             _skinsSorted.push_back(i);
         }
 
@@ -288,7 +286,7 @@ private:
         _collectibles.shrink_to_fit();
         _cases.shrink_to_fit();
         _caseLoot.shrink_to_fit();
-        _stickersSorted.shrink_to_fit();
+        _skinsSorted.shrink_to_fit();
         _paintKits.shrink_to_fit();
     }
 

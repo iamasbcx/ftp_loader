@@ -506,11 +506,11 @@ void GUI::renderStyleWindow(bool contentOnly) noexcept
     ImGui::PushItemWidth(150.0f);
     if (ImGui::Combo("Menu style", &config->style.menuStyle, "Classic\0One window\0"))
         window = { };
-    if (ImGui::Combo("Menu colors", &config->style.menuColors, "Dark\0Light\0Classic\0Gold\0Custom\0"))
+    if (ImGui::Combo("Menu colors", &config->style.menuColors, "Dark\0Light\0FTP\0Classic\0Gold\0Custom\0"))
         updateColors();
     ImGui::PopItemWidth();
 
-    if (config->style.menuColors == 4) {
+    if (config->style.menuColors == 5) {
         ImGuiStyle& style = ImGui::GetStyle();
         for (int i = 0; i < ImGuiCol_COUNT; i++) {
             if (i && i & 3) ImGui::SameLine(220.0f * (i & 3));

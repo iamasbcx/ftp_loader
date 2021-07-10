@@ -22,11 +22,11 @@ int WINAPI WinMain( _In_ HINSTANCE hInstance,
 	std::string proc_name;
 	std::string methhead;
 	std::string returnLib;
-	std::cout << " _____ _____ _____ _____ _____ _____ _____ _____ _____ _____ _____ __    _____ _____ _____ _____ _____ " << std::endl;
-	std::cout << "|   __|  |  |     |  |  |_   _|  |  |   __|  _  |     |  _  |  |  |  |  |  _  |_   _|     |     |   | |" << std::endl;
-	std::cout << "|   __|  |  |   --|    -| | | |     |   __|   __|  |  |   __|  |  |  |__|     | | | |-   -|  |  | | | |" << std::endl;
-	std::cout << "|__|  |_____|_____|__|__| |_| |__|__|_____|__|  |_____|__|  |_____|_____|__|__| |_| |_____|_____|_|___|" << std::endl;
-	std::cout << "~ developed by n0verify and b1scoito. Thank you DarthTon for making BlackBone memory hacking library." << std::endl;
+	log_design(" _____ _____ _____ _____ _____ _____ _____ _____ _____ _____ _____ __    _____ _____ _____ _____ _____ ");
+	log_design("|   __|  |  |     |  |  |_   _|  |  |   __|  _  |     |  _  |  |  |  |  |  _  |_   _|     |     |   | |");
+	log_design("|   __|  |  |   --|    -| | | |     |   __|   __|  |  |   __|  |  |  |__|     | | | |-   -|  |  | | | |");
+	log_design("|__|  |_____|_____|__|__| |_| |__|__|_____|__|  |_____|__|  |_____|_____|__|__| |_| |_____|_____|_|___|");
+	log_cred("~ developed by n0verify and b1scoito. Thank you DarthTon for making BlackBone memory hacking library.");
 	log_debug("1 ) LoadLibrary");
 	log_debug("2 ) ManualMap");
 	log_prompt("Injection Method: ");
