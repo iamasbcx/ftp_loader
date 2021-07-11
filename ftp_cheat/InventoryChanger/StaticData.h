@@ -46,6 +46,7 @@ namespace StaticData
         bool isStatTrakSwapTool() const noexcept { return type == Type::StatTrakSwapTool; }
         bool isViewerPass() const noexcept { return type == Type::ViewerPass; }
 
+
         bool hasPaintKit() const noexcept { return type >= Type::Sticker && type <= Type::SealedGraffiti; }
 
         Type type;
@@ -88,4 +89,5 @@ namespace StaticData
     const std::vector<PaintKit>& paintKits() noexcept;
     const std::wstring& getWeaponNameUpper(WeaponId weaponID) noexcept;
     const std::string& getWeaponName(WeaponId weaponID) noexcept;
+    std::size_t getItemIndex(WeaponId weaponID, int paintKit) noexcept;
 }
