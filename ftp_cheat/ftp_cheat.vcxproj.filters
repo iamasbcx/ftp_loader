@@ -604,6 +604,9 @@
     <ClInclude Include="VMP\def.h">
       <Filter>VMP</Filter>
     </ClInclude>
+    <ClInclude Include="ProtobufReader.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\default_vs.hlsl">

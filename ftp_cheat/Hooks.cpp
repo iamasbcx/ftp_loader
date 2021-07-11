@@ -536,6 +536,14 @@ static void __STDCALL soUpdated(LINUX_ARGS(void* thisptr, ) SOID owner, SharedOb
     hooks->inventory.callOriginal<void, 1>(owner, object, event);
 }
 
+static bool __STDCALL dispatchUserMessage(LINUX_ARGS(void* thisptr, ) int messageType, int passthroughFlags, int size, const void* data) noexcept
+{
+    if (messageType == 7) // CS_UM_TextMsg
+        InventoryChanger::onUserTextMsg(data, size);
+
+    return hooks->client.callOriginal<bool, 38>(messageType, passthroughFlags, size, data);
+}
+
 #ifdef _WIN32
 
 Hooks::Hooks(HMODULE moduleHandle) noexcept : moduleHandle{ moduleHandle }
@@ -625,6 +633,7 @@ void Hooks::install() noexcept
 
     client.init(interfaces->client);
     client.hookAt(37, &frameStageNotify);
+    client.hookAt(38, &dispatchUserMessage);
 
     clientMode.init(memory->clientMode);
     clientMode.hookAt(WIN32_LINUX(17, 18), &shouldDrawFog);

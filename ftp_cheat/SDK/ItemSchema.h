@@ -271,7 +271,7 @@ public:
     PAD(WIN32_LINUX(0x80, 0xB0))
     UtlMap<std::uint64_t, AlternateIconData> alternateIcons;
     PAD(WIN32_LINUX(0x48, 0x60))
-    UtlMap<int, PaintKit*> paintKits;
+    UtlMap<int, StaticData::PaintKit*> paintKits;
     UtlMap<int, StickerKit*> stickerKits;
     PAD(WIN32_LINUX(0x11C, 0x1A0))
     UtlMap<int, EconMusicDefinition*> musicKits;
@@ -329,6 +329,9 @@ public:
     void setMusicID(int musicID) noexcept { setAttributeValue(166, &musicID); }
     void setStatTrak(int value) noexcept { setAttributeValue(80, &value); }
     void setStatTrakType(int type) noexcept { setAttributeValue(81, &type); }
+    void setTournamentStage(int stage) noexcept { setAttributeValue(138, &stage); }
+    void setTournamentStage1(int team) noexcept { setAttributeValue(139, &team); }
+    void setTournamentStage2(int team) noexcept { setAttributeValue(140, &team); }
 
     void setStickerID(int slot, int stickerID) noexcept
     {
@@ -386,13 +389,15 @@ struct SOID {
     std::uint32_t padding;
 };
 
+class EconItemView;
+
 class CSPlayerInventory {
 public:
     INCONSTRUCTIBLE(CSPlayerInventory)
 
     VIRTUAL_METHOD(void, soUpdated, 1, (SOID owner, SharedObject* object, int event), (this, owner, object, event))
     VIRTUAL_METHOD(void, soDestroyed, 2, (SOID owner, SharedObject* object, int event), (this, owner, object, event))
-    VIRTUAL_METHOD_V(void*, getItemInLoadout, 8, (Team team, int slot), (this, team, slot))
+    VIRTUAL_METHOD_V(EconItemView*, getItemInLoadout, 8, (Team team, int slot), (this, team, slot))
     VIRTUAL_METHOD_V(void, removeItem, 15, (std::uint64_t itemID), (this, itemID))
 
     auto getSOC() noexcept
