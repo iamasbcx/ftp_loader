@@ -1602,14 +1602,14 @@ void InventoryChanger::fromJson(const json& j) noexcept
             if (staticData != StaticData::gameItems().end())
                 Inventory::addItem(std::ranges::distance(StaticData::gameItems().begin(), staticData), Inventory::INVALID_DYNAMIC_DATA_IDX, false);
         } else if (type == "StatTrak Swap Tool") {
-            if (!jsonItem.contains("Weapon ID") || !jsonItem["Weapon ID"].is_number_integer())
-                continue;
+        if (!jsonItem.contains("Weapon ID") || !jsonItem["Weapon ID"].is_number_integer())
+            continue;
 
-            const WeaponId weaponID = jsonItem["Weapon ID"];
+        const WeaponId weaponID = jsonItem["Weapon ID"];
 
-            const auto staticData = std::ranges::find_if(StaticData::gameItems(), [weaponID](const auto& gameItem) { return gameItem.isStatTrakSwapTool() && gameItem.weaponID == weaponID; });
-            if (staticData != StaticData::gameItems().end())
-                Inventory::addItem(std::ranges::distance(StaticData::gameItems().begin(), staticData), Inventory::INVALID_DYNAMIC_DATA_IDX, false);
+        const auto staticData = std::ranges::find_if(StaticData::gameItems(), [weaponID](const auto& gameItem) { return gameItem.isStatTrakSwapTool() && gameItem.weaponID == weaponID; });
+        if (staticData != StaticData::gameItems().end())
+            Inventory::addItem(std::ranges::distance(StaticData::gameItems().begin(), staticData), Inventory::INVALID_DYNAMIC_DATA_IDX, false);
         }
         else if (type == "Viewer Pass") {
             if (!jsonItem.contains("Weapon ID") || !jsonItem["Weapon ID"].is_number_integer())
@@ -1620,7 +1620,7 @@ void InventoryChanger::fromJson(const json& j) noexcept
             const auto staticData = std::ranges::find_if(StaticData::gameItems(), [weaponID](const auto& gameItem) { return gameItem.isViewerPass() && gameItem.weaponID == weaponID; });
             if (staticData != StaticData::gameItems().end())
                 Inventory::addItem(std::ranges::distance(StaticData::gameItems().begin(), staticData), Inventory::INVALID_DYNAMIC_DATA_IDX, false);
-        }
+    }
     }
 
     if (!j.contains("Equipment"))
@@ -2008,3 +2008,11 @@ void InventoryChanger::fixKnifeAnimation(Entity* viewModelWeapon, long& sequence
 
     sequence = remapKnifeAnim(viewModelWeapon->itemDefinitionIndex2(), sequence);
 }
+
+/*StaticData::GameItem::GameItem(Type type, int rarity, WeaponId weaponID, std::size_t dataIndex, std::string&& iconPath) noexcept : type{type}, rarity{static_cast<std::uint8_t>(rarity)}, weaponID{weaponID}, dataIndex{dataIndex}, iconPath{std::move(iconPath)} {}
+
+StaticData::PaintKit::PaintKit(int id, std::wstring&& name, float wearRemapMin, float wearRemapMax) noexcept : id{ id }, wearRemapMin{ wearRemapMin }, wearRemapMax{ wearRemapMax }, nameUpperCase{std::move(name)}
+{
+    this->name = interfaces->localize->convertUnicodeToAnsi(nameUpperCase.c_str());
+    nameUpperCase = Helpers::toUpper(nameUpperCase);
+}*/

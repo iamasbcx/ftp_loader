@@ -253,6 +253,7 @@ private:
         _skinsSorted.resize(_gameItems.size());
         std::iota(_skinsSorted.begin(), _skinsSorted.end(), 0);
 
+        std::ranges::sort(_stickersSorted, [this](std::size_t a, std::size_t b) { return _paintKits[_gameItems[a].dataIndex].id < _paintKits[_gameItems[b].dataIndex].id; });
         std::ranges::sort(_skinsSorted, [this](std::size_t a, std::size_t b) {
             const auto& itemA = _gameItems[a];
             const auto& itemB = _gameItems[b];
