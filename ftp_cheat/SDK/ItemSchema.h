@@ -271,7 +271,7 @@ public:
     PAD(WIN32_LINUX(0x80, 0xB0))
     UtlMap<std::uint64_t, AlternateIconData> alternateIcons;
     PAD(WIN32_LINUX(0x48, 0x60))
-    UtlMap<int, StaticData::PaintKit*> paintKits;
+    UtlMap<int, PaintKit*> paintKits;
     UtlMap<int, StickerKit*> stickerKits;
     PAD(WIN32_LINUX(0x11C, 0x1A0))
     UtlMap<int, EconMusicDefinition*> musicKits;
