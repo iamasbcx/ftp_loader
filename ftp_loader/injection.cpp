@@ -29,11 +29,13 @@ bool ftp_injector::init( std::string_view str_proc_name, const std::filesystem::
 	std::string launch_append {};
 
 	// i don't think it's a good idea to automatically open games from the list, but the code is here just in case.
-	//for ( const auto& it : vec_app_ids )
-	//{
-	//	if ( it.second.find( str_proc_name ) != std::string::npos )
-	//		launch_append = string::format( "-applaunch %d", it.first );
-	//}
+	for (const auto& it : vec_app_ids)
+	{
+		if (it.second.find(str_proc_name) != std::string::npos)
+			log_debug("Opening csgo");
+			std::this_thread::sleep_for(5000ms);
+			launch_append = string::format( "-applaunch %d", it.first );
+	}
 
 	log_debug( "Opening steam [ %ls ]", steam_path.c_str() );
 
