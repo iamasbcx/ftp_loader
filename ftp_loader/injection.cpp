@@ -32,7 +32,6 @@ bool ftp_injector::init( std::string_view str_proc_name, const std::filesystem::
 	for (const auto& it : vec_app_ids)
 	{
 		if (it.second.find(str_proc_name) != std::string::npos)
-			log_debug("Opening csgo");
 			std::this_thread::sleep_for(5000ms);
 			launch_append = string::format( "-applaunch %d", it.first );
 	}
@@ -83,6 +82,7 @@ bool ftp_injector::init( std::string_view str_proc_name, const std::filesystem::
 
 bool ftp_injector::map( std::string_view str_proc, std::wstring_view wstr_mod_name, std::vector<std::uint8_t> vec_buffer, blackbone::eLoadFlags flags )
 {
+	log_debug("Opening CSGO :) ");
 	log_debug( "Waiting for process - [ %s ]", str_proc );
 
 	// update process list while process is not opened

@@ -42,7 +42,7 @@ INT WINAPI WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 			return EXIT_FAILURE;
 		}
 
-		log_ok("Done.");
+		log_ok("Done. Window will close automatically.");
 		return EXIT_SUCCESS;
 	}
 	else if (methhead == "2" | methhead == "manualmap" | methhead == "ManualMap" | methhead == "mm")  // this function will inject vac3 bypass on steam and the dll on the target process
@@ -50,7 +50,7 @@ INT WINAPI WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		if (!g_injector->init(str_proc_name, dll_path))
 			return EXIT_FAILURE;
 
-		log_ok("Done.");
+		log_ok("Done. Window will close automatically.");
 		return EXIT_SUCCESS;
 	}
 }

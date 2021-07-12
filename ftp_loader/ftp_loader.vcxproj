@@ -57,8 +57,8 @@
     </LinkIncremental>
     <OutDir>.\out\release\</OutDir>
     <IntDir>.\out\release\obj\</IntDir>
-    <LibraryPath>D:\Libs\BlackBone\lib\Release;$(LibraryPath)</LibraryPath>
-    <IncludePath>D:\Libs\BlackBone\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)Blackbone Static Library\build\Win32\Debug;D:\Libs\BlackBone\lib\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Aubrey\Desktop\coding\ftp_loader\ftp_loader\Blackbone Static Library\src;D:\Libs\BlackBone\src</IncludePath>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg">
     <VcpkgEnabled>false</VcpkgEnabled>
@@ -96,7 +96,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DebugInformationFormat>None</DebugInformationFormat>
       <WholeProgramOptimization>false</WholeProgramOptimization>
