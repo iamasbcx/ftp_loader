@@ -28,6 +28,5 @@ vc redistributable is needed for this code to be executed, newest windows versio
 
 
 # Screenshots
-![Screenshot_4](https://user-images.githubusercontent.com/86177056/122670274-024ed900-d176-11eb-9c46-895e2946d52a.png)
-![Screenshot_2](https://user-images.githubusercontent.com/86177056/122670275-04b13300-d176-11eb-8efc-4ae0c177e1a6.png)
-![Screenshot_3](https://user-images.githubusercontent.com/86177056/122670277-07138d00-d176-11eb-9e68-7149f36a6876.png)
+![Screenshot_2](https://user-images.githubusercontent.com/86177056/125234327-58a2c980-e295-11eb-9c94-eb7442cb9a1c.png)
+![Screenshot_3](https://user-images.githubusercontent.com/86177056/125234334-5b052380-e295-11eb-8d20-11677913b3c7.png)
