@@ -181,8 +181,8 @@ private:
             const std::vector<GameItem>& gameItems;
         };
 
-        assert(!_skinsSorted.empty());
-        return std::equal_range(_skinsSorted.cbegin(), _skinsSorted.cend(), weaponID, Comp{ _gameItems }); // not using std::ranges::equal_range() here because it requires extra operators
+        assert(!_itemsSorted.empty());
+        return std::equal_range(_itemsSorted.cbegin(), _itemsSorted.cend(), weaponID, Comp{ _gameItems }); // not using std::ranges::equal_range() here because it requires extra operators
     }
 
     std::size_t getItemIndex(WeaponId weaponID, int paintKit) noexcept
@@ -250,11 +250,11 @@ private:
 
     void initSortedVectors() noexcept
     {
-        _skinsSorted.resize(_gameItems.size());
-        std::iota(_skinsSorted.begin(), _skinsSorted.end(), 0);
+        _itemsSorted.resize(_gameItems.size());
+        std::iota(_itemsSorted.begin(), _itemsSorted.end(), 0);
 
         std::ranges::sort(_stickersSorted, [this](std::size_t a, std::size_t b) { return _paintKits[_gameItems[a].dataIndex].id < _paintKits[_gameItems[b].dataIndex].id; });
-        std::ranges::sort(_skinsSorted, [this](std::size_t a, std::size_t b) {
+        std::ranges::sort(_itemsSorted, [this](std::size_t a, std::size_t b) {
             const auto& itemA = _gameItems[a];
             const auto& itemB = _gameItems[b];
             if (itemA.weaponID == itemB.weaponID && itemA.hasPaintKit() && itemB.hasPaintKit())
@@ -287,7 +287,7 @@ private:
         _collectibles.shrink_to_fit();
         _cases.shrink_to_fit();
         _caseLoot.shrink_to_fit();
-        _skinsSorted.shrink_to_fit();
+        _itemsSorted.shrink_to_fit();
         _paintKits.shrink_to_fit();
     }
 
@@ -302,7 +302,7 @@ private:
     std::vector<Case> _cases;
     std::vector<std::size_t> _caseLoot;
     std::vector<std::size_t> _stickersSorted;
-    std::vector<std::size_t> _skinsSorted;
+    std::vector<std::size_t> _itemsSorted;
     std::vector<StaticData::PaintKit> _paintKits{ { 0, L"" } };
     static constexpr auto vanillaPaintIndex = 0;
     std::unordered_map<WeaponId, std::string> _weaponNames;

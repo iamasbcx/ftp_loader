@@ -135,6 +135,9 @@
     <ClInclude Include="pch.hpp" />
     <ClInclude Include="utils.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ftp_loader.rc" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -58,4 +58,7 @@
       <Filter>utils\vac3_bypass</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ftp_loader.rc" />
+  </ItemGroup>
 </Project>
