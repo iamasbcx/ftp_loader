@@ -56,7 +56,7 @@ static ImFont* addFontFromVFONT(const std::string& path, float size, const ImWch
 GUI::GUI() noexcept
 {
     //ImGui::StyleColorsDark();
-    ImGui::StyleColorsGold();
+    ImGui::StyleColorsFTP();
     ImGuiStyle& style = ImGui::GetStyle();
 
     //style.ScrollbarSize = 9.0f;
@@ -130,6 +130,7 @@ void GUI::updateColors() const noexcept
     case 1: ImGui::StyleColorsLight(); break;
     case 2: ImGui::StyleColorsClassic(); break;
     case 3: ImGui::StyleColorsGold(); break;
+    case 4: ImGui::StyleColorsFTP(); break;
     }
 }
 
@@ -506,7 +507,7 @@ void GUI::renderStyleWindow(bool contentOnly) noexcept
     ImGui::PushItemWidth(150.0f);
     if (ImGui::Combo("Menu style", &config->style.menuStyle, "Classic\0One window\0"))
         window = { };
-    if (ImGui::Combo("Menu colors", &config->style.menuColors, "Dark\0Light\0FTP\0Classic\0Gold\0Custom\0"))
+    if (ImGui::Combo("Menu colors", &config->style.menuColors, "Dark\0Light\0Classic\0Gold\0FTP\0Custom\0"))
         updateColors();
     ImGui::PopItemWidth();
 

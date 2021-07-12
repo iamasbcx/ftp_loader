@@ -14,7 +14,7 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{bedd9cdf-0a43-468d-8214-816d1d69e405}</ProjectGuid>
-    <RootNamespace>ftploader</RootNamespace>
+    <RootNamespace>cozinhaloader</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>ftp_loader</ProjectName>
   </PropertyGroup>
@@ -23,14 +23,14 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -47,9 +47,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)CHEAT DEBUG</OutDir>
-    <IntDir>$(SolutionDir)CHEAT DEBUG\obj\</IntDir>
-    <IncludePath>C:\Users\Aubrey\Desktop\coding\ftp_loader\ftp_loader\DarkLoadLibrary\include;$(SolutionDir)ftp_loader\Blackbone Static Library\src;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)ftp_loader\Blackbone Static Library\build\Win32\Debug;D:\Libs\blackbone\lib\debug;$(LibraryPath)</LibraryPath>
+    <IntDir>.\out\debug\obj\</IntDir>
+    <IncludePath>$(ProjectDir)BlackBone Static Library\src;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)Blackbone Static Library\build\Win32\Debug;D:\Libs\BlackBone\lib\Debug;$(LibraryPath)</LibraryPath>
     <TargetName>FTP LOADER</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -57,31 +57,32 @@
     </LinkIncremental>
     <OutDir>.\out\release\</OutDir>
     <IntDir>.\out\release\obj\</IntDir>
-    <LibraryPath>C:\Users\Aubrey\Desktop\coding\ftp_loader\ftp_loader\Blackbone Static Library\build\Win32\Debug</LibraryPath>
-    <IncludePath>C:\Users\Aubrey\Desktop\coding\ftp_loader\ftp_loader\Blackbone Static Library\src</IncludePath>
+    <LibraryPath>D:\Libs\BlackBone\lib\Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\Libs\BlackBone\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg">
     <VcpkgEnabled>false</VcpkgEnabled>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;BLACKBONE_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <CompileAs>CompileAsCpp</CompileAs>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <DisableSpecificWarnings>26812</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
-      <AdditionalDependencies>blackbone.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>BlackBone.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -92,7 +93,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;BLACKBONE_STATIC;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -101,6 +102,10 @@
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <CompileAs>CompileAsCpp</CompileAs>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <DisableSpecificWarnings>26812</DisableSpecificWarnings>
+      <OmitFramePointers>true</OmitFramePointers>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -108,20 +113,22 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
-      <AdditionalDependencies>blackbone.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>BlackBone.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ProgramDatabaseFile />
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="injection.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="memory.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="3_bypass_data.hpp" />
+    <ClInclude Include="vac3_data.hpp" />
     <ClInclude Include="injection.hpp" />
     <ClInclude Include="logger.hpp" />
     <ClInclude Include="memory.hpp" />

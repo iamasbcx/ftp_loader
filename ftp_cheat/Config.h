@@ -109,7 +109,7 @@ public:
    
     struct Style {
         int menuStyle{ 0 };
-        int menuColors{ 3 };
+        int menuColors{ 4 };
     } style;
 
     void scheduleFontLoad(const std::string& name) noexcept;

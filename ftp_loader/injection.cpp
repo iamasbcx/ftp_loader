@@ -1,70 +1,109 @@
 #include "pch.hpp"
 #include "injection.hpp"
 
-bool injector::map( std::string process, std::wstring module_name, std::vector<std::uint8_t> binary_bytes )
+const auto failure = []( std::string_view str_err, const std::pair<HANDLE, HANDLE> handles = {} ) -> bool
 {
-	// ~ wait for process to be opened
-	//
-	log_debug( "waiting for [ %s ] to be opened...", process.c_str() );
+	const auto [hProcess, hThread] = handles;
 
-	auto process_list = memory::get_process_list();
-	while ( true )
+	if ( hProcess ) // hProcess
+		CloseHandle( hProcess );
+
+	if ( hThread ) // hThread
+		CloseHandle( hThread );
+
+	log_err( "%s", str_err );
+
+	return false;
+};
+
+bool ftp_injector::init( std::string_view str_proc_name, const std::filesystem::path dll_path )
+{
+	// closing processes
+	close_processes( { str_proc_name, "steam.exe" } );
+
+	const auto steam_path = ext::get_steam_path();
+
+	if ( steam_path.empty() )
+		return failure( "Failed to retrieve steam path" );
+
+	std::string launch_append {};
+
+	// i don't think it's a good idea to automatically open games from the list, but the code is here just in case.
+	//for ( const auto& it : vec_app_ids )
+	//{
+	//	if ( it.second.find( str_proc_name ) != std::string::npos )
+	//		launch_append = string::format( "-applaunch %d", it.first );
+	//}
+
+	log_debug( "Opening steam [ %ls ]", steam_path.c_str() );
+
+	PROCESS_INFORMATION pi;
+	if ( !memory::open_process( steam_path, { L"-console", string::to_unicode( launch_append ) }, pi ) )
+		return failure( "Failed to open steam", { pi.hProcess, pi.hThread } );
+
+	CloseHandle( pi.hProcess );
+	CloseHandle( pi.hThread );
+
+	log_debug( "Writing vac bypass to buffer..." );
+
+	const auto vac_buf_start = std::chrono::high_resolution_clock::now();
+
+	std::vector<std::uint8_t> vac_buffer( std::begin( vac3_data ), std::end( vac3_data ) );
+
+	const auto vac_buf_end = std::chrono::high_resolution_clock::now();
+
+	std::chrono::duration<double, std::milli> vac_buf_elapsed( vac_buf_end - vac_buf_start );
+	log_debug( "Done in %.3fms.", vac_buf_elapsed );
+
+	// inject vac bypass to steam
+	if ( !map( "steam.exe", L"tier0_s.dll", vac_buffer ) )
+		return false;
+
+	log_debug( "Writing dll to buffer..." );
+
+	const auto dll_buf_start = std::chrono::high_resolution_clock::now();
+
+	std::vector<std::uint8_t> dll_buffer;
+	if ( !ext::read_file_to_memory( std::filesystem::absolute( dll_path ), &dll_buffer ) )
+		return failure( "Failed to write DLL to memory!" );
+
+	const auto dll_buf_end = std::chrono::high_resolution_clock::now();
+
+	std::chrono::duration<double, std::milli> dll_buf_elapsed( dll_buf_end - dll_buf_start );
+	log_debug( "Done in %.3fms.", dll_buf_elapsed );
+
+	// inject dll to process
+	if ( !map( str_proc_name, L"serverbrowser.dll", dll_buffer ) )
+		return false;
+
+	return true;
+}
+
+bool ftp_injector::map( std::string_view str_proc, std::wstring_view wstr_mod_name, std::vector<std::uint8_t> vec_buffer, blackbone::eLoadFlags flags )
+{
+	log_debug( "Waiting for process - [ %s ]", str_proc );
+
+	// update process list while process is not opened
+	auto proc_list = memory::get_process_list();
+	do
 	{
-		process_list = memory::get_process_list();
-		if ( memory::is_process_open( process_list, process ) )
-			break;
-
+		proc_list = memory::get_process_list();
 		std::this_thread::sleep_for( 500ms );
 	}
+	while ( !memory::is_process_open( proc_list, str_proc ) );
 
-	// ~ bypassing injection block by csgo (-allow_third_party_software) the easiest way
-	//
-	if (process.find("csgo") != std::string::npos)
-	{
-		const auto bypass_nt_open_file = [](uint32_t pid)
-		{
-			const auto h_process = OpenProcess(PROCESS_ALL_ACCESS, false, pid);
-			const auto nt_dll = LoadLibrary("ntdll");
+	blackbone::Process bb_proc;
+	bb_proc.Attach( memory::get_process_id_by_name( proc_list, str_proc ), PROCESS_ALL_ACCESS ); // PROCESS_ALL_ACCESS not needed perhaps? placed it back in
 
-			if (!nt_dll)
-				return false;
+	// wait for a process module so we can continue with injection
+	log_debug( "Waiting for - [ %ls ] in %s", wstr_mod_name.data(), str_proc );
 
-			LPVOID nt_open_file = GetProcAddress(nt_dll, "NtOpenFile");
-
-			if (!nt_open_file)
-				return false;
-
-			char original_bytes[5];
-
-			// ~ copy 5 bytes to NtOpenFile procedure address
-			std::memcpy(original_bytes, nt_open_file, 5);
-
-			// ~ write it to memory
-			WriteProcessMemory(h_process, nt_open_file, original_bytes, 5, nullptr);
-
-			CloseHandle(h_process);
-
-			return true;
-		};
-
-		if (!bypass_nt_open_file(memory::get_process_id_by_name(process_list, process)))
-			return false;
-	}
-
-	blackbone::Process bb_process;
-
-	bb_process.Attach( memory::get_process_id_by_name( process_list, process ), PROCESS_ALL_ACCESS );
-
-	log_debug( "injecting VAC3 bypass into [ %s ] waiting for [ %ls ]...", process.c_str(), module_name.c_str() );
-
-	// ~ wait for a process module so we can continue with injection
-	//
 	auto mod_ready = false;
 	while ( !mod_ready )
 	{
-		for ( const auto& mod : bb_process.modules().GetAllModules() )
+		for ( const auto& mod : bb_proc.modules().GetAllModules() )
 		{
-			if ( mod.first.first == module_name )
+			if ( mod.first.first == wstr_mod_name )
 			{
 				mod_ready = true;
 				break;
@@ -74,145 +113,76 @@ bool injector::map( std::string process, std::wstring module_name, std::vector<s
 		if ( mod_ready )
 			break;
 
-		std::this_thread::sleep_for( 500ms );
+		std::this_thread::sleep_for( 500ms ); // 1s? fixes 0xC34... (i think i was calling the patch too early now)
 	}
 
-	// ~ resolve PE imports
-	//
+	// bypassing injection block by csgo (-allow_third_party_software)
+	if ( str_proc.find( "csgo" ) != std::string::npos )
+	{
+		const auto patch_nt_open_file = [&]()
+		{
+			const auto ntdll = LoadLibrary( L"ntdll" );
+
+			if ( !ntdll )
+				return failure( "Failed to load ntdll?" );
+
+			void* ntopenfile_ptr = GetProcAddress( ntdll, "NtOpenFile" );
+
+			if ( !ntopenfile_ptr )
+				return failure( "Failed to get NtOpenFile proc address?" );
+
+			uint8_t restore[5];
+			std::memcpy( restore, ntopenfile_ptr, sizeof( restore ) );
+
+			const auto result = bb_proc.memory().Write( (uintptr_t) ntopenfile_ptr, restore );
+
+			if ( !NT_SUCCESS( result ) )
+				return failure( "Failed to write patch memory" );
+
+			return true;
+		};
+
+		if ( !patch_nt_open_file() )
+			return false;
+	}
+
+	// resolve PE imports
 	const auto mod_callback = []( blackbone::CallbackType type, void*, blackbone::Process&, const blackbone::ModuleData& modInfo )
 	{
-		std::string user32 = "user32.dll";
 		if ( type == blackbone::PreCallback )
 		{
-			if ( modInfo.name == std::wstring( user32.begin(), user32.end() ) )
+			if ( modInfo.name == L"user32.dll" )
 				return blackbone::LoadData( blackbone::MT_Native, blackbone::Ldr_Ignore );
 		}
+
 		return blackbone::LoadData( blackbone::MT_Default, blackbone::Ldr_Ignore );
-
-		std::vector<std::uint8_t> FTP{};
-
 	};
 
+	// mapping dll to the process
+	const auto call_result = bb_proc.mmap().MapImage( vec_buffer.size(), vec_buffer.data(), false, flags, mod_callback );
 
-	
-	// ~ mapping dll bytes to the process
-	//
-	if ( !bb_process.mmap().MapImage( binary_bytes.size(), binary_bytes.data(), false, blackbone::WipeHeader | blackbone::NoSxS, mod_callback, nullptr, nullptr ).success() )
+	if ( !call_result.success() )
 	{
-		log_err( "failed to inject into [ %s ]!", process.c_str() );
-		bb_process.Detach();
+		// https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/596a1078-e883-4972-9bbc-49e60bebca55
+		log_err( "Failed to inject into - [ %s ] nt status - (0x%.8X)", str_proc, call_result.status );
+		bb_proc.Detach();
 
 		return false;
 	}
-	
-	// ~ free memory and detach from process
-	//
-	bb_process.Detach();
 
-	log_ok( "VAC3 bypass module injected to [ %s ] successfully!", process.c_str() );
+	// free memory and detach from process
+	bb_proc.Detach();
+	log_ok( "Injected into - [ %s ].", str_proc );
+
 	return true;
 }
 
-
-bool injector::call( std::string process_name )
-{
-	if ( !std::filesystem::exists( utils::vars::FTP_filename ) )
-	{
-		log_err( "[ %s ] not found!", utils::vars::FTP_filename.c_str() );
-		return false;
-	}
-
-	// ~ closing processes
-	//
-	close_processes( { process_name, "steam.exe" } );
-
-	const auto steam_path = utils::other::get_steam_path();
-	if ( steam_path.empty() )
-	{
-		log_err( "failed to retrieve steam path!" );
-		return false;
-	}
-
-	log_debug( "opening steam [ %s ]...", steam_path.c_str() );
-
-	PROCESS_INFORMATION pi{};
-	if ( !memory::open_process( steam_path, { "-console" }, pi ) )
-	{
-		log_err( "failed to open steam!" );
-
-		CloseHandle( pi.hProcess );
-		CloseHandle( pi.hThread );
-
-		return false;
-	}
-
-	CloseHandle( pi.hProcess );
-	CloseHandle( pi.hThread );
-
-	std::vector<std::uint8_t> FTP{};
-
-	// ~ inject vac bypass to steam
-	//
-	if (!map("steam.exe", L"tier0_s.dll", bypass3_data))
-	{
-		log_err("steam memory mapping failure!");
-		return false;
-	}
-
-	
-	// ~ reading file and writing it to a variable
-	//
-	if ( !utils::other::read_file_to_memory( std::filesystem::absolute( utils::vars::FTP_filename ).string(), &FTP ) )
-	{
-		log_err( "failed to write dll to memory!" );
-		return false;
-	}
-
-	
-	// ~ inject FTP to process
-	//
-	if ( !map( process_name, L"serverbrowser.dll", FTP ) )
-	{
-		log_err( "FTP memory mapping failure! Try using LoadLibrary instead" );
-		return false;
-	}
-	
-
-
-	log_ok( "all done!" );
-	return true;
-}
-
-void injector::close_processes( std::vector<std::string> processes )
-{
-	auto process_list = memory::get_process_list();
-	for ( const auto& process : processes )
-	{
-		while ( true )
-		{
-			memory::kill_process( process_list, process );
-
-			process_list = memory::get_process_list();
-			if ( !memory::is_process_open( process_list, process ) )
-				break;
-
-			std::this_thread::sleep_for( 500ms );
-		}
-	}
-}
-
-void myPause() {
-	log_err("Open CSGO FIRST, and then press any key to continue");
-	getchar();
-}
-//DWORD pID = GetProcessId("csgo.exe");
-
-bool LoadLibraryInject(DWORD ProcessId, const char* Dll)
+bool LoadLibraryInject(DWORD ProcessId, const wchar_t* Dll)
 {
 	if (ProcessId == NULL)
 		return false;
 
-	char CustomDLL[MAX_PATH];
+	wchar_t CustomDLL[MAX_PATH];
 	GetFullPathName(Dll, MAX_PATH, CustomDLL, 0);
 
 	HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, ProcessId);
@@ -229,14 +199,14 @@ bool LoadLibraryInject(DWORD ProcessId, const char* Dll)
 	return TRUE;
 }
 
-bool injector::callLoadLib(std::string process_name, std::wstring mod_name)
+bool ftp_injector::callLoadLib(std::string str_proc_name, std::wstring mod_name)
 {
 
 	// ~ closing processes
 	//
-	close_processes({ process_name, "steam.exe" });
+	close_processes({ str_proc_name, "steam.exe" });
 
-	const auto steam_path = utils::other::get_steam_path();
+	const auto steam_path = ext::get_steam_path();
 	if (steam_path.empty())
 	{
 		log_err("failed to retrieve steam path!");
@@ -245,55 +215,59 @@ bool injector::callLoadLib(std::string process_name, std::wstring mod_name)
 
 	log_debug("opening steam [ %s ]...", steam_path.c_str());
 
-	PROCESS_INFORMATION pi{};
-	if (!memory::open_process(steam_path, { "-console" }, pi))
-	{
-		log_err("failed to open steam!");
+	std::string launch_append{};
 
-		CloseHandle(pi.hProcess);
-		CloseHandle(pi.hThread);
+	PROCESS_INFORMATION pi;
+	if (!memory::open_process(steam_path, { L"-console", string::to_unicode(launch_append) }, pi))
+		return failure("Failed to open steam", { pi.hProcess, pi.hThread });
 
-		return false;
-	}
+	CloseHandle(pi.hProcess);
+	CloseHandle(pi.hThread);
 
-	//CloseHandle(pi.hProcess);
-	//CloseHandle(pi.hThread);
+
+	const auto vac_buf_start = std::chrono::high_resolution_clock::now();
+
+	std::vector<std::uint8_t> vac_buffer(std::begin(vac3_data), std::end(vac3_data));
+
+	const auto vac_buf_end = std::chrono::high_resolution_clock::now();
+
+	std::chrono::duration<double, std::milli> vac_buf_elapsed(vac_buf_end - vac_buf_start);
 
 	// ~ inject vac bypass to steam
 	//
-	if (!map("steam.exe", L"tier0_s.dll", bypass3_data))
+	if (!map("steam.exe", L"tier0_s.dll", vac_buffer))
 	{
 		log_err("steam memory mapping failure!");
 		return false;
 	}
 
 
-	log_debug("waiting for [ %s ] to be opened...", process_name.c_str());
+	log_debug("waiting for [ %s ] to be opened...", str_proc_name.c_str());
 
 	auto process_list = memory::get_process_list();
 	while (true)
 	{
 		process_list = memory::get_process_list();
-		if (memory::is_process_open(process_list, process_name))
+		if (memory::is_process_open(process_list, str_proc_name))
 			break;
 
 		std::this_thread::sleep_for(500ms);
 	}
 
-	if (memory::is_process_open(process_list, process_name))
+	if (memory::is_process_open(process_list, str_proc_name))
 	{
 
 	}
-	
-		
+
+
 	//log_debug("waiting for serverbrowser.dll... ");
 
 	blackbone::Process bb_proc;
 	auto proc_list = memory::get_process_list();
-	bb_proc.Attach(memory::get_process_id_by_name(proc_list, process_name), PROCESS_ALL_ACCESS);
+	bb_proc.Attach(memory::get_process_id_by_name(proc_list, str_proc_name), PROCESS_ALL_ACCESS);
 
-	log_debug("Waiting for - [ %ls ] in %s...", mod_name.c_str(), process_name.c_str());
-	
+	log_debug("Waiting for - [ %ls ] in %s...", mod_name.c_str(), str_proc_name.c_str());
+
 	auto serverBrowserOpen = false;
 	auto mod_ready = false;
 	while (!mod_ready)
@@ -314,26 +288,26 @@ bool injector::callLoadLib(std::string process_name, std::wstring mod_name)
 		std::this_thread::sleep_for(500ms);
 	}
 
-	std::this_thread::sleep_for(5000ms); //TODO: implement a wait for serverbrowser / cant find reliable method to do so ~ this will do for now :P
+	std::this_thread::sleep_for(5000ms);
 	if (serverBrowserOpen)
 	{
 
 
 
-		if (!std::filesystem::exists(utils::vars::FTP_filename))
+		if (!std::filesystem::exists(ext::vars::FTP_filename))
 		{
-			log_err("[ %s ] not found!", utils::vars::FTP_filename.c_str());
+			log_err("[ %s ] not found!", ext::vars::FTP_filename.c_str());
 			return false;
 		}
 		else
 		{
 			// ~ bypassing injection block by csgo (-allow_third_party_software) the easiest way
-			if (process_name.find("csgo") != std::string::npos)
+			if (str_proc_name.find("csgo") != std::string::npos)
 			{
 				const auto bypass_nt_open_file = [](uint32_t pid)
 				{
 					const auto h_process = OpenProcess(PROCESS_ALL_ACCESS, false, pid);
-					const auto nt_dll = LoadLibrary("ntdll");
+					const auto nt_dll = LoadLibrary(L"ntdll");
 
 					if (!nt_dll)
 						return false;
@@ -356,21 +330,21 @@ bool injector::callLoadLib(std::string process_name, std::wstring mod_name)
 					return true;
 				};
 
-				if (!bypass_nt_open_file(memory::get_process_id_by_name(process_list, process_name)))
+				if (!bypass_nt_open_file(memory::get_process_id_by_name(process_list, str_proc_name)))
 					return false;
 
-				log_debug("copying original bytes from [ %s ]", process_name.c_str());
+				log_debug("copying original bytes from [ %s ]", str_proc_name.c_str());
 				std::this_thread::sleep_for(1000ms);
-				log_debug("replacing vac bytes with original in [ %s ]", process_name.c_str());
-				bypass_nt_open_file(memory::get_process_id_by_name(process_list, process_name));
+				log_debug("replacing vac bytes with original in [ %s ]", str_proc_name.c_str());
+				bypass_nt_open_file(memory::get_process_id_by_name(process_list, str_proc_name));
 				std::this_thread::sleep_for(1000ms);
 				log_ok("success!");
 				std::this_thread::sleep_for(2000ms);
 			}
 
-			log_debug("injecting FTP into [ %s ]", process_name.c_str());
+			log_debug("injecting FTP into [ %s ]", str_proc_name.c_str());
 			std::this_thread::sleep_for(3000ms);
-			LoadLibraryInject(memory::get_process_id_by_name(process_list, process_name), "FTP.dll");
+			LoadLibraryInject(memory::get_process_id_by_name(process_list, str_proc_name), L"FTP.dll");
 			log_ok("success!");
 		}
 
@@ -378,4 +352,21 @@ bool injector::callLoadLib(std::string process_name, std::wstring mod_name)
 		return true;
 	}
 }
+
+void ftp_injector::close_processes( std::vector<std::string_view> vec_processes )
+{
+	auto proc_list = memory::get_process_list();
+	for ( const auto& proc : vec_processes )
+	{
+		do
+		{
+			memory::kill_process( proc_list, proc );
+
+			proc_list = memory::get_process_list();
+			std::this_thread::sleep_for( 25ms );
+		}
+		while ( memory::is_process_open( proc_list, proc ) );
+	}
+}
+
 

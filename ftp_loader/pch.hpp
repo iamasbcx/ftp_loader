@@ -5,16 +5,14 @@
 #include <fstream>
 #include <filesystem>
 
-#include <windows.h>
-#include <tlhelp32.h>
+#include <Windows.h>
 
-#include <BlackBone/Process/Process.h>
-
-using namespace std::chrono_literals;
-
-// header files
+// defs
 #include "logger.hpp"
 #include "utils.hpp"
 #include "memory.hpp"
-#include "3_bypass_data.hpp"
+#include "vac3_data.hpp"
 #include "injection.hpp"
+
+// other
+using namespace std::chrono_literals;

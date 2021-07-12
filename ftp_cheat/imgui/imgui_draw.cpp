@@ -177,103 +177,156 @@ namespace IMGUI_STB_NAMESPACE
 using namespace IMGUI_STB_NAMESPACE;
 #endif
 
-inline static int BackGroundColor = 0x25213100;
-inline static int TextColor = 0xF4F1DE00;
-inline static int MainColor = 0xDA115E00;
-inline static int MainAccentColor = 0x79235900;
-inline static int HighlightColor = 0xC7EF0000;
-inline static int Black = 0x00000000;
-inline static int White = 0xFFFFFF00;
+class EditorColorScheme {
+    inline static int BackGroundColor = 0x25213100; //inline static int BackGroundColor = 0x25213100;
+    inline static int TextColor = 0xF4F1DE00;
+    inline static int MainColor = 0xDA115E00;
+    inline static int MainAccentColor = 0x79235900; //inline static int MainAccentColor = 0x79235900;
+    inline static int HighlightColor = 0xC7EF0000;
+    inline static int Black = 0x00000000;
+    inline static int White = 0xFFFFFF00;
 
-inline static int AlphaTransparent = 0x00;
-inline static int Alpha20 = 0x33;
-inline static int Alpha40 = 0x66;
-inline static int Alpha50 = 0x80;
-inline static int Alpha60 = 0x99;
-inline static int Alpha80 = 0xCC;
-inline static int Alpha90 = 0xE6;
-inline static int AlphaFull = 0xFF;
+    inline static int AlphaTransparent = 0x00;
+    inline static int Alpha20 = 0x33;
+    inline static int Alpha40 = 0x66;
+    inline static int Alpha50 = 0x80;
+    inline static int Alpha60 = 0x99;
+    inline static int Alpha80 = 0xCC;
+    inline static int Alpha90 = 0xE6;
+    inline static int AlphaFull = 0xFF;
 
-extern float GetR(int colorCode) { return (float)((colorCode & 0xFF000000) >> 24) / (float)(0xFF); }
-static float GetG(int colorCode) { return (float)((colorCode & 0x00FF0000) >> 16) / (float)(0xFF); }
-static float GetB(int colorCode) { return (float)((colorCode & 0x0000FF00) >> 8) / (float)(0xFF); }
-static float GetA(int alphaCode) { return ((float)alphaCode / (float)0xFF); }
+    static float GetR(int colorCode) { return (float)((colorCode & 0xFF000000) >> 24) / (float)(0xFF); }
+    static float GetG(int colorCode) { return (float)((colorCode & 0x00FF0000) >> 16) / (float)(0xFF); }
+    static float GetB(int colorCode) { return (float)((colorCode & 0x0000FF00) >> 8) / (float)(0xFF); }
+    static float GetA(int alphaCode) { return ((float)alphaCode / (float)0xFF); }
 
-static ImVec4 GetColor(int c, int a = Alpha80) { return ImVec4(GetR(c), GetG(c), GetB(c), GetA(a)); }
-static ImVec4 Darken(ImVec4 c, float p) { return ImVec4(fmax(0.f, c.x - 1.0f * p), fmax(0.f, c.y - 1.0f * p), fmax(0.f, c.z - 1.0f * p), c.w); }
-static ImVec4 Lighten(ImVec4 c, float p) { return ImVec4(fmax(0.f, c.x + 1.0f * p), fmax(0.f, c.y + 1.0f * p), fmax(0.f, c.z + 1.0f * p), c.w); }
+    static ImVec4 GetColor(int c, int a = Alpha80) { return ImVec4(GetR(c), GetG(c), GetB(c), GetA(a)); }
+    static ImVec4 Darken(ImVec4 c, float p) { return ImVec4(fmax(0.f, c.x - 1.0f * p), fmax(0.f, c.y - 1.0f * p), fmax(0.f, c.z - 1.0f * p), c.w); }
+    static ImVec4 Lighten(ImVec4 c, float p) { return ImVec4(fmax(0.f, c.x + 1.0f * p), fmax(0.f, c.y + 1.0f * p), fmax(0.f, c.z + 1.0f * p), c.w); }
 
-static ImVec4 Disabled(ImVec4 c) { return Darken(c, 0.6f); }
-static ImVec4 Hovered(ImVec4 c) { return Lighten(c, 0.2f); }
-static ImVec4 Active(ImVec4 c) { return Lighten(ImVec4(c.x, c.y, c.z, 1.0f), 0.1f); }
-static ImVec4 Collapsed(ImVec4 c) { return Darken(c, 0.2f); }
+    static ImVec4 Disabled(ImVec4 c) { return Darken(c, 0.6f); }
+    static ImVec4 Hovered(ImVec4 c) { return Lighten(c, 0.2f); }
+    static ImVec4 Active(ImVec4 c) { return Lighten(ImVec4(c.x, c.y, c.z, 1.0f), 0.1f); }
+    static ImVec4 Collapsed(ImVec4 c) { return Darken(c, 0.2f); }
+
+public:
+
+    static void SetColors(int backGroundColor, int textColor, int mainColor, int mainAccentColor, int highlightColor)
+    {
+        BackGroundColor = backGroundColor;
+        TextColor = textColor;
+        MainColor = mainColor;
+        MainAccentColor = mainAccentColor;
+        HighlightColor = highlightColor;
+    }
+
+    static void StyleColorsFTP()
+    {
+        ImGuiStyle* style = &ImGui::GetStyle();
+        ImVec4* colors = style->Colors;
+
+        colors[ImGuiCol_Text] = GetColor(TextColor);
+        colors[ImGuiCol_TextDisabled] = Disabled(colors[ImGuiCol_Text]);
+        colors[ImGuiCol_WindowBg] = GetColor(BackGroundColor);
+        colors[ImGuiCol_Tab] = GetColor(MainColor, Alpha60);
+        colors[ImGuiCol_TabHovered] = Hovered(colors[ImGuiCol_Tab]);
+        colors[ImGuiCol_TabActive] = Active(colors[ImGuiCol_Tab]);
+        colors[ImGuiCol_PopupBg] = GetColor(BackGroundColor, Alpha90);
+        colors[ImGuiCol_Border] = Lighten(GetColor(BackGroundColor), 0.4f);
+        colors[ImGuiCol_BorderShadow] = GetColor(Black);
+        colors[ImGuiCol_FrameBg] = GetColor(MainColor, Alpha40);
+        colors[ImGuiCol_FrameBgHovered] = Hovered(colors[MainColor]);
+        colors[ImGuiCol_FrameBgActive] = Active(colors[ImGuiCol_FrameBg]);
+        colors[ImGuiCol_TitleBg] = GetColor(MainColor, Alpha80);
+        colors[ImGuiCol_TitleBgActive] = Active(colors[ImGuiCol_TitleBg]);
+        colors[ImGuiCol_TitleBgCollapsed] = Collapsed(colors[ImGuiCol_TitleBg]);
+        colors[ImGuiCol_MenuBarBg] = Darken(GetColor(BackGroundColor), 0.2f);
+        colors[ImGuiCol_ScrollbarBg] = Lighten(GetColor(BackGroundColor, Alpha50), 0.4f);
+        colors[ImGuiCol_ScrollbarGrab] = Lighten(GetColor(BackGroundColor), 0.3f);
+        colors[ImGuiCol_ScrollbarGrabHovered] = Hovered(colors[ImGuiCol_ScrollbarGrab]);
+        colors[ImGuiCol_ScrollbarGrabActive] = Active(colors[ImGuiCol_ScrollbarGrab]);
+        colors[ImGuiCol_CheckMark] = GetColor(HighlightColor);
+        colors[ImGuiCol_SliderGrab] = GetColor(HighlightColor);
+        colors[ImGuiCol_SliderGrabActive] = Active(colors[ImGuiCol_SliderGrab]);
+        colors[ImGuiCol_Button] = GetColor(MainColor, Alpha80);
+        colors[ImGuiCol_ButtonHovered] = Hovered(colors[ImGuiCol_Button]);
+        colors[ImGuiCol_ButtonActive] = Active(colors[ImGuiCol_Button]);
+        colors[ImGuiCol_Header] = GetColor(MainColor, Alpha80);
+        colors[ImGuiCol_HeaderHovered] = Hovered(colors[ImGuiCol_Header]);
+        colors[ImGuiCol_HeaderActive] = Active(colors[ImGuiCol_Header]);
+        colors[ImGuiCol_Separator] = colors[ImGuiCol_Border];
+        colors[ImGuiCol_SeparatorHovered] = Hovered(colors[ImGuiCol_Separator]);
+        colors[ImGuiCol_SeparatorActive] = Active(colors[ImGuiCol_Separator]);
+        colors[ImGuiCol_ResizeGrip] = GetColor(MainColor, Alpha20);
+        colors[ImGuiCol_ResizeGripHovered] = Hovered(colors[ImGuiCol_ResizeGrip]);
+        colors[ImGuiCol_ResizeGripActive] = Active(colors[ImGuiCol_ResizeGrip]);
+        colors[ImGuiCol_TabUnfocused] = colors[ImGuiCol_Tab];
+        colors[ImGuiCol_TabUnfocusedActive] = colors[ImGuiCol_TabActive];
+        colors[ImGuiCol_PlotLines] = GetColor(HighlightColor);
+        colors[ImGuiCol_PlotLinesHovered] = Hovered(colors[ImGuiCol_PlotLines]);
+        colors[ImGuiCol_PlotHistogram] = GetColor(HighlightColor);
+        colors[ImGuiCol_PlotHistogramHovered] = Hovered(colors[ImGuiCol_PlotHistogram]);
+        colors[ImGuiCol_TextSelectedBg] = GetColor(HighlightColor, Alpha40);
+
+    }
+};
+
+EditorColorScheme customStyle;
+
+void ImGui::StyleColorsFTP(ImGuiStyle* dst) {
+    ImGuiStyle* style = dst ? dst : &ImGui::GetStyle();
+    ImVec4* colors = style->Colors;
+
+    colors[ImGuiCol_Text] = ImVec4(0.92f, 0.92f, 0.92f, 1.00f);//
+    colors[ImGuiCol_TextDisabled] = ImVec4(0.44f, 0.44f, 0.44f, 1.00f);//
+    colors[ImGuiCol_WindowBg] = ImVec4(0.10282537f, 0.0f, 0.111111104f, 1.0f);//
+    colors[ImGuiCol_Tab] = ImVec4(0.7195767f, 0.1446768f, 0.381937f, 1.0f);//
+    colors[ImGuiCol_TabHovered] = ImVec4(1.0f,0.0f, 0.41269827f, 1.0f);//
+    colors[ImGuiCol_TabActive] = ImVec4(0.7665905f, 0.074074075f, 0.7777778f,1.0f);
+    colors[ImGuiCol_PopupBg] = ImVec4(0.07450981f, 0.0f, 0.10980392f, 0.9411765f);//
+    colors[ImGuiCol_Border] = ImVec4(0.51f, 0.15000005f, 0.45857146f, 1.0f); //
+    colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f); //
+    colors[ImGuiCol_FrameBg] = ImVec4(0.11f, 0.11f, 0.11f, 1.00f); //
+    colors[ImGuiCol_FrameBgHovered] = ImVec4(0.5757017f, 0.13286301f, 0.5978836f, 1.0f);//
+    colors[ImGuiCol_FrameBgActive] = ImVec4(0.78f,  0.20999996f, 0.445238f, 1.0f); //
+    colors[ImGuiCol_TitleBg] = ImVec4(0.51f, 0.15000005f, 0.45857146f, 1.0f);//
+    colors[ImGuiCol_TitleBgActive] = ImVec4(1.0f, 0.0f, 0.41269827f, 1.0f);
+    colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.00f, 0.00f, 0.00f, 0.51f);//
+    colors[ImGuiCol_MenuBarBg] = ImVec4(0.11f, 0.11f, 0.11f, 1.00f);//
+    colors[ImGuiCol_ScrollbarBg] = ImVec4(0.06f, 0.06f, 0.06f, 0.53f);//
+    colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.21f, 0.21f, 0.21f, 1.00f);//
+    colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.47f, 0.47f, 0.47f, 1.00f);//
+    colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.81f, 0.83f, 0.81f, 1.00f);//
+    colors[ImGuiCol_CheckMark] = ImVec4(0.78f, 0.20999996, 0.46333346f, 1.0f);//
+    colors[ImGuiCol_SliderGrab] = ImVec4(0.30791005f, 0.7619048f, 0.24187452f, 1.0f);
+    colors[ImGuiCol_SliderGrabActive] = ImVec4(0.39077848f, 1.0f, 0.015873015f, 1.0f);
+    colors[ImGuiCol_Button] = ImVec4(0.51f, 0.15000005f, 0.45857146f, 1.0f);//
+    colors[ImGuiCol_ButtonHovered] = ImVec4(0.91f, 0.13f, 0.6252384f, 1.00f); //
+    colors[ImGuiCol_ButtonActive] = ImVec4(1.0f, 0.0f, 0.41269827f, 1.00f);
+    colors[ImGuiCol_Header] = ImVec4(0.51f, 0.15000005f, 0.45857146f, 1.0f);
+    colors[ImGuiCol_HeaderHovered] = ImVec4(0.91f, 0.13f, 0.52619046f, 1.0f);
+    colors[ImGuiCol_HeaderActive] = ImVec4(1.0f, 0.0f, 0.41269827f, 1.0f);
+    colors[ImGuiCol_Separator] = ImVec4(0.21f, 0.21f, 0.21f, 1.00f);//
+    colors[ImGuiCol_SeparatorHovered] = ImVec4(0.91f, 0.13f, 0.40238103f, 1.0f);
+    colors[ImGuiCol_SeparatorActive] = ImVec4(0.78039217f, 0.21176471f, 0.45882353f, 1.0f);
+    colors[ImGuiCol_ResizeGrip] = ImVec4(0.21f, 0.21f, 0.21f, 1.00f); //
+    colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.91f, 0.13f, 0.40238103f, 1.0f);
+    colors[ImGuiCol_ResizeGripActive] = ImVec4(0.6442856f, 0.20999996f, 0.78f, 1.0f);
+    colors[ImGuiCol_PlotLines] = ImVec4(0.61f, 0.61f, 0.61f, 1.00f); //
+    colors[ImGuiCol_PlotLinesHovered] = ImVec4(0.84656084f, 0.5374989f, 0.8122209f, 1.0f);
+    colors[ImGuiCol_PlotHistogram] = ImVec4(0.9f, 0.0f, 0.45714283f, 1.0f);
+    colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.0f, 0.0f, 0.38095236f, 1.0f);
+    colors[ImGuiCol_TextSelectedBg] = ImVec4(0.26f, 0.59f, 0.98f, 0.35f);
+    colors[ImGuiCol_DragDropTarget] = ImVec4(0.38095236f, 1.0f, 9.0f, 0.9f);//
+    colors[ImGuiCol_TabUnfocused] = ImVec4(0.2832f, 0.2832f, 0.56880003f, 0.8212f);//
+    colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.3504f, 0.3504f, 0.6516f, 0.8372f);////
+}
 
 //-----------------------------------------------------------------------------
 // [SECTION] Style functions
 //-----------------------------------------------------------------------------
 
-static void SetColors(int backGroundColor, int textColor, int mainColor, int mainAccentColor, int highlightColor)
-{
-    BackGroundColor = backGroundColor;
-    TextColor = textColor;
-    MainColor = mainColor;
-    MainAccentColor = mainAccentColor;
-    HighlightColor = highlightColor;
-}
 
-void ImGui::StyleColorsFTP(ImGuiStyle* dst)
-{
-    ImVec4* colors = ImGui::GetStyle().Colors;
-
-    colors[ImGuiCol_Text] = GetColor(TextColor);
-    colors[ImGuiCol_TextDisabled] = Disabled(colors[ImGuiCol_Text]);
-    colors[ImGuiCol_WindowBg] = GetColor(BackGroundColor);
-    colors[ImGuiCol_ChildBg] = GetColor(Black, Alpha20);
-    colors[ImGuiCol_PopupBg] = GetColor(BackGroundColor, Alpha90);
-    colors[ImGuiCol_Border] = Lighten(GetColor(BackGroundColor), 0.4f);
-    colors[ImGuiCol_BorderShadow] = GetColor(Black);
-    colors[ImGuiCol_FrameBg] = GetColor(MainColor, Alpha40);
-    colors[ImGuiCol_FrameBgHovered] = Hovered(colors[MainAccentColor]);
-    colors[ImGuiCol_FrameBgActive] = Active(colors[ImGuiCol_FrameBg]);
-    colors[ImGuiCol_TitleBg] = GetColor(BackGroundColor, Alpha80);
-    colors[ImGuiCol_TitleBgActive] = Active(colors[ImGuiCol_TitleBg]);
-    colors[ImGuiCol_TitleBgCollapsed] = Collapsed(colors[ImGuiCol_TitleBg]);
-    colors[ImGuiCol_MenuBarBg] = Darken(GetColor(BackGroundColor), 0.2f);
-    colors[ImGuiCol_ScrollbarBg] = Lighten(GetColor(BackGroundColor, Alpha50), 0.4f);
-    colors[ImGuiCol_ScrollbarGrab] = Lighten(GetColor(BackGroundColor), 0.3f);
-    colors[ImGuiCol_ScrollbarGrabHovered] = Hovered(colors[ImGuiCol_ScrollbarGrab]);
-    colors[ImGuiCol_ScrollbarGrabActive] = Active(colors[ImGuiCol_ScrollbarGrab]);
-    colors[ImGuiCol_CheckMark] = GetColor(HighlightColor);
-    colors[ImGuiCol_SliderGrab] = GetColor(HighlightColor);
-    colors[ImGuiCol_SliderGrabActive] = Active(colors[ImGuiCol_SliderGrab]);
-    colors[ImGuiCol_Button] = GetColor(MainColor, Alpha80);
-    colors[ImGuiCol_ButtonHovered] = Hovered(colors[ImGuiCol_Button]);
-    colors[ImGuiCol_ButtonActive] = Active(colors[ImGuiCol_Button]);
-    colors[ImGuiCol_Header] = GetColor(MainColor, Alpha80);
-    colors[ImGuiCol_HeaderHovered] = Hovered(colors[ImGuiCol_Header]);
-    colors[ImGuiCol_HeaderActive] = Active(colors[ImGuiCol_Header]);
-    colors[ImGuiCol_Separator] = colors[ImGuiCol_Border];
-    colors[ImGuiCol_SeparatorHovered] = Hovered(colors[ImGuiCol_Separator]);
-    colors[ImGuiCol_SeparatorActive] = Active(colors[ImGuiCol_Separator]);
-    colors[ImGuiCol_ResizeGrip] = GetColor(MainColor, Alpha20);
-    colors[ImGuiCol_ResizeGripHovered] = Hovered(colors[ImGuiCol_ResizeGrip]);
-    colors[ImGuiCol_ResizeGripActive] = Active(colors[ImGuiCol_ResizeGrip]);
-    colors[ImGuiCol_Tab] = GetColor(MainColor, Alpha60);
-    colors[ImGuiCol_TabHovered] = Hovered(colors[ImGuiCol_Tab]);
-    colors[ImGuiCol_TabActive] = Active(colors[ImGuiCol_Tab]);
-    colors[ImGuiCol_TabUnfocused] = colors[ImGuiCol_Tab];
-    colors[ImGuiCol_TabUnfocusedActive] = colors[ImGuiCol_TabActive];
-    colors[ImGuiCol_PlotLines] = GetColor(HighlightColor);
-    colors[ImGuiCol_PlotLinesHovered] = Hovered(colors[ImGuiCol_PlotLines]);
-    colors[ImGuiCol_PlotHistogram] = GetColor(HighlightColor);
-    colors[ImGuiCol_PlotHistogramHovered] = Hovered(colors[ImGuiCol_PlotHistogram]);
-    colors[ImGuiCol_TextSelectedBg] = GetColor(HighlightColor, Alpha40);
-    colors[ImGuiCol_DragDropTarget] = GetColor(HighlightColor, Alpha80);;
-    colors[ImGuiCol_NavHighlight] = GetColor(White);
-    colors[ImGuiCol_NavWindowingHighlight] = GetColor(White, Alpha80);
-    colors[ImGuiCol_NavWindowingDimBg] = GetColor(White, Alpha20);
-    colors[ImGuiCol_ModalWindowDimBg] = GetColor(Black, Alpha60);
-}
 void ImGui::StyleColorsGold(ImGuiStyle* dst)
 {
     ImGuiStyle* style = dst ? dst : &ImGui::GetStyle();
