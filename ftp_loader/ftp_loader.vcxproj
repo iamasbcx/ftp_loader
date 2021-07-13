@@ -128,6 +128,7 @@
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h" />
     <ClInclude Include="vac3_data.hpp" />
     <ClInclude Include="injection.hpp" />
     <ClInclude Include="logger.hpp" />
@@ -137,6 +138,9 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ftp_loader.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="5996601.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
