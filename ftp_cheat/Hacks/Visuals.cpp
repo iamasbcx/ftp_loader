@@ -3,6 +3,7 @@
 #include <string_view>
 #include <utility>
 #include <vector>
+#include <iostream>
 
 #include "../imgui/imgui.h"
 #define IMGUI_DEFINE_MATH_OPERATORS
@@ -21,6 +22,7 @@
 #include "../SDK/Cvar.h"
 #include "../SDK/Engine.h"
 #include "../SDK/Entity.h"
+#include "../SDK/ClientClass.h"
 #include "../SDK/EntityList.h"
 #include "../SDK/FrameStage.h"
 #include "../SDK/GameEvent.h"
@@ -85,8 +87,30 @@ struct VisualsConfig {
         float green = 0.0f;
         float yellow = 0.0f;
     } colorCorrection;
+
+    struct CustomPostProcessing {
+        bool enabled = false;
+        float worldExposure = 0.0f;
+        float modelAmbient = 0.0f;
+        float bloomScale = 0.0f;
+    } customPostProcessing;
 } visualsConfig;
 
+static void from_json(const json& j, VisualsConfig::CustomPostProcessing& c)
+{
+    read(j, "Enabled", c.enabled);
+    read(j, "World exposure", c.worldExposure);
+    read(j, "Model ambient", c.modelAmbient);
+    read(j, "Bloom scale", c.bloomScale);
+}
+
+static void to_json(json& j, const VisualsConfig::CustomPostProcessing& o, const VisualsConfig::CustomPostProcessing& dummy)
+{
+    WRITE("Enabled", enabled);
+    WRITE("World exposure", worldExposure);
+    WRITE("Model ambient", modelAmbient);
+    WRITE("Bloom scale", bloomScale);
+}
 
 static void from_json(const json& j, VisualsConfig::ColorCorrection& c)
 {
@@ -108,6 +132,7 @@ static void from_json(const json& j, BulletTracers& o)
 static void from_json(const json& j, VisualsConfig& v)
 {
     read(j, "Disable post-processing", v.disablePostProcessing);
+    read<value_t::object>(j, "Custom post-processing", v.customPostProcessing);
     read(j, "Inverse ragdoll gravity", v.inverseRagdollGravity);
     read(j, "No fog", v.noFog);
     read(j, "No 3d sky", v.no3dSky);
@@ -170,6 +195,7 @@ static void to_json(json& j, const VisualsConfig& o)
     const VisualsConfig dummy;
 
     WRITE("Disable post-processing", disablePostProcessing);
+    WRITE("Custom post-processing", customPostProcessing);
     WRITE("Inverse ragdoll gravity", inverseRagdollGravity);
     WRITE("No fog", noFog);
     WRITE("No 3d sky", no3dSky);
@@ -551,6 +577,43 @@ void Visuals::hitEffect(GameEvent* event) noexcept
     }
 }
 
+void Visuals::doBloomEffects() noexcept
+{
+
+    
+    if (!localPlayer)
+        return;
+
+    for (int i = 0; i < 2048; i++)
+    {
+        Entity* ent = interfaces->entityList->getEntity(i);
+
+        if (!ent)
+            continue;
+
+        if (!std::string(ent->getClientClass()->networkName).ends_with("TonemapController"))
+            continue;
+
+        bool enabled = visualsConfig.customPostProcessing.enabled;
+        ent->useCustomAutoExposureMax() = enabled;
+        ent->useCustomAutoExposureMin() = enabled;
+        ent->useCustomBloomScale() = enabled;
+
+        if (!enabled)
+            return;
+
+        float worldExposure = visualsConfig.customPostProcessing.worldExposure;
+        ent->customAutoExposureMin() = worldExposure;
+        ent->customAutoExposureMax() = worldExposure;
+
+        float bloomScale = visualsConfig.customPostProcessing.bloomScale;
+        ent->customBloomScale() = bloomScale;
+
+        ConVar* modelAmbientMin = interfaces->cvar->findVar("r_modelAmbientMin");
+        modelAmbientMin->setValue(visualsConfig.customPostProcessing.modelAmbient);
+    }
+}
+
 void Visuals::hitMarker(GameEvent* event, ImDrawList* drawList) noexcept
 {
     if (visualsConfig.hitMarker == 0)
@@ -821,6 +884,19 @@ void Visuals::drawGUI(bool contentOnly) noexcept
     ImGui::Checkbox("No grass", &visualsConfig.noGrass);
     ImGui::Checkbox("No shadows", &visualsConfig.noShadows);
     ImGui::Checkbox("Wireframe smoke", &visualsConfig.wireframeSmoke);
+    ImGui::Checkbox("Custom post-processing", &visualsConfig.customPostProcessing.enabled);
+    ImGui::SameLine();
+    bool ppPopup = ImGui::Button("Edit");
+
+    if (ppPopup)
+        ImGui::OpenPopup("##pppopup");
+
+    if (ImGui::BeginPopup("##pppopup")) {
+        ImGui::SliderFloat("World exposure", &visualsConfig.customPostProcessing.worldExposure, 0.0f, 100.f, "%.3f", ImGuiSliderFlags_Logarithmic);
+        ImGui::SliderFloat("Model ambient", &visualsConfig.customPostProcessing.modelAmbient, 0.0f, 100.f, "%.3f", ImGuiSliderFlags_Logarithmic);
+        ImGui::SliderFloat("Bloom scale", &visualsConfig.customPostProcessing.bloomScale, 0.0f, 100.f, "%.3f", ImGuiSliderFlags_Logarithmic);
+        ImGui::EndPopup();
+    }
     ImGui::NextColumn();
     ImGui::Checkbox("Zoom", &visualsConfig.zoom);
     ImGui::SameLine();
@@ -874,9 +950,9 @@ void Visuals::drawGUI(bool contentOnly) noexcept
     ImGui::SameLine();
 
     if (bool ccPopup = ImGui::Button("Edit"))
-        ImGui::OpenPopup("##popup");
+        ImGui::OpenPopup("##ccpopup");
 
-    if (ImGui::BeginPopup("##popup")) {
+    if (ImGui::BeginPopup("##ccpopup")) {
         ImGui::VSliderFloat("##1", { 40.0f, 160.0f }, &visualsConfig.colorCorrection.blue, 0.0f, 1.0f, "Blue\n%.3f"); ImGui::SameLine();
         ImGui::VSliderFloat("##2", { 40.0f, 160.0f }, &visualsConfig.colorCorrection.red, 0.0f, 1.0f, "Red\n%.3f"); ImGui::SameLine();
         ImGui::VSliderFloat("##3", { 40.0f, 160.0f }, &visualsConfig.colorCorrection.mono, 0.0f, 1.0f, "Mono\n%.3f"); ImGui::SameLine();

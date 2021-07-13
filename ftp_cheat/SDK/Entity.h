@@ -274,6 +274,13 @@ public:
     NETVAR(pinPulled, "CBaseCSGrenade", "m_bPinPulled", bool)
     NETVAR(throwTime, "CBaseCSGrenade", "m_fThrowTime", float)
 
+    NETVAR(useCustomAutoExposureMin, "CEnvTonemapController", "m_bUseCustomAutoExposureMin", bool)
+    NETVAR(useCustomAutoExposureMax, "CEnvTonemapController", "m_bUseCustomAutoExposureMax", bool)
+    NETVAR(useCustomBloomScale, "CEnvTonemapController", "m_bUseCustomBloomScale", bool)
+    NETVAR(customAutoExposureMin, "CEnvTonemapController", "m_flCustomAutoExposureMin", float)
+    NETVAR(customAutoExposureMax, "CEnvTonemapController", "m_flCustomAutoExposureMax", float)
+    NETVAR(customBloomScale, "CEnvTonemapController", "m_flCustomBloomScale", float)
+
     NETVAR(zoomLevel, "CWeaponCSBaseGun", "m_zoomLevel", int)
         
     NETVAR(mapHasBombTarget, "CCSGameRulesProxy", "m_bMapHasBombTarget", bool)
