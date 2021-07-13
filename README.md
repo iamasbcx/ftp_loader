@@ -15,8 +15,8 @@
 - [DarthTon](https://github.com/DarthTon/Blackbone)
 - [Daniel Krupiński](https://github.com/danielkrupinski)
 
-# Doesn't open
-vc redistributable is needed for this code to be executed, newest windows versions already comes with these.
+## Does not open
+If your error is `msvcp140.dll`, Please install the following libraries, `x86` is required. `x64` is optional but recommended.
 - https://aka.ms/vs/16/release/vc_redist.x86.exe
 - https://aka.ms/vs/16/release/vc_redist.x64.exe
 
