@@ -10,7 +10,6 @@ This will only, most likely, work only with _source engine_ games in _steam_ tha
 - LoadLibrary Injection
 
 # Cheat
-## Features
 *   **Aimbot** - aim assistance
 *   **Triggerbot** - automatically fires when crosshair is on enemy
 *   **Backtrack** - abuse lag compensation to move players back in time
@@ -240,7 +239,6 @@ This will only, most likely, work only with _source engine_ games in _steam_ tha
     *   **Reload configs** - reload configs list
 </details>
 
-# 
 # [Download](https://github.com/n0verify/ftp_loader/releases/)
 
 # Credits
@@ -252,6 +250,8 @@ This will only, most likely, work only with _source engine_ games in _steam_ tha
 If your error is `msvcp140.dll`, Please install the following libraries, `x86` is required. `x64` is optional but recommended.
 - https://aka.ms/vs/16/release/vc_redist.x86.exe
 - https://aka.ms/vs/16/release/vc_redist.x64.exe
+If your error is `ucrtbased.dll`, Please install the Windows 10 SDK
+- https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk/.
 
 # Prerequisites
 - Visual Studio 2019
