@@ -37,6 +37,7 @@ INT WINAPI WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
 	if (methhead == "1" | methhead == "loadlibrary" | methhead == "LoadLibrary" | methhead == "ll")  // this function will inject vac3 bypass on steam and the dll on the target process
 	{
+		log_debug("Injecting VAC bypass module into Steam");
 		if (!g_injector->callLoadLib(str_proc_name, L"serverbrowser.dll"))
 		{
 			return EXIT_FAILURE;
@@ -47,6 +48,7 @@ INT WINAPI WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	}
 	else if (methhead == "2" | methhead == "manualmap" | methhead == "ManualMap" | methhead == "mm")  // this function will inject vac3 bypass on steam and the dll on the target process
 	{
+		log_debug("Injecting VAC bypass module into Steam");
 		if (!g_injector->init(str_proc_name, dll_path))
 			return EXIT_FAILURE;
 
