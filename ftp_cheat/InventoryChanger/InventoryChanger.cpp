@@ -422,9 +422,7 @@ void InventoryChanger::run(FrameStage stage) noexcept
     if (!localInventory)
         return;
 
-    const auto baseTypeCache = localInventory->getItemBaseTypeCache();
-    if (!baseTypeCache)
-        return;
+
 
     applyMusicKit(*localInventory);
     applyPlayerAgent(*localInventory);
