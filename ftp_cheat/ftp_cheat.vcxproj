@@ -198,6 +198,7 @@
     <ClInclude Include="BSPFlags.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="ConfigStructs.h" />
+    <ClInclude Include="EconItemView.h" />
     <ClInclude Include="EventListener.h" />
     <ClInclude Include="fnv.h" />
     <ClInclude Include="freetype\freetype\config\ftmodule.h" />

@@ -613,6 +613,9 @@
     <ClInclude Include="ToolUser.h">
       <Filter>InventoryChanger</Filter>
     </ClInclude>
+    <ClInclude Include="EconItemView.h">
+      <Filter>SDK</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\default_vs.hlsl">
