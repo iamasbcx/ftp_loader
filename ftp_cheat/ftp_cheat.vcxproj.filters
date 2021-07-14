@@ -42,6 +42,9 @@
     <Filter Include="VMP">
       <UniqueIdentifier>{a1c91c91-b2bb-45ab-9723-17201b5bae1d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Protobuffs">
+      <UniqueIdentifier>{22c7d3a6-9c78-4685-88e9-b9b3df442dec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GUI.cpp">
@@ -243,6 +246,9 @@
       <Filter>InventoryChanger</Filter>
     </ClCompile>
     <ClCompile Include="ToolUser.cpp">
+      <Filter>InventoryChanger</Filter>
+    </ClCompile>
+    <ClCompile Include="ProfileChanger.cpp">
       <Filter>InventoryChanger</Filter>
     </ClCompile>
   </ItemGroup>
@@ -615,6 +621,21 @@
     </ClInclude>
     <ClInclude Include="EconItemView.h">
       <Filter>SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="pbwrap.h">
+      <Filter>Protobuffs</Filter>
+    </ClInclude>
+    <ClInclude Include="protomessages.h">
+      <Filter>Protobuffs</Filter>
+    </ClInclude>
+    <ClInclude Include="protoparser.h">
+      <Filter>Protobuffs</Filter>
+    </ClInclude>
+    <ClInclude Include="MemAlloc.h">
+      <Filter>SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="ProfileChanger.h">
+      <Filter>InventoryChanger</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

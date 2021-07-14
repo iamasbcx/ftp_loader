@@ -282,6 +282,23 @@ void Config::load(size_t id, bool incremental) noexcept
     load(configs[id].c_str(), incremental);
 }
 
+static void from_json(const json& j, Config::profileChanger& p)
+{
+    read(j, "Friendly", p.friendly);
+    read(j, "Teach", p.teach);
+    read(j, "Leader", p.leader);
+    read(j, "Level", p.level);
+    read(j, "Exp", p.exp);
+    read(j, "Ban Type", p.ban_type);
+    read(j, "Ban Time", p.ban_time);
+    read(j, "Rank MM", p.rankMatchmaking);
+    read(j, "Wins MM", p.winsMatchmaking);
+    read(j, "Rank Wingman", p.rankWingman);
+    read(j, "Wins Wingman", p.winsWingman);
+    read(j, "Rank DZ", p.rankDangerzone);
+    read(j, "Wins DZ", p.winsDangerzone);
+}
+
 void Config::load(const char8_t* name, bool incremental) noexcept
 {
     json j;
@@ -310,6 +327,7 @@ void Config::load(const char8_t* name, bool incremental) noexcept
     read(j["Chams"], "Hold Key", chamsHoldKey);
     read<value_t::object>(j, "ESP", streamProofESP);
     read<value_t::object>(j, "Style", style);
+    read<value_t::object>(j, "Profile changer", profilechanger);
 
     AntiAim::fromJson(j["Anti aim"]);
     Backtrack::fromJson(j["Backtrack"]);
@@ -318,6 +336,26 @@ void Config::load(const char8_t* name, bool incremental) noexcept
     InventoryChanger::fromJson(j["Inventory Changer"]);
     Sound::fromJson(j["Sound"]);
     Misc::fromJson(j["Misc"]);
+}
+
+static void to_json(json& j, const Config::profileChanger& o)
+{
+    const Config::profileChanger dummy;
+
+    WRITE("Friendly", friendly);
+    WRITE("Teach", teach);
+    WRITE("Leader", leader);
+    WRITE("Level", level);
+    WRITE("Exp", exp);
+    WRITE("Ban Type", ban_type);
+    WRITE("Ban Time", ban_time);
+    WRITE("Rank MM", rankMatchmaking);
+    WRITE("Wins MM", winsMatchmaking);
+    WRITE("Rank Wingman", rankWingman);
+    WRITE("Wins Wingman", winsWingman);
+    WRITE("Rank DZ", rankDangerzone);
+    WRITE("Wins DZ", winsDangerzone);
+
 }
 
 static void to_json(json& j, const ColorToggleRounding& o, const ColorToggleRounding& dummy = {})

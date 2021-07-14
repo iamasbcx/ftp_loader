@@ -45,6 +45,7 @@ public:
 
     void install() noexcept;
     void uninstall() noexcept;
+    void hookGC() noexcept;
     void callOriginalDrawModelExecute(void* ctx, void* state, const ModelRenderInfo& info, matrix3x4* customBoneToWorld) noexcept;
 
     std::add_pointer_t<int __FASTCALL(SoundInfo&)> originalDispatchSound;
@@ -59,6 +60,7 @@ public:
     HookType modelRender;
     HookType panoramaMarshallHelper;
     HookType sound;
+    HookType gc_hook;
     HookType surface;
     HookType viewRender;
     HookType svCheats;

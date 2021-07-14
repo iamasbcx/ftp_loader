@@ -21,12 +21,14 @@ private:
     void renderStyleWindow(bool contentOnly = false) noexcept;
     void renderConfigWindow(bool contentOnly = false) noexcept;
     void renderGuiStyle2() noexcept;
+    void renderProfileChangerWindow(bool contentOnly = false) noexcept;
 
     struct {
         bool aimbot = false;
         bool triggerbot = false;
         bool chams = false;
         bool sound = false;
+        bool profileChanger = false;
         bool style = false;
         bool config = false;
     } window;
