@@ -5,6 +5,7 @@
 #include "../Memory.h"
 #include "../SDK/Entity.h"
 #include "../SDK/ItemSchema.h"
+#include "../EconItemView.h"
 
 using Inventory::INVALID_DYNAMIC_DATA_IDX;
 
@@ -179,7 +180,7 @@ private:
         }
 
         if (const auto view = memory->findOrCreateEconItemViewForItemID(econItem->itemID))
-            memory->clearInventoryImageRGBA(view);
+            view->clearInventoryImageRGBA();
 
         return econItem->itemID;
     }
