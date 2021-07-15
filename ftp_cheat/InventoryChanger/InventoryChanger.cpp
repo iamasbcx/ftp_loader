@@ -608,6 +608,44 @@ void InventoryChanger::tabItem() noexcept
     }
 }
 
+static std::uint64_t stringToUint64(const char* str) noexcept
+{
+    std::uint64_t result = 0;
+    std::from_chars(str, str + std::strlen(str), result);
+    return result;
+}
+
+void InventoryChanger::getArgAsStringHook(const char* string, std::uintptr_t returnAddress) noexcept
+{
+    if (returnAddress == memory->useToolGetArgAsStringReturnAddress) {
+        InventoryChanger::setToolToUse(stringToUint64(string));
+    }
+    else if (returnAddress == memory->useToolGetArg2AsStringReturnAddress) {
+        InventoryChanger::setItemToApplyTool(stringToUint64(string));
+    }
+    else if (returnAddress == memory->wearItemStickerGetArgAsStringReturnAddress) {
+        InventoryChanger::setItemToWearSticker(stringToUint64(string));
+    }
+    else if (returnAddress == memory->setNameToolStringGetArgAsStringReturnAddress) {
+        InventoryChanger::setNameTagString(string);
+    }
+    else if (returnAddress == memory->clearCustomNameGetArgAsStringReturnAddress) {
+        InventoryChanger::setItemToRemoveNameTag(stringToUint64(string));
+    }
+    else if (returnAddress == memory->deleteItemGetArgAsStringReturnAddress) {
+        InventoryChanger::deleteItem(stringToUint64(string));
+    }
+    else if (returnAddress == memory->acknowledgeNewItemByItemIDGetArgAsStringReturnAddress) {
+        InventoryChanger::acknowledgeItem(stringToUint64(string));
+    }
+    else if (returnAddress == memory->setStatTrakSwapToolItemsGetArgAsStringReturnAddress1) {
+        InventoryChanger::setStatTrakSwapItem1(stringToUint64(string));
+    }
+    else if (returnAddress == memory->setStatTrakSwapToolItemsGetArgAsStringReturnAddress2) {
+        InventoryChanger::setStatTrakSwapItem2(stringToUint64(string));
+    }
+}
+
 static ImTextureID getItemIconTexture(const std::string& iconpath) noexcept;
 
 namespace ImGui

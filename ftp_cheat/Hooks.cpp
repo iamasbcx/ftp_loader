@@ -152,6 +152,29 @@ static HRESULT __stdcall reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* 
     return hooks->originalReset(device, params);
 }
 
+static int __fastcall SendDatagram(NetworkChannel* network, void* edx, void* datagram)
+{
+    auto original = hooks->networkChannel.getOriginal<int, 46, void*>(datagram);
+    if (!Backtrack::backtrackConfig.fakeLatency || datagram || !interfaces->engine->isInGame() || !Backtrack::backtrackConfig.enabled)
+    {
+        return original(network, datagram);
+    }
+    int instate = network->InReliableState;
+    int insequencenr = network->InSequenceNr;
+    int faketimeLimit = Backtrack::backtrackConfig.timeLimit; if (faketimeLimit <= 200) { faketimeLimit = 0; }
+    else { faketimeLimit -= 200; }
+    float delta = std::max(0.f, std::clamp(faketimeLimit / 1000.f, 0.f, 0.2f) - network->getLatency(0));
+
+    Backtrack::AddLatencyToNetwork(network, delta + (delta / 20.0f));
+
+    int result = original(network, datagram);
+
+    network->InReliableState = instate;
+    network->InSequenceNr = insequencenr;
+
+    return result;
+}
+
 #endif
 
 static bool __STDCALL createMove(LINUX_ARGS(void* thisptr,) float inputSampleTime, UserCmd* cmd) noexcept
@@ -190,6 +213,18 @@ static bool __STDCALL createMove(LINUX_ARGS(void* thisptr,) float inputSampleTim
     Misc::quickReload(cmd);
     Misc::fixTabletSignal();
     Misc::slowwalk(cmd);
+
+    static void* oldPointer = nullptr;
+
+    auto network = interfaces->engine->getNetworkChannel();
+    if (oldPointer != network && network && localPlayer)
+    {
+        oldPointer = network;
+        Backtrack::UpdateIncomingSequences(true);
+        hooks->networkChannel.init(network);
+        hooks->networkChannel.hookAt(46, SendDatagram);
+    }
+    Backtrack::UpdateIncomingSequences();
 
     EnginePrediction::run(cmd);
 
@@ -484,27 +519,8 @@ static const char* __STDCALL getArgAsString(LINUX_ARGS(void* thisptr,) void* par
 {
     const auto result = hooks->panoramaMarshallHelper.callOriginal<const char*, 7>(params, index);
 
-    if (result) {
-        if (const auto ret = RETURN_ADDRESS(); ret == memory->useToolGetArgAsStringReturnAddress) {
-            InventoryChanger::setToolToUse(stringToUint64(result));
-        } else if (ret == memory->useToolGetArg2AsStringReturnAddress) {
-            InventoryChanger::setItemToApplyTool(stringToUint64(result));
-        } else if (ret == memory->wearItemStickerGetArgAsStringReturnAddress) {
-            InventoryChanger::setItemToWearSticker(stringToUint64(result));
-        } else if (ret == memory->setNameToolStringGetArgAsStringReturnAddress) {
-            InventoryChanger::setNameTagString(result);
-        } else if (ret == memory->clearCustomNameGetArgAsStringReturnAddress) {
-            InventoryChanger::setItemToRemoveNameTag(stringToUint64(result));
-        } else if (ret == memory->deleteItemGetArgAsStringReturnAddress) {
-            InventoryChanger::deleteItem(stringToUint64(result));
-        } else if (ret == memory->acknowledgeNewItemByItemIDGetArgAsStringReturnAddress) {
-            InventoryChanger::acknowledgeItem(stringToUint64(result));
-        } else if (ret == memory->setStatTrakSwapToolItemsGetArgAsStringReturnAddress1) {
-            InventoryChanger::setStatTrakSwapItem1(stringToUint64(result));
-        } else if (ret == memory->setStatTrakSwapToolItemsGetArgAsStringReturnAddress2) {
-            InventoryChanger::setStatTrakSwapItem2(stringToUint64(result));
-        }
-    }
+    if (result)
+        InventoryChanger::getArgAsStringHook(result, RETURN_ADDRESS());
 
     return result;
 }
@@ -786,6 +802,7 @@ void Hooks::uninstall() noexcept
     surface.restore();
     svCheats.restore();
     viewRender.restore();
+    networkChannel.restore();
 
     Netvars::restore();
 

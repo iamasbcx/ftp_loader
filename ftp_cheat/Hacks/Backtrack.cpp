@@ -7,26 +7,33 @@
 #include "../Interfaces.h"
 #include "../Memory.h"
 #include "../SDK/Cvar.h"
-#include "../SDK/ConVar.h"
 #include "../SDK/Engine.h"
 #include "../SDK/Entity.h"
 #include "../SDK/EntityList.h"
 #include "../SDK/FrameStage.h"
-#include "../SDK/GlobalVars.h"
 #include "../SDK/LocalPlayer.h"
-#include "../SDK/NetworkChannel.h"
 #include "../SDK/UserCmd.h"
 
 #if FTP_BACKTRACK()
+
+
+
+//std::deque<Backtrack::Record> Backtrack::records[65];
+// static Backtrack::Cvars cvars; // From Master, but this breaks code in hooks.cpp line 132 max() function
+//Backtrack::Cvars Backtrack::cvars;
+
+static std::deque<Backtrack::IncomingSequence>Backtrack::sequences;
+static std::array<std::deque<Backtrack::Record>, 513> records;
 
 struct BacktrackConfig {
     bool enabled = false;
     bool ignoreSmoke = false;
     bool recoilBasedFov = false;
-    int timeLimit = 200;
+    int timeLimit = 0;
+    //bool fakeLatency = false;
+    //bool drawAllChams = false;
+    //int timeLimit = 200;
 } backtrackConfig;
-
-static std::array<std::deque<Backtrack::Record>, 65> records;
 
 struct Cvars {
     ConVar* updateRate;
@@ -47,7 +54,15 @@ static auto timeToTicks(float time) noexcept
 
 void Backtrack::update(FrameStage stage) noexcept
 {
-    if (stage == FrameStage::RENDER_START) {
+    //if (stage == FrameStage::RENDER_START) {
+    int timeLimit = backtrackConfig.timeLimit;
+    if (timeLimit <= 0 || timeLimit >= 201) { backtrackConfig.fakeLatency = true; }
+    else { backtrackConfig.fakeLatency = false; }
+    if (timeLimit <= 0 || timeLimit > 400) { backtrackConfig.enabled = false; }
+    else { backtrackConfig.enabled = true; }
+
+    if (stage == FrameStage::RENDER_START)
+    {
         if (!backtrackConfig.enabled || !localPlayer || !localPlayer->isAlive()) {
             for (auto& record : records)
                 record.clear();
@@ -72,7 +87,7 @@ void Backtrack::update(FrameStage stage) noexcept
 
             records[i].push_front(record);
 
-            while (records[i].size() > 3 && records[i].size() > static_cast<size_t>(timeToTicks(static_cast<float>(backtrackConfig.timeLimit) / 1000.f)))
+            while (records[i].size() > 3 && records[i].size() > static_cast<size_t>(timeToTicks(static_cast<float>(backtrackConfig.timeLimit) / 1000.f + getExtraTicks())))
                 records[i].pop_back();
 
             if (auto invalid = std::find_if(std::cbegin(records[i]), std::cend(records[i]), [](const Record& rec) { return !valid(rec.simulationTime); }); invalid != std::cend(records[i]))
@@ -91,12 +106,14 @@ void Backtrack::run(UserCmd* cmd) noexcept
 {
     if (!backtrackConfig.enabled)
         return;
-
+    
+    if (!localPlayer)
+        return;
+    
     if (!(cmd->buttons & UserCmd::IN_ATTACK))
         return;
 
-    if (!localPlayer)
-        return;
+    
 
     auto localPlayerEyePosition = localPlayer->getEyePosition();
 
@@ -170,6 +187,59 @@ bool Backtrack::valid(float simtime) noexcept
     return std::abs(delta) <= 0.2f;
 }
 
+float Backtrack::getExtraTicks() noexcept
+{
+    auto network = interfaces->engine->getNetworkChannel();
+    if (!network)
+        return 0.f;
+    return std::clamp(network->getLatency(1) - network->getLatency(0), 0.f, cvars.maxUnlag->getFloat());
+}
+
+void Backtrack::AddLatencyToNetwork(NetworkChannel* network, float latency) noexcept
+{
+    for (auto& sequence : sequences)
+    {
+        if (memory->globalVars->serverTime() - sequence.servertime >= latency)
+        {
+            network->InReliableState = sequence.inreliablestate;
+            network->InSequenceNr = sequence.sequencenr;
+            break;
+        }
+    }
+}
+
+void Backtrack::UpdateIncomingSequences(bool reset) noexcept
+{
+    static float lastIncomingSequenceNumber = 0.f;
+
+    if (!backtrackConfig.enabled)
+        return;
+
+    if (backtrackConfig.timeLimit == 0)
+        return;
+
+    if (!localPlayer)
+        return;
+
+    auto network = interfaces->engine->getNetworkChannel();
+    if (!network)
+        return;
+
+    if (network->InSequenceNr != lastIncomingSequenceNumber)
+    {
+        lastIncomingSequenceNumber = static_cast<float>(network->InSequenceNr);
+
+        IncomingSequence sequence{ };
+        sequence.inreliablestate = network->InReliableState;
+        sequence.sequencenr = network->InSequenceNr;
+        sequence.servertime = memory->globalVars->serverTime();
+        sequences.push_front(sequence);
+    }
+
+    while (sequences.size() > 2048)
+        sequences.pop_back();
+}
+
 void Backtrack::init() noexcept
 {
     cvars.updateRate = interfaces->cvar->findVar("cl_updaterate");
@@ -208,22 +278,33 @@ void Backtrack::drawGUI(bool contentOnly) noexcept
         ImGui::SetNextWindowSize({ 0.0f, 0.0f });
         ImGui::Begin("Backtrack", &backtrackWindowOpen, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
     }
-    ImGui::Checkbox("Enabled", &backtrackConfig.enabled);
+    ImGui::PushID(0);
+    ImGui::PushItemWidth(220.0f);
+    ImGui::SliderInt("", &backtrackConfig.timeLimit, 0, 400, "Time limit %d ms");
+    ImGui::PopItemWidth();
+    ImGui::PopID();
+    ImGui::Checkbox("Ignore smoke", &backtrackConfig.ignoreSmoke);
+    ImGui::SameLine();
+    ImGui::Checkbox("Recoil based fov", &backtrackConfig.recoilBasedFov);
+    ImGui::Checkbox("Chams All Ticks(Enable in chams tab too)", &backtrackConfig.drawAllChams);
+    /*ImGui::Checkbox("Enabled", &backtrackConfig.enabled);
     ImGui::Checkbox("Ignore smoke", &backtrackConfig.ignoreSmoke);
     ImGui::Checkbox("Recoil based fov", &backtrackConfig.recoilBasedFov);
     ImGui::PushItemWidth(220.0f);
     ImGui::SliderInt("Time limit", &backtrackConfig.timeLimit, 1, 200, "%d ms");
-    ImGui::PopItemWidth();
+    ImGui::PopItemWidth();*/
     if (!contentOnly)
         ImGui::End();
 }
 
-static void to_json(json& j, const BacktrackConfig& o, const BacktrackConfig& dummy = {})
+static void to_json(json& j, const Backtrack::BacktrackConfig& o, const Backtrack::BacktrackConfig& dummy = {})
 {
     WRITE("Enabled", enabled);
     WRITE("Ignore smoke", ignoreSmoke);
     WRITE("Recoil based fov", recoilBasedFov);
     WRITE("Time limit", timeLimit);
+    WRITE("Fake Latency", fakeLatency);
+    WRITE("Draw All Chams", drawAllChams);
 }
 
 json Backtrack::toJson() noexcept
@@ -233,12 +314,14 @@ json Backtrack::toJson() noexcept
     return j;
 }
 
-static void from_json(const json& j, BacktrackConfig& b)
+static void from_json(const json& j, Backtrack::BacktrackConfig& b)
 {
     read(j, "Enabled", b.enabled);
     read(j, "Ignore smoke", b.ignoreSmoke);
     read(j, "Recoil based fov", b.recoilBasedFov);
     read(j, "Time limit", b.timeLimit);
+    read(j, "Fake Latency", b.fakeLatency);
+    read(j, "Draw All Chams", b.drawAllChams);
 }
 
 void Backtrack::fromJson(const json& j) noexcept

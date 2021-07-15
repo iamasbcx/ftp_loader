@@ -192,6 +192,14 @@ void Chams::renderPlayer(Entity* player) noexcept
             if (!appliedChams)
                 hooks->modelRender.callOriginal<void, 21>(ctx, state, info, customBoneToWorld);
             applyChams(config->chams["Backtrack"].materials, health, records->back().matrix);
+            if (Backtrack::backtrackConfig.drawAllChams)
+            {
+                for (int i = 0; i < records->size(); i++) {
+                    if (!appliedChams)
+                        hooks->modelRender.callOriginal<void, 21>(ctx, state, info, customBoneToWorld);
+                    applyChams(config->chams["Backtrack"].materials, health, records->at(i).matrix);
+                }
+            }
             interfaces->studioRender->forcedMaterialOverride(nullptr);
         }
     }

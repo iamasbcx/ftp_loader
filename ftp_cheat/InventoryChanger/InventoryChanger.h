@@ -39,6 +39,7 @@ namespace InventoryChanger
     void setStatTrakSwapItem2(std::uint64_t itemID) noexcept;
     void deleteItem(std::uint64_t itemID) noexcept;
     void acknowledgeItem(std::uint64_t itemID) noexcept;
+    void InventoryChanger::getArgAsStringHook(const char* string, std::uintptr_t returnAddress) noexcept;
 
     void clearItemIconTextures() noexcept;
     void clearUnusedItemIconTextures() noexcept;
