@@ -238,11 +238,11 @@ void Aimbot::run(UserCmd* cmd) noexcept
     if (localPlayer->shotsFired() > 0 && !activeWeapon->isFullAuto())
         return;
 
-    auto weaponIndex = getWeaponIndex(activeWeapon->itemDefinitionIndex2());
+    auto weaponIndex = getWeaponIndex(activeWeapon->ItemDefinitionIndex());
     if (!weaponIndex)
         return;
 
-    auto weaponClass = getWeaponClass(activeWeapon->itemDefinitionIndex2());
+    auto weaponClass = getWeaponClass(activeWeapon->ItemDefinitionIndex());
     if (!config->aimbot[weaponIndex].enabled)
         weaponIndex = weaponClass;
 

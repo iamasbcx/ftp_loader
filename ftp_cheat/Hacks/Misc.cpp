@@ -419,7 +419,7 @@ void Misc::prepareRevolver(UserCmd* cmd) noexcept
     static float readyTime;
     if (miscConfig.prepareRevolver && localPlayer && (!miscConfig.prepareRevolverKey.isSet() || miscConfig.prepareRevolverKey.isDown())) {
         const auto activeWeapon = localPlayer->getActiveWeapon();
-        if (activeWeapon && activeWeapon->itemDefinitionIndex2() == WeaponId::Revolver) {
+        if (activeWeapon && activeWeapon->ItemDefinitionIndex() == WeaponId::Revolver) {
             if (!readyTime) readyTime = memory->globalVars->serverTime() + revolverPrepareTime;
             auto ticksToReady = timeToTicks(readyTime - memory->globalVars->serverTime() - interfaces->engine->getNetworkChannel()->getLatency(0));
             if (ticksToReady > 0 && ticksToReady <= timeToTicks(revolverPrepareTime))
@@ -752,7 +752,7 @@ void Misc::autoPistol(UserCmd* cmd) noexcept
     if (miscConfig.autoPistol && localPlayer) {
         const auto activeWeapon = localPlayer->getActiveWeapon();
         if (activeWeapon && activeWeapon->isPistol() && activeWeapon->nextPrimaryAttack() > memory->globalVars->serverTime()) {
-            if (activeWeapon->itemDefinitionIndex2() == WeaponId::Revolver)
+            if (activeWeapon->ItemDefinitionIndex() == WeaponId::Revolver)
                 cmd->buttons &= ~UserCmd::IN_ATTACK2;
             else
                 cmd->buttons &= ~UserCmd::IN_ATTACK;
@@ -770,7 +770,7 @@ void Misc::autoReload(UserCmd* cmd) noexcept
 {
     if (miscConfig.autoReload && localPlayer) {
         const auto activeWeapon = localPlayer->getActiveWeapon();
-        if (activeWeapon && getWeaponIndex(activeWeapon->itemDefinitionIndex2()) && !activeWeapon->clip())
+        if (activeWeapon && getWeaponIndex(activeWeapon->ItemDefinitionIndex()) && !activeWeapon->clip())
             cmd->buttons &= ~(UserCmd::IN_ATTACK | UserCmd::IN_ATTACK2);
     }
 }
