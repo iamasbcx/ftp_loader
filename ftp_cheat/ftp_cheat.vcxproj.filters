@@ -251,6 +251,9 @@
     <ClCompile Include="ProfileChanger.cpp">
       <Filter>InventoryChanger</Filter>
     </ClCompile>
+    <ClCompile Include="EconItemView.cpp">
+      <Filter>SDK</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GUI.h">
