@@ -885,6 +885,7 @@ void Visuals::drawGUI(bool contentOnly) noexcept
     ImGui::Checkbox("No shadows", &visualsConfig.noShadows);
     ImGui::Checkbox("Wireframe smoke", &visualsConfig.wireframeSmoke);
     ImGui::Checkbox("Custom post-processing", &visualsConfig.customPostProcessing.enabled);
+    ImGuiCustom::AddCircleImageFilled(0, ImVec2(5,6), 2, 4, 0);
     ImGui::SameLine();
     bool ppPopup = ImGui::Button("Edit");
 
