@@ -329,9 +329,6 @@ static void updateHud() noexcept
     hudUpdateRequired = false;
 }
 
-void InventoryChanger::setStickerApplySlot(int slot) noexcept { ToolUser::setStickerSlot(slot); }
-void InventoryChanger::setStickerSlotToWear(int slot) noexcept { ToolUser::setStickerSlot(slot); }
-
 void InventoryChanger::deleteItem(std::uint64_t itemID) noexcept
 {
     if (const auto item = Inventory::getItem(itemID))
@@ -641,10 +638,8 @@ void InventoryChanger::getArgAsStringHook(const char* string, std::uintptr_t ret
 
 void InventoryChanger::getArgAsNumberHook(int number, std::uintptr_t returnAddress) noexcept
 {
-    if (returnAddress == memory->setStickerToolSlotGetArgAsNumberReturnAddress)
-        InventoryChanger::setStickerApplySlot(number);
-    else if (returnAddress == memory->wearItemStickerGetArgAsNumberReturnAddress)
-        InventoryChanger::setStickerSlotToWear(number);
+    if (returnAddress == memory->setStickerToolSlotGetArgAsNumberReturnAddress || returnAddress == memory->wearItemStickerGetArgAsNumberReturnAddress)
+        ToolUser::setStickerSlot(number);
 }
 
 static ImTextureID getItemIconTexture(const std::string& iconpath) noexcept;
