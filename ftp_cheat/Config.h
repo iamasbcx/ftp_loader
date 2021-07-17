@@ -75,6 +75,7 @@ public:
     struct Chams {
         struct Material : Color4 {
             bool enabled = false;
+            bool enabledBacktrack = true;
             bool healthBased = false;
             bool blinking = false;
             bool wireframe = false;

@@ -286,7 +286,7 @@ void Backtrack::drawGUI(bool contentOnly) noexcept
     ImGui::Checkbox("Ignore smoke", &backtrackConfig.ignoreSmoke);
     ImGui::SameLine();
     ImGui::Checkbox("Recoil based fov", &backtrackConfig.recoilBasedFov);
-    ImGui::Checkbox("Chams All Ticks(Enable in chams tab too)", &backtrackConfig.drawAllChams);
+    ImGui::Checkbox("Chams All Ticks", &backtrackConfig.drawAllChams);
     /*ImGui::Checkbox("Enabled", &backtrackConfig.enabled);
     ImGui::Checkbox("Ignore smoke", &backtrackConfig.ignoreSmoke);
     ImGui::Checkbox("Recoil based fov", &backtrackConfig.recoilBasedFov);

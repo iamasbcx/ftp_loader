@@ -1,0 +1,1652 @@
+{
+  "Aimbot": [
+    {
+      "Fov": 0.06,
+      "Ignore flash": true,
+      "Ignore smoke": true,
+      "Max aim inaccuracy": 0.0012,
+      "Max shot inaccuracy": 0.39973,
+      "Scoped only": false,
+      "Smooth": 8.88
+    },
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {
+      "Auto shot": true,
+      "Bone": 2,
+      "Enabled": true,
+      "Fov": 5.37,
+      "Ignore smoke": true,
+      "Scoped only": false,
+      "Smooth": 2.75
+    },
+    {},
+    {},
+    {
+      "Auto shot": true,
+      "Enabled": true,
+      "Fov": 16.49,
+      "Ignore flash": true,
+      "Ignore smoke": true
+    },
+    {},
+    {},
+    {
+      "Auto shot": true,
+      "Bone": 2,
+      "Enabled": true,
+      "Fov": 3.28,
+      "Ignore smoke": true,
+      "Scoped only": false,
+      "Smooth": 6.69
+    },
+    {
+      "Auto shot": true,
+      "Enabled": true,
+      "Fov": 3.28,
+      "Ignore smoke": true,
+      "Scoped only": false,
+      "Smooth": 6.69
+    },
+    {
+      "Auto shot": true,
+      "Enabled": true,
+      "Fov": 8.79,
+      "Ignore smoke": true,
+      "Scoped only": false,
+      "Smooth": 4.07
+    },
+    {
+      "Auto shot": true,
+      "Enabled": true,
+      "Fov": 2.62,
+      "Ignore smoke": true,
+      "Scoped only": false,
+      "Smooth": 5.38
+    },
+    {}
+  ],
+  "Aimbot Key": "MOUSE1",
+  "Aimbot Key mode": 0,
+  "Aimbot On key": true,
+  "Backtrack": {
+    "Enabled": true,
+    "Fake Latency": true,
+    "Time limit": 198
+  },
+  "Chams": {
+    "Allies": {
+      "Materials": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    "Backtrack": {
+      "Materials": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    "Defusing": {
+      "Materials": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    "Enemies": {
+      "Materials": [
+        {
+          "Alpha": 1.0,
+          "Color": "#59fff7",
+          "Enabled": true
+        },
+        {
+          "Enabled": true,
+          "Ignore-Z": true
+        },
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    "Hands": {
+      "Materials": [
+        {
+          "Enabled": true,
+          "Material": 11,
+          "Rainbow": true
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    "Local player": {
+      "Materials": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    "Planting": {
+      "Materials": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    "Sleeves": {
+      "Materials": [
+        {
+          "Alpha": 1.0,
+          "Color": "#00ebff",
+          "Enabled": true,
+          "Material": 11,
+          "Rainbow": true
+        },
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    "Weapons": {
+      "Materials": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    }
+  },
+  "ESP": {
+    "Enemies": {
+      "All": {
+        "Box": {
+          "Enabled": true
+        },
+        "Enabled": true,
+        "Font": {
+          "Name": "Arial"
+        },
+        "Name": {
+          "Enabled": true
+        },
+        "Skeleton": {
+          "Alpha": 1.0,
+          "Color": "#fefeff"
+        }
+      },
+      "Occluded": {
+        "Enabled": true
+      },
+      "Visible": {
+        "Enabled": true
+      }
+    },
+    "Other Entities": {
+      "Planted C4": {
+        "Box": {
+          "Enabled": true,
+          "Scale": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "Enabled": true,
+        "Name": {
+          "Enabled": true
+        }
+      }
+    },
+    "Weapons": {
+      "All": {
+        "Ammo": {
+          "Enabled": true
+        },
+        "Box": {
+          "Enabled": true,
+          "Scale": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "Name": {
+          "Enabled": true
+        }
+      }
+    }
+  },
+  "Glow": {
+    "Players": {
+      "Enemies": {
+        "All": {
+          "Alpha": 1.0,
+          "Color": "#ff0000"
+        },
+        "Occluded": {
+          "Alpha": 1.0,
+          "Color": "#8100ff"
+        },
+        "Visible": {
+          "Alpha": 1.0,
+          "Color": "#820f0f"
+        }
+      }
+    }
+  },
+  "Inventory Changer": {
+    "Equipment": [
+      {
+        "CT": 45,
+        "Slot": 0,
+        "TT": 44
+      },
+      {
+        "CT": 28,
+        "Slot": 2,
+        "TT": 31
+      },
+      {
+        "CT": 61,
+        "Slot": 3
+      },
+      {
+        "CT": 53,
+        "Slot": 4,
+        "TT": 53
+      },
+      {
+        "CT": 49,
+        "Slot": 5,
+        "TT": 37
+      },
+      {
+        "CT": 60,
+        "Slot": 6
+      },
+      {
+        "CT": 62,
+        "Slot": 8,
+        "TT": 48
+      },
+      {
+        "CT": 63,
+        "Slot": 9
+      },
+      {
+        "CT": 43,
+        "Slot": 10,
+        "TT": 43
+      },
+      {
+        "CT": 54,
+        "Slot": 11,
+        "TT": 54
+      },
+      {
+        "CT": 50,
+        "Slot": 14,
+        "TT": 89
+      },
+      {
+        "CT": 42,
+        "Slot": 15,
+        "TT": 27
+      },
+      {
+        "CT": 51,
+        "Slot": 16,
+        "TT": 52
+      },
+      {
+        "CT": 36,
+        "Slot": 17
+      },
+      {
+        "CT": 26,
+        "Slot": 18,
+        "TT": 26
+      },
+      {
+        "CT": 55,
+        "Slot": 19,
+        "TT": 56
+      },
+      {
+        "CT": 64,
+        "Slot": 20
+      },
+      {
+        "CT": 65,
+        "Slot": 21
+      },
+      {
+        "CT": 66,
+        "Slot": 22
+      },
+      {
+        "CT": 68,
+        "Slot": 24
+      },
+      {
+        "CT": 90,
+        "Slot": 38,
+        "TT": 91
+      },
+      {
+        "CT": 30,
+        "Slot": 41,
+        "TT": 30
+      },
+      {
+        "NOTEAM": 58,
+        "Slot": 54
+      },
+      {
+        "NOTEAM": 57,
+        "Slot": 55
+      },
+      {
+        "NOTEAM": 69,
+        "Slot": 56
+      }
+    ],
+    "Items": [
+      {
+        "Paint Kit": 420,
+        "Seed": 748,
+        "Type": "Skin",
+        "Weapon ID": 500,
+        "Wear": 0.004983685
+      },
+      {
+        "Paint Kit": 420,
+        "Seed": 382,
+        "Type": "Skin",
+        "Weapon ID": 500,
+        "Wear": 0.0053600795
+      },
+      {
+        "Paint Kit": 420,
+        "Seed": 108,
+        "Type": "Skin",
+        "Weapon ID": 500,
+        "Wear": 0.00036798607
+      },
+      {
+        "Paint Kit": 420,
+        "Seed": 435,
+        "Type": "Skin",
+        "Weapon ID": 500,
+        "Wear": 0.0016185477
+      },
+      {
+        "Paint Kit": 707,
+        "Seed": 738,
+        "Type": "Skin",
+        "Weapon ID": 7,
+        "Wear": 0.02897632
+      },
+      {
+        "Paint Kit": 707,
+        "Seed": 188,
+        "Type": "Skin",
+        "Weapon ID": 7,
+        "Wear": 0.053201597
+      },
+      {
+        "Paint Kit": 430,
+        "Seed": 789,
+        "Type": "Skin",
+        "Weapon ID": 60,
+        "Wear": 0.009043905
+      },
+      {
+        "Paint Kit": 430,
+        "Seed": 882,
+        "Type": "Skin",
+        "Weapon ID": 60,
+        "Wear": 0.014017117
+      },
+      {
+        "Paint Kit": 301,
+        "Seed": 981,
+        "Type": "Skin",
+        "Weapon ID": 60,
+        "Wear": 0.05211733
+      },
+      {
+        "Paint Kit": 344,
+        "Seed": 974,
+        "Type": "Skin",
+        "Weapon ID": 9,
+        "Wear": 0.030083627
+      },
+      {
+        "Paint Kit": 413,
+        "Seed": 695,
+        "Type": "Skin",
+        "Weapon ID": 507,
+        "Wear": 0.0013333886
+      },
+      {
+        "Paint Kit": 413,
+        "Seed": 522,
+        "Type": "Skin",
+        "Weapon ID": 507,
+        "Wear": 0.0028210017
+      },
+      {
+        "Paint Kit": 415,
+        "Seed": 258,
+        "Type": "Skin",
+        "Weapon ID": 507,
+        "Wear": 0.003285476
+      },
+      {
+        "Paint Kit": 417,
+        "Seed": 22,
+        "Type": "Skin",
+        "Weapon ID": 507,
+        "Wear": 0.005173933
+      },
+      {
+        "Paint Kit": 421,
+        "Seed": 472,
+        "Type": "Skin",
+        "Weapon ID": 507,
+        "Wear": 0.0036124215
+      },
+      {
+        "Paint Kit": 10041,
+        "Seed": 256,
+        "Type": "Glove",
+        "Weapon ID": 5031,
+        "Wear": 0.07960683
+      },
+      {
+        "Paint Kit": 801,
+        "Seed": 342,
+        "Type": "Skin",
+        "Weapon ID": 7,
+        "Wear": 0.06669048
+      },
+      {
+        "Paint Kit": 445,
+        "Seed": 668,
+        "Type": "Skin",
+        "Weapon ID": 60,
+        "Wear": 0.00041062804
+      },
+      {
+        "Paint Kit": 440,
+        "Seed": 158,
+        "Type": "Skin",
+        "Weapon ID": 60,
+        "Wear": 0.0033376103
+      },
+      {
+        "Paint Kit": 360,
+        "Seed": 235,
+        "Type": "Skin",
+        "Weapon ID": 60,
+        "Wear": 0.028683547
+      },
+      {
+        "Paint Kit": 474,
+        "Seed": 654,
+        "Type": "Skin",
+        "Weapon ID": 7,
+        "Wear": 0.015921304
+      },
+      {
+        "Paint Kit": 639,
+        "Seed": 509,
+        "Type": "Skin",
+        "Weapon ID": 7,
+        "Wear": 0.0074075805
+      },
+      {
+        "Paint Kit": 524,
+        "Seed": 160,
+        "Type": "Skin",
+        "Weapon ID": 7,
+        "Wear": 0.04740963
+      },
+      {
+        "Paint Kit": 316,
+        "Seed": 128,
+        "Type": "Skin",
+        "Weapon ID": 7,
+        "Wear": 0.069480956
+      },
+      {
+        "Paint Kit": 380,
+        "Seed": 413,
+        "Type": "Skin",
+        "Weapon ID": 7,
+        "Wear": 0.061435558
+      },
+      {
+        "Is Original": false,
+        "Type": "Collectible",
+        "Weapon ID": 1362
+      },
+      {
+        "Paint Kit": 344,
+        "Seed": 877,
+        "Stickers": [
+          {
+            "Slot": 3,
+            "Sticker ID": 80,
+            "Wear": 0.0
+          }
+        ],
+        "Type": "Skin",
+        "Weapon ID": 9,
+        "Wear": 0.04331017
+      },
+      {
+        "Paint Kit": 180,
+        "Seed": 110,
+        "Stickers": [
+          {
+            "Slot": 0,
+            "Sticker ID": 80,
+            "Wear": 0.0
+          },
+          {
+            "Slot": 1,
+            "Sticker ID": 80,
+            "Wear": 0.0
+          },
+          {
+            "Slot": 2,
+            "Sticker ID": 80,
+            "Wear": 0.0
+          },
+          {
+            "Slot": 3,
+            "Sticker ID": 80,
+            "Wear": 0.0
+          }
+        ],
+        "Type": "Skin",
+        "Weapon ID": 7,
+        "Wear": 0.08045994
+      },
+      {
+        "Paint Kit": 504,
+        "Seed": 503,
+        "Stickers": [
+          {
+            "Slot": 0,
+            "Sticker ID": 80,
+            "Wear": 0.0
+          },
+          {
+            "Slot": 1,
+            "Sticker ID": 80,
+            "Wear": 0.0
+          },
+          {
+            "Slot": 2,
+            "Sticker ID": 80,
+            "Wear": 0.0
+          },
+          {
+            "Slot": 3,
+            "Sticker ID": 80,
+            "Wear": 0.0
+          }
+        ],
+        "Type": "Skin",
+        "Weapon ID": 61,
+        "Wear": 0.02657553
+      },
+      {
+        "Paint Kit": 10018,
+        "Seed": 561,
+        "Type": "Glove",
+        "Weapon ID": 5030,
+        "Wear": 0.06501089
+      },
+      {
+        "Paint Kit": 10037,
+        "Seed": 613,
+        "Type": "Glove",
+        "Weapon ID": 5030,
+        "Wear": 0.07128988
+      },
+      {
+        "Paint Kit": 988,
+        "Seed": 238,
+        "Stickers": [
+          {
+            "Slot": 0,
+            "Sticker ID": 80,
+            "Wear": 0.0
+          }
+        ],
+        "Type": "Skin",
+        "Weapon ID": 4,
+        "Wear": 0.013715338
+      },
+      {
+        "Paint Kit": 38,
+        "Seed": 661,
+        "Type": "Skin",
+        "Weapon ID": 507,
+        "Wear": 0.0013698894
+      },
+      {
+        "Paint Kit": 38,
+        "Seed": 718,
+        "Type": "Skin",
+        "Weapon ID": 507,
+        "Wear": 0.00364608
+      },
+      {
+        "Paint Kit": 38,
+        "Seed": 450,
+        "Type": "Skin",
+        "Weapon ID": 507,
+        "Wear": 0.0047000274
+      },
+      {
+        "Paint Kit": 38,
+        "Seed": 82,
+        "Type": "Skin",
+        "Weapon ID": 507,
+        "Wear": 0.0043631867
+      },
+      {
+        "Paint Kit": 455,
+        "Seed": 400,
+        "Type": "Skin",
+        "Weapon ID": 8,
+        "Wear": 0.056596577
+      },
+      {
+        "Paint Kit": 614,
+        "Seed": 334,
+        "Type": "Skin",
+        "Weapon ID": 30,
+        "Wear": 0.064437255
+      },
+      {
+        "Paint Kit": 548,
+        "Seed": 613,
+        "Stickers": [
+          {
+            "Slot": 0,
+            "Sticker ID": 80,
+            "Wear": 0.0
+          },
+          {
+            "Slot": 1,
+            "Sticker ID": 80,
+            "Wear": 0.0
+          },
+          {
+            "Slot": 2,
+            "Sticker ID": 80,
+            "Wear": 0.0
+          },
+          {
+            "Slot": 3,
+            "Sticker ID": 80,
+            "Wear": 0.0
+          }
+        ],
+        "Type": "Skin",
+        "Weapon ID": 60,
+        "Wear": 0.022318145
+      },
+      {
+        "Paint Kit": 360,
+        "Seed": 463,
+        "Type": "Skin",
+        "Weapon ID": 60,
+        "Wear": 0.027211534
+      },
+      {
+        "Paint Kit": 984,
+        "Seed": 393,
+        "Stickers": [
+          {
+            "Slot": 0,
+            "Sticker ID": 80,
+            "Wear": 0.0
+          }
+        ],
+        "Type": "Skin",
+        "Weapon ID": 60,
+        "Wear": 0.021838209
+      },
+      {
+        "Sticker ID": 98,
+        "Type": "Sticker",
+        "Weapon ID": 1209
+      },
+      {
+        "Paint Kit": 309,
+        "Seed": 806,
+        "Stickers": [
+          {
+            "Slot": 0,
+            "Sticker ID": 98,
+            "Wear": 0.0
+          },
+          {
+            "Slot": 1,
+            "Sticker ID": 98,
+            "Wear": 0.0
+          },
+          {
+            "Slot": 3,
+            "Sticker ID": 98,
+            "Wear": 0.0
+          }
+        ],
+        "Type": "Skin",
+        "Weapon ID": 16,
+        "Wear": 0.007965059
+      },
+      {
+        "Paint Kit": 802,
+        "Seed": 559,
+        "Type": "Skin",
+        "Weapon ID": 24,
+        "Wear": 0.02627711
+      },
+      {
+        "Paint Kit": 568,
+        "Seed": 916,
+        "Type": "Skin",
+        "Weapon ID": 500,
+        "Wear": 0.002942046
+      },
+      {
+        "Paint Kit": 562,
+        "Seed": 154,
+        "Type": "Skin",
+        "Weapon ID": 508,
+        "Wear": 0.016821045
+      },
+      {
+        "Paint Kit": 558,
+        "Seed": 15,
+        "Type": "Skin",
+        "Weapon ID": 500,
+        "Wear": 0.004672236
+      },
+      {
+        "Paint Kit": 38,
+        "Seed": 230,
+        "Type": "Skin",
+        "Weapon ID": 500,
+        "Wear": 0.00055340107
+      },
+      {
+        "Paint Kit": 433,
+        "Seed": 88,
+        "Type": "Skin",
+        "Weapon ID": 17,
+        "Wear": 0.0037655632
+      },
+      {
+        "Paint Kit": 660,
+        "Seed": 419,
+        "Type": "Skin",
+        "Weapon ID": 3,
+        "Wear": 0.061814256
+      },
+      {
+        "Paint Kit": 919,
+        "Seed": 330,
+        "Type": "Skin",
+        "Weapon ID": 10,
+        "Wear": 0.017768493
+      },
+      {
+        "Paint Kit": 624,
+        "Seed": 625,
+        "Type": "Skin",
+        "Weapon ID": 40,
+        "Wear": 0.015549231
+      },
+      {
+        "Paint Kit": 222,
+        "Seed": 567,
+        "Type": "Skin",
+        "Weapon ID": 40,
+        "Wear": 0.06199806
+      },
+      {
+        "Paint Kit": 678,
+        "Seed": 251,
+        "Type": "Skin",
+        "Weapon ID": 36,
+        "Wear": 0.046574287
+      },
+      {
+        "Paint Kit": 156,
+        "Seed": 673,
+        "Type": "Skin",
+        "Weapon ID": 19,
+        "Wear": 0.08708424
+      },
+      {
+        "Paint Kit": 597,
+        "Seed": 565,
+        "Type": "Skin",
+        "Weapon ID": 38,
+        "Wear": 0.0029986687
+      },
+      {
+        "Paint Kit": 493,
+        "Seed": 862,
+        "Type": "Skin",
+        "Weapon ID": 11,
+        "Wear": 0.010911757
+      },
+      {
+        "Is Original": false,
+        "Type": "Collectible",
+        "Weapon ID": 969
+      },
+      {
+        "Music ID": 53,
+        "Type": "Music",
+        "Weapon ID": 1314
+      },
+      {
+        "Paint Kit": 360,
+        "Seed": 242,
+        "Type": "Skin",
+        "Weapon ID": 60,
+        "Wear": 0.025437158
+      },
+      {
+        "Paint Kit": 962,
+        "Seed": 66,
+        "Type": "Skin",
+        "Weapon ID": 1,
+        "Wear": 0.045155454
+      },
+      {
+        "Paint Kit": 747,
+        "Seed": 973,
+        "Type": "Skin",
+        "Weapon ID": 2,
+        "Wear": 0.015794931
+      },
+      {
+        "Paint Kit": 734,
+        "Seed": 661,
+        "Type": "Skin",
+        "Weapon ID": 34,
+        "Wear": 0.04627367
+      },
+      {
+        "Paint Kit": 696,
+        "Seed": 908,
+        "Type": "Skin",
+        "Weapon ID": 33,
+        "Wear": 0.010773321
+      },
+      {
+        "Paint Kit": 62,
+        "Seed": 270,
+        "Type": "Skin",
+        "Weapon ID": 35,
+        "Wear": 0.09191282
+      },
+      {
+        "Paint Kit": 1046,
+        "Seed": 246,
+        "Type": "Skin",
+        "Weapon ID": 25,
+        "Wear": 0.035311624
+      },
+      {
+        "Paint Kit": 737,
+        "Seed": 465,
+        "Type": "Skin",
+        "Weapon ID": 27,
+        "Wear": 0.00013447506
+      },
+      {
+        "Paint Kit": 547,
+        "Seed": 112,
+        "Type": "Skin",
+        "Weapon ID": 14,
+        "Wear": 0.023088152
+      },
+      {
+        "Paint Kit": 763,
+        "Seed": 583,
+        "Type": "Skin",
+        "Weapon ID": 28,
+        "Wear": 0.008730143
+      },
+      {
+        "Graffiti ID": 1677,
+        "Type": "Graffiti",
+        "Weapon ID": 1349
+      },
+      {
+        "Type": "Case",
+        "Weapon ID": 4179
+      },
+      {
+        "Type": "Case",
+        "Weapon ID": 4179
+      },
+      {
+        "Type": "Case",
+        "Weapon ID": 4179
+      },
+      {
+        "Type": "Case",
+        "Weapon ID": 4179
+      },
+      {
+        "Sticker ID": 60,
+        "Type": "Sticker",
+        "Weapon ID": 1209
+      },
+      {
+        "Paint Kit": 946,
+        "Seed": 621,
+        "Stickers": [
+          {
+            "Slot": 0,
+            "Sticker ID": 60,
+            "Wear": 0.0
+          },
+          {
+            "Slot": 1,
+            "Sticker ID": 60,
+            "Wear": 0.0
+          },
+          {
+            "Slot": 2,
+            "Sticker ID": 60,
+            "Wear": 0.0
+          }
+        ],
+        "Type": "Skin",
+        "Weapon ID": 60,
+        "Wear": 0.021300033
+      },
+      {
+        "Paint Kit": 475,
+        "Seed": 533,
+        "Type": "Skin",
+        "Weapon ID": 9,
+        "Wear": 0.017242705
+      },
+      {
+        "Paint Kit": 917,
+        "Seed": 393,
+        "Type": "Skin",
+        "Weapon ID": 9,
+        "Wear": 0.01936565
+      },
+      {
+        "Paint Kit": 51,
+        "Seed": 876,
+        "Type": "Skin",
+        "Weapon ID": 9,
+        "Wear": 0.0017411696
+      },
+      {
+        "Paint Kit": 736,
+        "Seed": 697,
+        "Type": "Skin",
+        "Weapon ID": 9,
+        "Wear": 0.02557917
+      },
+      {
+        "Paint Kit": 662,
+        "Seed": 592,
+        "Type": "Skin",
+        "Weapon ID": 9,
+        "Wear": 0.014096975
+      },
+      {
+        "Paint Kit": 803,
+        "Seed": 122,
+        "Type": "Skin",
+        "Weapon ID": 9,
+        "Wear": 0.009146204
+      },
+      {
+        "Paint Kit": 395,
+        "Seed": 700,
+        "Type": "Skin",
+        "Weapon ID": 9,
+        "Wear": 0.10038457
+      },
+      {
+        "Paint Kit": 756,
+        "Seed": 929,
+        "Type": "Skin",
+        "Weapon ID": 9,
+        "Wear": 0.01917257
+      },
+      {
+        "Paint Kit": 640,
+        "Seed": 484,
+        "Type": "Skin",
+        "Weapon ID": 9,
+        "Wear": 0.00206518
+      },
+      {
+        "Paint Kit": 174,
+        "Seed": 494,
+        "Type": "Skin",
+        "Weapon ID": 9,
+        "Wear": 0.075318925
+      },
+      {
+        "Paint Kit": 887,
+        "Seed": 735,
+        "Type": "Skin",
+        "Weapon ID": 9,
+        "Wear": 0.0070832586
+      },
+      {
+        "Paint Kit": 279,
+        "Seed": 439,
+        "Stickers": [
+          {
+            "Slot": 0,
+            "Sticker ID": 60,
+            "Wear": 0.0
+          },
+          {
+            "Slot": 1,
+            "Sticker ID": 60,
+            "Wear": 0.0
+          },
+          {
+            "Slot": 2,
+            "Sticker ID": 60,
+            "Wear": 0.0
+          },
+          {
+            "Slot": 3,
+            "Sticker ID": 60,
+            "Wear": 0.0
+          }
+        ],
+        "Type": "Skin",
+        "Weapon ID": 9,
+        "Wear": 0.21369974
+      },
+      {
+        "Paint Kit": 321,
+        "Seed": 913,
+        "Stickers": [
+          {
+            "Slot": 0,
+            "Sticker ID": 60,
+            "Wear": 0.0
+          },
+          {
+            "Slot": 1,
+            "Sticker ID": 60,
+            "Wear": 0.0
+          },
+          {
+            "Slot": 2,
+            "Sticker ID": 60,
+            "Wear": 0.0
+          },
+          {
+            "Slot": 3,
+            "Sticker ID": 60,
+            "Wear": 0.0
+          }
+        ],
+        "Type": "Skin",
+        "Weapon ID": 60,
+        "Wear": 0.03227638
+      },
+      {
+        "Paint Kit": 398,
+        "Seed": 969,
+        "Type": "Skin",
+        "Weapon ID": 13,
+        "Wear": 0.36615333
+      },
+      {
+        "Type": "Agent",
+        "Weapon ID": 4619
+      },
+      {
+        "Type": "Agent",
+        "Weapon ID": 5504
+      }
+    ],
+    "Version": 2
+  },
+  "Misc": {
+    "Auto accept": true,
+    "Auto pistol": true,
+    "Auto reload": true,
+    "Bomb timer": {
+      "Enabled": true
+    },
+    "Bunny hop": true,
+    "Custom Hit Sound": "1",
+    "Custom Kill Sound": "1",
+    "Fix animation LOD": true,
+    "Fix bone matrix": true,
+    "Fix movement": true,
+    "Grenade predict": true,
+    "Hit sound": 5,
+    "Kill sound": 5,
+    "Noscope crosshair": {
+      "Enabled": true
+    },
+    "Radar hack": true,
+    "Reportbot": {
+      "Abusive Communications": true,
+      "Griefing": true,
+      "Rounds": 132
+    },
+    "Reveal money": true,
+    "Reveal ranks": true,
+    "Reveal suspect": true,
+    "Spectator list": {
+      "Enabled": true,
+      "Pos": {
+        "X": 1716.0,
+        "Y": 705.0
+      },
+      "Size": {
+        "X": 200.0,
+        "Y": 84.0
+      }
+    }
+  },
+  "Sound": {
+    "Chicken volume": 0,
+    "Players": [
+      {},
+      {},
+      {}
+    ]
+  },
+  "Style": {
+    "Colors": {
+      "Border": [
+        0.51,
+        0.15000005,
+        0.45857146,
+        1.0
+      ],
+      "BorderShadow": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "Button": [
+        0.51,
+        0.15000005,
+        0.45857146,
+        1.0
+      ],
+      "ButtonActive": [
+        1.0,
+        0.0,
+        0.41269827,
+        1.0
+      ],
+      "ButtonHovered": [
+        0.91,
+        0.13,
+        0.6252384,
+        1.0
+      ],
+      "CheckMark": [
+        0.78,
+        0.20999996,
+        0.46333346,
+        1.0
+      ],
+      "ChildBg": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "DragDropTarget": [
+        0.38095236,
+        1.0,
+        9.0,
+        0.9
+      ],
+      "FrameBg": [
+        0.11,
+        0.11,
+        0.11,
+        1.0
+      ],
+      "FrameBgActive": [
+        0.78,
+        0.20999996,
+        0.445238,
+        1.0
+      ],
+      "FrameBgHovered": [
+        0.5757017,
+        0.13286301,
+        0.5978836,
+        1.0
+      ],
+      "Header": [
+        0.51,
+        0.15000005,
+        0.45857146,
+        1.0
+      ],
+      "HeaderActive": [
+        1.0,
+        0.0,
+        0.41269827,
+        1.0
+      ],
+      "HeaderHovered": [
+        0.91,
+        0.13,
+        0.52619046,
+        1.0
+      ],
+      "MenuBarBg": [
+        0.11,
+        0.11,
+        0.11,
+        1.0
+      ],
+      "ModalWindowDimBg": [
+        0.2,
+        0.2,
+        0.2,
+        0.35
+      ],
+      "NavHighlight": [
+        0.26,
+        0.59,
+        0.98,
+        0.8
+      ],
+      "NavWindowingDimBg": [
+        0.2,
+        0.2,
+        0.2,
+        0.2
+      ],
+      "NavWindowingHighlight": [
+        0.7,
+        0.7,
+        0.7,
+        0.7
+      ],
+      "PlotHistogram": [
+        0.9,
+        0.0,
+        0.45714283,
+        1.0
+      ],
+      "PlotHistogramHovered": [
+        1.0,
+        0.0,
+        0.38095236,
+        1.0
+      ],
+      "PlotLines": [
+        0.61,
+        0.61,
+        0.61,
+        1.0
+      ],
+      "PlotLinesHovered": [
+        0.84656084,
+        0.5374989,
+        0.8122209,
+        1.0
+      ],
+      "PopupBg": [
+        0.07450981,
+        0.0,
+        0.10980392,
+        0.9411765
+      ],
+      "ResizeGrip": [
+        0.21,
+        0.21,
+        0.21,
+        1.0
+      ],
+      "ResizeGripActive": [
+        0.6442856,
+        0.20999996,
+        0.78,
+        1.0
+      ],
+      "ResizeGripHovered": [
+        0.91,
+        0.13,
+        0.40238103,
+        1.0
+      ],
+      "ScrollbarBg": [
+        0.06,
+        0.06,
+        0.06,
+        0.53
+      ],
+      "ScrollbarGrab": [
+        0.21,
+        0.21,
+        0.21,
+        1.0
+      ],
+      "ScrollbarGrabActive": [
+        0.81,
+        0.83,
+        0.81,
+        1.0
+      ],
+      "ScrollbarGrabHovered": [
+        0.47,
+        0.47,
+        0.47,
+        1.0
+      ],
+      "Separator": [
+        0.21,
+        0.21,
+        0.21,
+        1.0
+      ],
+      "SeparatorActive": [
+        0.78039217,
+        0.21176471,
+        0.45882353,
+        1.0
+      ],
+      "SeparatorHovered": [
+        0.91,
+        0.13,
+        0.40238103,
+        1.0
+      ],
+      "SliderGrab": [
+        0.30791005,
+        0.7619048,
+        0.24187452,
+        1.0
+      ],
+      "SliderGrabActive": [
+        0.39077848,
+        1.0,
+        0.015873015,
+        1.0
+      ],
+      "Tab": [
+        0.7195767,
+        0.1446768,
+        0.381937,
+        1.0
+      ],
+      "TabActive": [
+        0.7665905,
+        0.074074075,
+        0.7777778,
+        1.0
+      ],
+      "TabHovered": [
+        1.0,
+        0.0,
+        0.41269827,
+        1.0
+      ],
+      "TabUnfocused": [
+        0.2832,
+        0.2832,
+        0.56880003,
+        0.8212
+      ],
+      "TabUnfocusedActive": [
+        0.3504,
+        0.3504,
+        0.6516,
+        0.8372
+      ],
+      "TableBorderLight": [
+        0.68,
+        0.68,
+        0.74,
+        1.0
+      ],
+      "TableBorderStrong": [
+        0.57,
+        0.57,
+        0.64,
+        1.0
+      ],
+      "TableHeaderBg": [
+        0.78,
+        0.87,
+        0.98,
+        1.0
+      ],
+      "TableRowBg": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "TableRowBgAlt": [
+        0.3,
+        0.3,
+        0.3,
+        0.09
+      ],
+      "Text": [
+        0.92,
+        0.92,
+        0.92,
+        1.0
+      ],
+      "TextDisabled": [
+        0.44,
+        0.44,
+        0.44,
+        1.0
+      ],
+      "TextSelectedBg": [
+        0.26,
+        0.59,
+        0.98,
+        0.35
+      ],
+      "TitleBg": [
+        0.51,
+        0.15000005,
+        0.45857146,
+        1.0
+      ],
+      "TitleBgActive": [
+        1.0,
+        0.0,
+        0.41269827,
+        1.0
+      ],
+      "TitleBgCollapsed": [
+        0.0,
+        0.0,
+        0.0,
+        0.51
+      ],
+      "WindowBg": [
+        0.10282537,
+        0.0,
+        0.111111104,
+        1.0
+      ]
+    }
+  },
+  "Triggerbot": [
+    {
+      "Scoped only": false
+    },
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {},
+    {
+      "Enabled": true,
+      "Scoped only": false
+    }
+  ],
+  "Triggerbot Key": "LALT",
+  "Visuals": {
+    "Bullet Tracers": {
+      "Alpha": 1.0,
+      "Color": "#ff00f2",
+      "Enabled": true
+    },
+    "Deagle spinner": true,
+    "Disable post-processing": true,
+    "FOV": 17,
+    "Flash reduction": 70,
+    "Hit effect": 4,
+    "Hit effect time": 0.17,
+    "Hit marker": 1,
+    "No 3d sky": true,
+    "No aim punch": true,
+    "No grass": true,
+    "No shadows": true,
+    "No view punch": true,
+    "Sky": {
+      "Color": [
+        0.99999,
+        0.9999988,
+        1.0
+      ]
+    },
+    "Skybox": 9,
+    "Thirdperson distance": 156,
+    "World": {
+      "Color": [
+        1.0,
+        0.99999,
+        0.99999
+      ]
+    }
+  }
+}

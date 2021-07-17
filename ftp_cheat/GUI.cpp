@@ -636,6 +636,7 @@ void GUI::renderChamsWindow(bool contentOnly) noexcept
     ImGui::Checkbox("Cover", &chams.cover);
     ImGui::Checkbox("Ignore-Z", &chams.ignorez);
     ImGuiCustom::colorPicker("Color", chams);
+   
 
     if (!contentOnly) {
         ImGui::End();

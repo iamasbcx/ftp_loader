@@ -13,6 +13,7 @@ public:
     bool render(void*, void*, const ModelRenderInfo&, matrix3x4*) noexcept;
     static void updateInput() noexcept;
 private:
+    void renderBacktrack(Entity* player) noexcept;
     void renderPlayer(Entity* player) noexcept;
     void renderWeapons() noexcept;
     void renderHands() noexcept;
