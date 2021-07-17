@@ -1269,19 +1269,7 @@ void InventoryChanger::fromJson(const json& j) noexcept
                 dynamicDataIdx = loadDynamicSkinDataFromJson(jsonItem);
             }
             else if (item.isGlove()) {
-                DynamicGloveData dynamicData;
-
-                if (jsonItem.contains("Wear")) {
-                    if (const auto& wear = jsonItem["Wear"]; wear.is_number_float())
-                        dynamicData.wear = wear;
-                }
-
-                if (jsonItem.contains("Seed")) {
-                    if (const auto& seed = jsonItem["Seed"]; seed.is_number_integer())
-                        dynamicData.seed = seed;
-                }
-
-                dynamicDataIdx = Inventory::emplaceDynamicData(std::move(dynamicData));
+                dynamicDataIdx = loadDynamicGloveDataFromJson(jsonItem);
             }
             else if (item.isMusic()) {
                 DynamicMusicData dynamicData;
@@ -1369,19 +1357,7 @@ void InventoryChanger::fromJson(const json& j) noexcept
             if (itemIndex == StaticData::InvalidItemIdx)
                 continue;
 
-            DynamicGloveData dynamicData;
-
-            if (jsonItem.contains("Wear")) {
-                if (const auto& wear = jsonItem["Wear"]; wear.is_number_float())
-                    dynamicData.wear = wear;
-            }
-
-            if (jsonItem.contains("Seed")) {
-                if (const auto& seed = jsonItem["Seed"]; seed.is_number_integer())
-                    dynamicData.seed = seed;
-            }
-
-            Inventory::addItemAcknowledged(itemIndex, Inventory::emplaceDynamicData(std::move(dynamicData)));
+            Inventory::addItemAcknowledged(itemIndex, loadDynamicGloveDataFromJson(jsonItem));
         } else if (type == "Music") {
             if (!jsonItem.contains("Music ID") || !jsonItem["Music ID"].is_number_integer())
                 continue;
@@ -1512,6 +1488,23 @@ void InventoryChanger::fromJson(const json& j) noexcept
                 Inventory::equipItem(Team::None, slot, noteam);
         }
     }
+}
+
+[[nodiscard]] std::size_t loadDynamicGloveDataFromJson(const json& j) noexcept
+{
+    DynamicGloveData dynamicData;
+
+    if (j.contains("Wear")) {
+        if (const auto& wear = j["Wear"]; wear.is_number_float())
+            dynamicData.wear = wear;
+    }
+
+    if (j.contains("Seed")) {
+        if (const auto& seed = j["Seed"]; seed.is_number_integer())
+            dynamicData.seed = seed;
+    }
+
+    return Inventory::emplaceDynamicData(std::move(dynamicData));
 }
 
 void InventoryChanger::resetConfig() noexcept
