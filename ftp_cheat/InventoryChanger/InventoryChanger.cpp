@@ -1163,6 +1163,18 @@ json InventoryChanger::toJson() noexcept
     return j;
 }
 
+[[nodiscard]] std::size_t loadDynamicMusicDataFromJson(const json& j) noexcept
+{
+    DynamicMusicData dynamicData;
+
+    if (j.contains("StatTrak")) {
+        if (const auto& statTrak = j["StatTrak"]; statTrak.is_number_integer() && statTrak > -1)
+            dynamicData.statTrak = statTrak;
+    }
+
+    return Inventory::emplaceDynamicData(std::move(dynamicData));
+}
+
 [[nodiscard]] std::size_t loadDynamicSkinDataFromJson(const json& j) noexcept
 {
     DynamicSkinData dynamicData;
@@ -1272,14 +1284,7 @@ void InventoryChanger::fromJson(const json& j) noexcept
                 dynamicDataIdx = loadDynamicGloveDataFromJson(jsonItem);
             }
             else if (item.isMusic()) {
-                DynamicMusicData dynamicData;
-
-                if (jsonItem.contains("StatTrak")) {
-                    if (const auto& statTrak = jsonItem["StatTrak"]; statTrak.is_number_integer() && statTrak > -1)
-                        dynamicData.statTrak = statTrak;
-                }
-
-                dynamicDataIdx = Inventory::emplaceDynamicData(std::move(dynamicData));
+                dynamicDataIdx = loadDynamicMusicDataFromJson(jsonItem);
             }
             else if (item.isAgent()) {
                 DynamicAgentData dynamicData;
@@ -1367,14 +1372,7 @@ void InventoryChanger::fromJson(const json& j) noexcept
             if (itemIndex == StaticData::InvalidItemIdx)
                 continue;
 
-            DynamicMusicData dynamicData;
-
-            if (jsonItem.contains("StatTrak")) {
-                if (const auto& statTrak = jsonItem["StatTrak"]; statTrak.is_number_integer() && statTrak > -1)
-                    dynamicData.statTrak = statTrak;
-            }
-
-            Inventory::addItemAcknowledged(itemIndex, Inventory::emplaceDynamicData(std::move(dynamicData)));
+            Inventory::addItemAcknowledged(itemIndex, loadDynamicMusicDataFromJson(jsonItem));
         } else if (type == "Collectible") {
             if (!jsonItem.contains("Weapon ID") || !jsonItem["Weapon ID"].is_number_integer())
                 continue;
