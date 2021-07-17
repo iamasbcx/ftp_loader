@@ -279,7 +279,7 @@ void ImGui::StyleColorsFTP(ImGuiStyle* dst) {
 
     colors[ImGuiCol_Text] = ImVec4(0.92f, 0.92f, 0.92f, 1.00f);//
     colors[ImGuiCol_TextDisabled] = ImVec4(0.44f, 0.44f, 0.44f, 1.00f);//
-    colors[ImGuiCol_WindowBg] = ImVec4(0.10282537f, 0.0f, 0.111111104f, 1.0f);//
+    colors[ImGuiCol_WindowBg] = ImVec4(0.10282537f, 0.0f, 0.111111104f, 0.8f);//
     colors[ImGuiCol_Tab] = ImVec4(0.7195767f, 0.1446768f, 0.381937f, 1.0f);//
     colors[ImGuiCol_TabHovered] = ImVec4(1.0f,0.0f, 0.41269827f, 1.0f);//
     colors[ImGuiCol_TabActive] = ImVec4(0.7665905f, 0.074074075f, 0.7777778f,1.0f);

@@ -857,6 +857,23 @@ namespace ImGui
     }
 }
 
+[[nodiscard]] std::size_t loadDynamicGloveDataFromJson(const json& j) noexcept
+{
+    DynamicGloveData dynamicData;
+
+    if (j.contains("Wear")) {
+        if (const auto& wear = j["Wear"]; wear.is_number_float())
+            dynamicData.wear = wear;
+    }
+
+    if (j.contains("Seed")) {
+        if (const auto& seed = j["Seed"]; seed.is_number_integer())
+            dynamicData.seed = seed;
+    }
+
+    return Inventory::emplaceDynamicData(std::move(dynamicData));
+}
+
 void InventoryChanger::drawGUI(bool contentOnly) noexcept
 {
     if (!contentOnly) {
@@ -1203,34 +1220,41 @@ json InventoryChanger::toJson() noexcept
     return skinStickers;
 }
 
+[[nodiscard]] auto loadAgentPatchesFromJson(const json& j) noexcept
+{
+    std::array<PatchConfig, 5> agentPatches;
+
+    if (!j.contains("Patches"))
+        return agentPatches;
+
+    const auto& patches = j["Patches"];
+    if (!patches.is_array())
+        return agentPatches;
+
+    for (const auto& patch : patches) {
+        if (!patch.is_object())
+            continue;
+
+        if (!patch.contains("Patch ID") || !patch["Patch ID"].is_number_integer())
+            continue;
+
+        if (!patch.contains("Slot") || !patch["Slot"].is_number_integer())
+            continue;
+
+        const int patchID = patch["Patch ID"];
+        const std::size_t slot = patch["Slot"];
+
+        if (patchID != 0 && slot < agentPatches.size())
+            agentPatches[slot].patchID = patchID;
+    }
+
+    return agentPatches;
+}
+
 [[nodiscard]] std::size_t loadDynamicAgentDataFromJson(const json& j) noexcept
 {
     DynamicAgentData dynamicData;
-
-    if (j.contains("Patches")) {
-        if (const auto& patches = j["Patches"]; patches.is_array()) {
-            for (std::size_t k = 0; k < patches.size(); ++k) {
-                const auto& patch = patches[k];
-                if (!patch.is_object())
-                    continue;
-
-                if (!patch.contains("Patch ID") || !patch["Patch ID"].is_number_integer())
-                    continue;
-
-                if (!patch.contains("Slot") || !patch["Slot"].is_number_integer())
-                    continue;
-
-                const int patchID = patch["Patch ID"];
-                if (patchID == 0)
-                    continue;
-                const std::size_t slot = patch["Slot"];
-                if (slot >= std::tuple_size_v<decltype(DynamicAgentData::patches)>)
-                    continue;
-                dynamicData.patches[slot].patchID = patchID;
-            }
-        }
-    }
-
+    dynamicData.patches = loadAgentPatchesFromJson(j);
     return Inventory::emplaceDynamicData(std::move(dynamicData));
 }
 
@@ -1481,23 +1505,6 @@ void InventoryChanger::fromJson(const json& j) noexcept
                 Inventory::equipItem(Team::None, slot, noteam);
         }
     }
-}
-
-[[nodiscard]] std::size_t loadDynamicGloveDataFromJson(const json& j) noexcept
-{
-    DynamicGloveData dynamicData;
-
-    if (j.contains("Wear")) {
-        if (const auto& wear = j["Wear"]; wear.is_number_float())
-            dynamicData.wear = wear;
-    }
-
-    if (j.contains("Seed")) {
-        if (const auto& seed = j["Seed"]; seed.is_number_integer())
-            dynamicData.seed = seed;
-    }
-
-    return Inventory::emplaceDynamicData(std::move(dynamicData));
 }
 
 void InventoryChanger::resetConfig() noexcept
