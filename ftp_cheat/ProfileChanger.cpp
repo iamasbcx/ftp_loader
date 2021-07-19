@@ -183,5 +183,5 @@ namespace profile_changer {
 		free(ptr);
 
 		return result;
-	}
+
 }
