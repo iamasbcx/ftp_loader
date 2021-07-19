@@ -49,6 +49,7 @@
 #include "../SDK/WeaponData.h"
 #include "../SDK/WeaponId.h"
 #include "../SDK/WeaponSystem.h"
+#include "../SDK/Steam.h"
 
 #include "../GUI.h"
 #include "../Helpers.h"
@@ -397,7 +398,42 @@ void Misc::watermark() noexcept
     if (!miscConfig.watermark.enabled)
         return;
 
-    ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize;
+    //NAME
+    std::string name = interfaces->engine->getSteamAPIContext()->steamFriends->getPersonaName();
+
+    //FPS
+    static auto fps = 1.0f;
+    fps = 0.9f * fps + 0.1f * memory->globalVars->absoluteFrameTime;
+
+    //PING
+    auto ping = GameData::getNetOutgoingLatency();
+
+    //TIME
+    time_t t = std::time(nullptr);
+    std::ostringstream time;
+    time << std::put_time(std::localtime(&t), ("%H:%M:%S"));
+
+    std::ostringstream format;
+    format << "-> fuckthepopulation"
+        << " | " << (name.c_str())
+        << " | " << (fps != 0.0f ? static_cast<int>(1 / fps) : 0) << " fps"
+        << " | " << (ping) << " ms"
+        << " | " << (time.str().data());
+
+    if (!gui->isOpen())
+        ImGui::SetNextWindowBgAlpha(0.4f);
+
+    float windowWidth = ImGui::CalcTextSize(format.str().c_str()).x + 16.f;
+    ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x - windowWidth, 0), ImGuiCond_Always);
+    ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 1.0f);
+    if (ImGui::Begin("Watermark", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoInputs))
+    {
+        ImGui::Text("%s", format.str().c_str());
+        ImGui::End();
+    }
+    ImGui::PopStyleVar();
+
+    /*ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize;
     if (!gui->isOpen())
         windowFlags |= ImGuiWindowFlags_NoInputs;
 
@@ -408,7 +444,7 @@ void Misc::watermark() noexcept
     frameRate = 0.9f * frameRate + 0.1f * memory->globalVars->absoluteFrameTime;
 
     ImGui::Text("FTP | %d fps | %d ms", frameRate != 0.0f ? static_cast<int>(1 / frameRate) : 0, GameData::getNetOutgoingLatency());
-    ImGui::End();
+    ImGui::End();*/
 }
 
 void Misc::prepareRevolver(UserCmd* cmd) noexcept
