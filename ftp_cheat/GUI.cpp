@@ -19,6 +19,7 @@
 #include "imguiCustom.h"
 #include "Hooks.h"
 #include "Protobuffs.h"
+#include "ProfileChanger.h"
 
 #include "GUI.h"
 #include "Config.h"
@@ -116,7 +117,7 @@ void GUI::render() noexcept
         StreamProofESP::drawGUI(false);
         Visuals::drawGUI(false);
         InventoryChanger::drawGUI(false);
-        renderProfileChangerWindow();
+        ProfileChanger::drawGUI(false);
         Sound::drawGUI(false);
         renderStyleWindow();
         Misc::drawGUI(false);
@@ -171,7 +172,7 @@ void GUI::renderMenuBar() noexcept
         StreamProofESP::menuBarItem();
         Visuals::menuBarItem();
         InventoryChanger::menuBarItem();
-        menuBarItem("Rank Changer", window.profileChanger);
+        ProfileChanger::menuBarItem();
         Sound::menuBarItem();
         menuBarItem("Style", window.style);
         Misc::menuBarItem();
@@ -180,89 +181,49 @@ void GUI::renderMenuBar() noexcept
     }
 }
 
-void GUI::renderProfileChangerWindow(bool contentOnly) noexcept
-{
-    if (!contentOnly) {
-        if (!window.profileChanger)
-            return;
-        ImGui::SetNextWindowSize({ 290.0f, 0.0f });
-        ImGui::Begin("Rank Changer", &window.profileChanger, windowFlags);
-    }
 
-    static const char* bans_gui[] =
-    {
-        "Off",
-        "You were kicked from the last match (competitive cooldown)",
-        "You killed too many teammates (competitive cooldown)",
-        "You killed a teammate at round start (competitive cooldown)",
-        "You failed to reconnect to the last match (competitive cooldown)",
-        "You abandoned the last match (competitive cooldown)",
-        "You did too much damage to your teammates (competitive cooldown)",
-        "You did too much damage to your teammates at round start (competitive cooldown)",
-        "This account is permanently untrusted (global cooldown)",
-        "You were kicked from too many recent matches (competitive cooldown)",
-        "Convicted by overwatch - majorly disruptive (global cooldown)",
-        "Convicted by overwatch - minorly disruptive (global cooldown)",
-        "Resolving matchmaking state for your account (temporary cooldown)",
-        "Resolving matchmaking state after the last match (temporary cooldown)",
-        "This account is permanently untrusted (global cooldown)",
-        "(global cooldown)",
-        "You failed to connect by match start. (competitive cooldown)",
-        "You have kicked too many teammates in recent matches (competitive cooldown)",
-        "Congratulations on your recent competitive wins! before you play competitive matches further please wait for matchmaking servers to calibrate your skill group placement based on your lastest performance. (temporary cooldown)",
-        "A server using your game server login token has been banned. your account is now permanently banned from operating game servers, and you have a cooldown from connecting to game servers. (global cooldown)"
-    };
-    const char* ranks_gui[] = {
-        "Off",
-        "Silver 1",
-        "Silver 2",
-        "Silver 3",
-        "Silver 4",
-        "Silver Elite",
-        "Silver Elite Master",
-        "Gold Nova 1",
-        "Gold Nova 2",
-        "Gold Nova 3",
-        "Gold Nova Master",
-        "Master Guardian 1",
-        "Master Guardian 2",
-        "Master Guardian elite",
-        "Distinguished Master Guardian",
-        "Legendary Eagle",
-        "Legendary Eagle master",
-        "Supreme Master First Class",
-        "The Global Elite"
-    };
-    ImGui::Columns(2, nullptr, false);
-    ImGui::Checkbox("Enabled (May make MM times longer)##profile", &config->profileChanger.enabled);
-    ImGui::Text("Rank");
-    ImGui::Combo("##Rank", &config->profileChanger.rank, ranks_gui, ARRAYSIZE(ranks_gui));
-    ImGui::Text("Level");
-    ImGui::SliderInt("##Level", &config->profileChanger.level, 0, 40);
-    ImGui::Text("XP");
-    ImGui::InputInt("##Xp##level", &config->profileChanger.exp);
-    ImGui::Text("Wins");
-    ImGui::InputInt("##Wins", &config->profileChanger.wins);
-    if (ImGui::Button("Apply", ImVec2(190, 30)))
-    {
-        write.SendClientHello();
-        write.SendMatchmakingClient2GCHello();
-    }
-    ImGui::NextColumn();
-    ImGui::Text("Friend");
-    ImGui::InputInt("##Friend", &config->profileChanger.friendly);
-    ImGui::Text("Teach");
-    ImGui::InputInt("##Teach", &config->profileChanger.teach);
-    ImGui::Text("Leader");
-    ImGui::InputInt("##Leader", &config->profileChanger.leader);
-    ImGui::Text("Fake ban type");
-    ImGui::Combo("##fake-ban", &config->profileChanger.ban_type, bans_gui, IM_ARRAYSIZE(bans_gui));
-    ImGui::Text("Fake ban time");
-    ImGui::SliderInt("##fake-ban-time", &config->profileChanger.ban_time, 0, 1000, "Seconds: %d");
-    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + (250 / 2) - (190 / 2) - 20.f);
-   
-    if (!contentOnly)
-        ImGui::End();
+
+static void to_json(json& j, const ProfileChanger::ProfileChanger& o, const ProfileChanger::ProfileChanger& dummy = {})
+{
+    WRITE("Enabled", enabled);
+    WRITE("Rank", rank);
+    WRITE("Level", level);
+    WRITE("XP Level", exp);
+    WRITE("Wins", wins);
+    WRITE("Friendly", friendly);
+    WRITE("Teacher", teach);
+    WRITE("Ban type", ban_type);
+    WRITE("Ban time", ban_time);
+}
+
+json ProfileChanger::toJson() noexcept
+{
+    json j;
+    to_json(j, profileChanger);
+    return j;
+}
+
+static void from_json(const json& j, ProfileChanger::ProfileChanger& b)
+{
+    read(j, "Enabled", b.enabled);
+    read(j, "Rank", b.rank);
+    read(j, "Level", b.level);
+    read(j, "XP Level", b.exp);
+    read(j, "Wins", b.wins);
+    read(j, "Friendly", b.friendly);
+    read(j, "Teacher", b.teach);
+    read(j, "Ban type", b.ban_type);
+    read(j, "Ban time", b.ban_time);
+}
+
+void ProfileChanger::fromJson(const json& j) noexcept
+{
+    from_json(j, profileChanger);
+}
+
+void ProfileChanger::resetConfig() noexcept
+{
+    profileChanger = {};
 }
 
 void GUI::renderAimbotWindow(bool contentOnly) noexcept
@@ -678,7 +639,7 @@ void GUI::renderConfigWindow(bool contentOnly) noexcept
             ImGui::OpenPopup("Config to reset");
 
         if (ImGui::BeginPopup("Config to reset")) {
-            static constexpr const char* names[]{ "Whole", "Aimbot", "Triggerbot", "Backtrack", "Anti aim", "Glow", "Chams", "ESP", "Visuals", "Inventory Changer", "Sound", "Style", "Misc" };
+            static constexpr const char* names[]{ "Whole", "Aimbot", "Triggerbot", "Backtrack", "Anti aim", "Glow", "Chams", "ESP", "Visuals", "Inventory Changer", "Sound", "Style", "Misc", "Profile Changer"};
             for (int i = 0; i < IM_ARRAYSIZE(names); i++) {
                 if (i == 1) ImGui::Separator();
 
@@ -697,6 +658,7 @@ void GUI::renderConfigWindow(bool contentOnly) noexcept
                     case 10: Sound::resetConfig(); break;
                     case 11: config->style = { }; updateColors(); break;
                     case 12: Misc::resetConfig(); Misc::updateClanTag(true); break;
+                    case 13: ProfileChanger::resetConfig(); break;
                     }
                 }
             }
@@ -748,10 +710,7 @@ void GUI::renderGuiStyle2() noexcept
         StreamProofESP::tabItem();
         Visuals::tabItem();
         InventoryChanger::tabItem();
-        if (ImGui::BeginTabItem("Rank Changer")) {
-            renderProfileChangerWindow(true);
-            ImGui::EndTabItem();
-        }
+        ProfileChanger::tabItem();
         Sound::tabItem();
         if (ImGui::BeginTabItem("Style")) {
             renderStyleWindow(true);

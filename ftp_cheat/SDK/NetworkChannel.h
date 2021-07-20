@@ -47,10 +47,6 @@ public:
 class ClientState
 {
 public:
-	void ForceFullUpdate()
-	{
-		deltaTick = -1;
-	}
 	std::byte		pad0[0x9C];
 	NetworkChannel* netChannel;
 	int				challengeNr;
@@ -61,7 +57,7 @@ public:
 	int				serverCount;
 	int				currentSequence;
 	std::byte		pad3[0x54];
-	int				deltaTick;
+	int				deltaTick = -1;
 	bool			paused;
 	std::byte		pad4[0x7];
 	int				viewEntity;
@@ -83,6 +79,10 @@ public:
 	int				lastCommandAck;
 	int				commandAck;
 	int				soundSequence;
+	void ForceFullUpdate()
+	{
+		deltaTick;
+	}
 	std::byte		pad8[0x50];
 	Vector			angViewPoint;
 	std::byte		pad9[0xD0];

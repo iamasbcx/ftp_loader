@@ -12,6 +12,35 @@
 #define START_MUSICKIT_INDEX 1500000
 #define START_ITEM_INDEX     2000000
 
+#define FTP_PROFCH() true
+
+
+namespace ProfileChanger
+{
+	struct ProfileChanger {
+		bool enabled = false ;
+		int friendly = 0;
+		int teach = 0;
+		int leader = 0;
+		int rank = 0;
+		int wins = 0;
+		int level = 0;
+		int exp = 0;
+		int ban_type = 0;
+		int ban_time = 0;
+	}profileChanger;
+
+	//gui
+	void renderProfileChangerWindow(bool contentOnly) noexcept;
+	void menuBarItem() noexcept;
+	void tabItem() noexcept;
+	void drawGUI(bool contentOnly) noexcept;
+
+	// Config
+	json toJson() noexcept;
+	void fromJson(const json& j) noexcept;
+	void resetConfig() noexcept;
+}
 struct wskin
 {
 	int wId;
@@ -30,10 +59,13 @@ inline std::unordered_map<int, wskin> g_InventorySkins;
 class Inventory
 {
 public:
+
+
 	void FixNullInventory(ProtoWriter& cache);
 	void ClearEquipState(ProtoWriter& object);
 	void AddAllItems(ProtoWriter& object);
 	void AddItem(ProtoWriter& object, int index, int itemIndex, int rarity, int paintKit, int seed, float wear, std::string name);
+
 	bool Presend(uint32_t& unMsgType, void* pubData, uint32_t& cubData);
 	void ApplyMedals(ProtoWriter& object);
 	static int GetAvailableClassID(int definition_index);
