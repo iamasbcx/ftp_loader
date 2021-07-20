@@ -6,7 +6,7 @@
 #include <type_traits>
 
 #include "SDK/Platform.h"
-#include "SDK/Steam.h"
+#include "SDK/SteamAPI.h"
 
 class ClientMode;
 template <typename T> class ClientSharedObjectCache;
@@ -25,6 +25,7 @@ class MoveHelper;
 class MoveData;
 class PanoramaMarshallHelper;
 class PlantedC4;
+class ClientState;
 class PlayerResource;
 template <typename T> class SharedObjectTypeCache;
 class ViewRender;
@@ -59,6 +60,7 @@ public:
     ClientMode* clientMode;
     Input* input;
     GlobalVars* globalVars;
+    ClientState* clientState;
     GlowObjectManager* glowObjectManager;
     UtlVector<PlantedC4*>* plantedC4s;
     UtlMap<short, PanoramaEventRegistration>* registeredPanoramaEvents;
@@ -93,9 +95,8 @@ public:
     KeyValues*(__THISCALL* keyValuesFindKey)(KeyValues* keyValues, const char* keyName, bool create);
     void(__THISCALL* keyValuesSetString)(KeyValues* keyValues, const char* value);
     WeaponSystem* weaponSystem;
-    MemAlloc* memAlloc;
+    MemAlloc* memalloc;
     ISteamGameCoordinator* SteamGameCoordinator;
-    ISteamUser* SteamUser;
     std::add_pointer_t<const char** __FASTCALL(const char* playerModelName)> getPlayerViewmodelArmConfigForPlayerModel;
     GameEventDescriptor* (__THISCALL* getEventDescriptor)(GameEventManager* _this, const char* name, int* cookie);
     ActiveChannels* activeChannels;

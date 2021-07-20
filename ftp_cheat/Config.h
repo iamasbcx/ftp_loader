@@ -108,27 +108,24 @@ public:
         ImFont* big;
     };
 
-    struct profileChanger {
-        int hooked{ false };
-        int friendly = 0;
-        int teach = 0;
-        int leader = 0;
-        int level = 0;
-        int exp = 0;
-        int ban_type = 0;
-        int ban_time = 0;
-        int winsMatchmaking = 0;
-        int rankMatchmaking = 0;
-        int winsWingman = 0;
-        int rankWingman = 0;
-        int winsDangerzone = 0;
-        int rankDangerzone = 0;
-    } profilechanger;
    
     struct Style {
         int menuStyle{ 1 };
         int menuColors{ 4 };
     } style;
+
+    struct profileChanger {
+        bool enabled{ 0 };
+        int friendly = 0;
+        int teach = 0;
+        int leader = 0;
+        int rank = 0;
+        int wins = 0;
+        int level = 0;
+        int exp = 0;
+        int ban_type = 0;
+        int ban_time = 0;
+    } profileChanger;
 
     void scheduleFontLoad(const std::string& name) noexcept;
     bool loadScheduledFonts() noexcept;

@@ -49,7 +49,7 @@
 #include "../SDK/WeaponData.h"
 #include "../SDK/WeaponId.h"
 #include "../SDK/WeaponSystem.h"
-#include "../SDK/Steam.h"
+
 
 #include "../GUI.h"
 #include "../Helpers.h"
@@ -398,8 +398,6 @@ void Misc::watermark() noexcept
     if (!miscConfig.watermark.enabled)
         return;
 
-    //NAME
-    std::string name = interfaces->engine->getSteamAPIContext()->steamFriends->getPersonaName();
 
     //FPS
     static auto fps = 1.0f;
@@ -415,7 +413,6 @@ void Misc::watermark() noexcept
 
     std::ostringstream format;
     format << "-> fuckthepopulation"
-        << " | " << (name.c_str())
         << " | " << (fps != 0.0f ? static_cast<int>(1 / fps) : 0) << " fps"
         << " | " << (ping) << " ms"
         << " | " << (time.str().data());

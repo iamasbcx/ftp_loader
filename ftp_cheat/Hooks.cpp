@@ -67,7 +67,7 @@
 #include "SDK/StudioRender.h"
 #include "SDK/Surface.h"
 #include "SDK/UserCmd.h"
-#include "SDK/Steam.h"
+#include "SDK/SteamAPI.h"
 
 #ifdef _WIN32
 
@@ -464,6 +464,38 @@ static const DemoPlaybackParameters* __STDCALL getDemoPlaybackParameters(LINUX_A
     return params;
 }
 
+using GCRetrieveMessage = EGCResult(__thiscall*)(void*, uint32_t* punMsgType, void* pubDest, uint32_t cubDest, uint32_t* pcubMsgSize);
+using GCSendMessage = EGCResult(__thiscall*)(void*, uint32_t unMsgType, const void* pubData, uint32_t cubData);
+EGCResult __fastcall hkGCRetrieveMessage(void* ecx, void*, uint32_t* punMsgType, void* pubDest, uint32_t cubDest, uint32_t* pcubMsgSize)
+{
+
+    static auto oGCRetrieveMessage = hooks->gameCoordinator.get_original<GCRetrieveMessage>(2);
+    auto status = oGCRetrieveMessage(ecx, punMsgType, pubDest, cubDest, pcubMsgSize);
+
+    if (status == k_EGCResultOK)
+    {
+
+        void* thisPtr = nullptr;
+        __asm mov thisPtr, ebx;
+        auto oldEBP = *reinterpret_cast<void**>((uint32_t)_AddressOfReturnAddress() - 4);
+
+        uint32_t messageType = *punMsgType & 0x7FFFFFFF;
+        write.ReceiveMessage(thisPtr, oldEBP, messageType, pubDest, cubDest, pcubMsgSize);
+    }
+    return status;
+}
+
+EGCResult __fastcall hkGCSendMessage(void* ecx, void*, uint32_t unMsgType, const void* pubData, uint32_t cubData)
+{
+    static auto oGCSendMessage = hooks->gameCoordinator.get_original<GCSendMessage>(0);
+    bool sendMessage = write.PreSendMessage(unMsgType, const_cast<void*>(pubData), cubData);
+
+    if (!sendMessage)
+        return EGCResult::k_EGCResultOK;
+
+    return oGCSendMessage(ecx, unMsgType, const_cast<void*>(pubData), cubData);
+}
+
 static bool __STDCALL isPlayingDemo(LINUX_ARGS(void* thisptr)) noexcept
 {
     if (Misc::shouldRevealMoney() && RETURN_ADDRESS() == memory->demoOrHLTV && *reinterpret_cast<std::uintptr_t*>(FRAME_ADDRESS() + WIN32_LINUX(8, 24)) == memory->money)
@@ -574,26 +606,8 @@ Hooks::Hooks(HMODULE moduleHandle) noexcept : moduleHandle{ moduleHandle }
     originalWndProc = WNDPROC(SetWindowLongPtrW(window, GWLP_WNDPROC, LONG_PTR(&wndProc)));
 }
 
-using GCRetrieveMessage = EGCResult(__thiscall*)(void*, uint32_t* punMsgType, void* pubDest, uint32_t cubDest, uint32_t* pcubMsgSize);
-using GCSendMessage = EGCResult(__thiscall*)(void*, uint32_t unMsgType, const void* pubData, uint32_t cubData);
 
-EGCResult __fastcall hkGCRetrieveMessage(void* ecx, void*, uint32_t* punMsgType, void* pubDest, uint32_t cubDest, uint32_t* pcubMsgSize)
-{
-    static auto oGCRetrieveMessage = hooks->gc_hook.callOriginal<GCRetrieveMessage, 2>((punMsgType, pubDest, cubDest, pcubMsgSize));
-    auto status = oGCRetrieveMessage(ecx, punMsgType, pubDest, cubDest, pcubMsgSize);
 
-    if (status == k_EGCResultOK)
-    {
-
-        void* thisPtr = nullptr;
-        __asm mov thisPtr, ebx;
-        auto oldEBP = *reinterpret_cast<void**>((uint32_t)_AddressOfReturnAddress() - 4);
-
-        uint32_t messageType = *punMsgType & 0x7FFFFFFF;
-        profile_changer::receive_message(thisPtr, oldEBP, messageType, pubDest, cubDest, pcubMsgSize);
-    }
-    return status;
-}
 
 #else
 
@@ -644,17 +658,6 @@ static void swapWindow(SDL_Window* window) noexcept
 }
 
 #endif
-
-void Hooks::hookGC() noexcept
-{
-#ifdef _WIN32
-    gc_hook.init(memory->SteamGameCoordinator);
-    gc_hook.hookAt(2, hkGCRetrieveMessage);
-    config->profilechanger.hooked = true;
-#else
-    return;
-#endif
-}
 
 void Hooks::install() noexcept
 {
@@ -729,6 +732,10 @@ void Hooks::install() noexcept
     viewRender.hookAt(WIN32_LINUX(39, 40), &render2dEffectsPreHud);
     viewRender.hookAt(WIN32_LINUX(41, 42), &renderSmokeOverlay);
 
+    gameCoordinator.setup(memory->SteamGameCoordinator);
+    gameCoordinator.hook_index(2, hkGCRetrieveMessage);
+    gameCoordinator.hook_index(0, hkGCSendMessage);
+
 #ifdef _WIN32
     if (DWORD oldProtection; VirtualProtect(memory->dispatchSound, 4, PAGE_EXECUTE_READWRITE, &oldProtection)) {
 #else
@@ -800,6 +807,7 @@ void Hooks::uninstall() noexcept
     svCheats.restore();
     viewRender.restore();
     networkChannel.restore();
+    gameCoordinator.unhook_all();
 
     Netvars::restore();
 

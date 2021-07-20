@@ -14,6 +14,8 @@ union SDL_Event;
 #include "Hooks/MinHook.h"
 #include "Hooks/VmtHook.h"
 #include "Hooks/VmtSwap.h"
+#include "vfunc_hook.hpp"
+#include "SDK/SteamAPI.h"
 
 #include "SDK/Platform.h"
 
@@ -65,6 +67,7 @@ public:
     HookType viewRender;
     HookType svCheats;
     VmtSwap networkChannel;
+    vfunc_hook gameCoordinator;
 private:
 #ifdef _WIN32
     HMODULE moduleHandle;

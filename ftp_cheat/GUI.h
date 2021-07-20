@@ -4,12 +4,15 @@
 
 struct ImFont;
 
+
+
 class GUI {
 public:
     GUI() noexcept;
     void render() noexcept;
     void handleToggle() noexcept;
     bool isOpen() const noexcept { return open; }
+
 private:
     bool open = true;
 
@@ -22,6 +25,7 @@ private:
     void renderConfigWindow(bool contentOnly = false) noexcept;
     void renderGuiStyle2() noexcept;
     void renderProfileChangerWindow(bool contentOnly = false) noexcept;
+
 
     struct {
         bool aimbot = false;

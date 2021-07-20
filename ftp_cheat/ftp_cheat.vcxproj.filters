@@ -42,8 +42,14 @@
     <Filter Include="VMP">
       <UniqueIdentifier>{a1c91c91-b2bb-45ab-9723-17201b5bae1d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Protobuffs">
-      <UniqueIdentifier>{22c7d3a6-9c78-4685-88e9-b9b3df442dec}</UniqueIdentifier>
+    <Filter Include="ProfileChanger">
+      <UniqueIdentifier>{69907bf7-03c9-4f1a-a21f-2434f291d191}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ProfileChanger\ProtoUtils">
+      <UniqueIdentifier>{79f94c65-2ff0-4943-b47f-9053fe7d321e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ProfileChanger\Utils">
+      <UniqueIdentifier>{0fb72bc8-80fa-4ce5-93d4-23c75602f406}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -248,11 +254,20 @@
     <ClCompile Include="ToolUser.cpp">
       <Filter>InventoryChanger</Filter>
     </ClCompile>
-    <ClCompile Include="ProfileChanger.cpp">
-      <Filter>InventoryChanger</Filter>
-    </ClCompile>
     <ClCompile Include="EconItemView.cpp">
       <Filter>SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="ProfileChanger.cpp">
+      <Filter>ProfileChanger</Filter>
+    </ClCompile>
+    <ClCompile Include="Protobuffs.cpp">
+      <Filter>ProfileChanger\ProtoUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="valve_parser.cpp">
+      <Filter>ProfileChanger\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="vfunc_hook.cpp">
+      <Filter>Hooks</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -625,20 +640,35 @@
     <ClInclude Include="EconItemView.h">
       <Filter>SDK</Filter>
     </ClInclude>
-    <ClInclude Include="pbwrap.h">
-      <Filter>Protobuffs</Filter>
-    </ClInclude>
-    <ClInclude Include="protomessages.h">
-      <Filter>Protobuffs</Filter>
-    </ClInclude>
-    <ClInclude Include="protoparser.h">
-      <Filter>Protobuffs</Filter>
-    </ClInclude>
     <ClInclude Include="MemAlloc.h">
       <Filter>SDK</Filter>
     </ClInclude>
     <ClInclude Include="ProfileChanger.h">
-      <Filter>InventoryChanger</Filter>
+      <Filter>ProfileChanger</Filter>
+    </ClInclude>
+    <ClInclude Include="ProtoField.h">
+      <Filter>ProfileChanger\ProtoUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="ProtoWriter.h">
+      <Filter>ProfileChanger\ProtoUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="Protobuffs.h">
+      <Filter>ProfileChanger\ProtoUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK\SteamAPI.h">
+      <Filter>SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="valve_parser.h">
+      <Filter>ProfileChanger\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Enums.hpp">
+      <Filter>ProfileChanger\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages.h">
+      <Filter>ProfileChanger\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="vfunc_hook.hpp">
+      <Filter>Hooks</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

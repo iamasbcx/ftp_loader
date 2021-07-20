@@ -189,18 +189,22 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="ProfileChanger.cpp" />
+    <ClCompile Include="Protobuffs.cpp" />
     <ClCompile Include="SDK\Entity.cpp" />
     <ClCompile Include="SDK\GlobalVars.cpp" />
     <ClCompile Include="SDK\KeyValues.cpp" />
     <ClCompile Include="SDK\Utils.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="ToolUser.cpp" />
+    <ClCompile Include="valve_parser.cpp" />
+    <ClCompile Include="vfunc_hook.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BSPFlags.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="ConfigStructs.h" />
     <ClInclude Include="EconItemView.h" />
+    <ClInclude Include="Enums.hpp" />
     <ClInclude Include="EventListener.h" />
     <ClInclude Include="fnv.h" />
     <ClInclude Include="freetype\freetype\config\ftmodule.h" />
@@ -230,6 +234,7 @@
     <ClInclude Include="InventoryChanger\StaticData.h" />
     <ClInclude Include="JsonForward.h" />
     <ClInclude Include="MemAlloc.h" />
+    <ClInclude Include="Messages.h" />
     <ClInclude Include="MinHook\buffer.h" />
     <ClInclude Include="MinHook\hde\hde32.h" />
     <ClInclude Include="MinHook\hde\hde64.h" />
@@ -240,12 +245,12 @@
     <ClInclude Include="MinHook\trampoline.h" />
     <ClInclude Include="Netvars.h" />
     <ClInclude Include="nlohmann\json.hpp" />
-    <ClInclude Include="pbwrap.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ProfileChanger.h" />
+    <ClInclude Include="Protobuffs.h" />
     <ClInclude Include="ProtobufReader.h" />
-    <ClInclude Include="protomessages.h" />
-    <ClInclude Include="protoparser.h" />
+    <ClInclude Include="ProtoField.h" />
+    <ClInclude Include="ProtoWriter.h" />
     <ClInclude Include="Resources\avatar_ct.h" />
     <ClInclude Include="Resources\avatar_tt.h" />
     <ClInclude Include="Resources\Resource.h" />
@@ -307,6 +312,7 @@
     <ClInclude Include="SDK\SoundEmitter.h" />
     <ClInclude Include="SDK\SoundInfo.h" />
     <ClInclude Include="SDK\Steam.h" />
+    <ClInclude Include="SDK\SteamAPI.h" />
     <ClInclude Include="SDK\StudioRender.h" />
     <ClInclude Include="SDK\Surface.h" />
     <ClInclude Include="SDK\UserCmd.h" />
@@ -322,6 +328,8 @@
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="ToolUser.h" />
+    <ClInclude Include="valve_parser.h" />
+    <ClInclude Include="vfunc_hook.hpp" />
     <ClInclude Include="VMP\def.h" />
     <ClInclude Include="VMP\VMProtectSDK.h" />
     <ClInclude Include="xorstr.hpp" />
