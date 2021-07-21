@@ -246,6 +246,7 @@
     <ClInclude Include="Netvars.h" />
     <ClInclude Include="nlohmann\json.hpp" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="PlantedC4.h" />
     <ClInclude Include="ProfileChanger.h" />
     <ClInclude Include="Protobuffs.h" />
     <ClInclude Include="ProtobufReader.h" />

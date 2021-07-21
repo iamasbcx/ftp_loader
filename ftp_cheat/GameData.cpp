@@ -11,6 +11,7 @@
 #include "GameData.h"
 #include "Interfaces.h"
 #include "Memory.h"
+#include "PlantedC4.h"
 
 #include "Resources/avatar_ct.h"
 #include "Resources/avatar_tt.h"
