@@ -51,7 +51,7 @@ type* name = reinterpret_cast<type*>(find(moduleName, version));
     GAME_INTERFACE(FileSystem, fileSystem, FILESYSTEM_DLL, "VFileSystem017")
     GAME_INTERFACE(GameEventManager, gameEventManager, ENGINE_DLL, "GAMEEVENTSMANAGER002")
     GAME_INTERFACE(GameMovement, gameMovement, CLIENT_DLL, "GameMovement001")
-    GAME_INTERFACE(GameUI, gameUI, CLIENT_DLL, "GameUI011")
+    //GAME_INTERFACE(GameUI, gameUI, CLIENT_DLL, "GameUI011")  //leaving for createmessage use
     GAME_INTERFACE(InputSystem, inputSystem, INPUTSYSTEM_DLL, "InputSystemVersion001")
     GAME_INTERFACE(Localize, localize, LOCALIZE_DLL, "Localize_001")
     GAME_INTERFACE(MaterialSystem, materialSystem, MATERIALSYSTEM_DLL, "VMaterialSystem080")
