@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "../Helpers.h"
 #include "../InventoryChanger/Inventory.h"
 #include "ItemGenerator.h"
@@ -36,7 +38,7 @@ std::pair<std::size_t, std::size_t> ItemGenerator::generateItemFromContainer(con
         dynamicData.wear = std::lerp(staticData.wearRemapMin, staticData.wearRemapMax, generateWear());
         dynamicData.seed = Helpers::random(1, 1000);
 
-        if (caseData.isSouvenirPackage)
+        if (caseData.isSouvenirPackage())
             dynamicData.isSouvenir = true;
         else if (Helpers::random(0, 9) == 0)
             dynamicData.statTrak = 0;

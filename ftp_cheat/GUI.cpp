@@ -141,6 +141,16 @@ void GUI::updateColors() const noexcept
 
 void GUI::handleToggle() noexcept
 {
+    //close menu w/ esc
+    const auto esc = KeyBind::KeyCode::ESCAPE;
+    const static KeyBind closeMenuKeybind(esc);
+
+    if (closeMenuKeybind.isPressed() && !ImGui::IsAnyItemActive()) {
+        open = false;
+        interfaces->inputSystem->resetInputState();
+    }
+    //
+
     if (Misc::isMenuKeyPressed()) {
         open = !open;
         if (!open)
