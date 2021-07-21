@@ -298,3 +298,4 @@ public:
     }
 };
 
+static_assert(sizeof(Entity) == 1);
