@@ -330,6 +330,8 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="ToolUser.h" />
     <ClInclude Include="UserMessages.h" />
+    <ClInclude Include="UtlMap.h" />
+    <ClInclude Include="UtlMemory.h" />
     <ClInclude Include="valve_parser.h" />
     <ClInclude Include="vfunc_hook.hpp" />
     <ClInclude Include="VMP\def.h" />
