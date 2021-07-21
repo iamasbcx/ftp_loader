@@ -269,6 +269,9 @@
     <ClCompile Include="vfunc_hook.cpp">
       <Filter>Hooks</Filter>
     </ClCompile>
+    <ClCompile Include="ItemGenerator.cpp">
+      <Filter>InventoryChanger</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GUI.h">
@@ -684,6 +687,9 @@
     </ClInclude>
     <ClInclude Include="UtlString.h">
       <Filter>SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemGenerator.h">
+      <Filter>InventoryChanger</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
