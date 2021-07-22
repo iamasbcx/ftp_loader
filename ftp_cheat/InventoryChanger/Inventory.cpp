@@ -127,8 +127,9 @@ private:
             econItem->setPaintKit(static_cast<float>(StaticData::paintKits()[item.dataIndex].id));
 
             const auto& dynamicData = dynamicSkinData[inventoryItem.getDynamicDataIndex()];
-            if (dynamicData.tournamentID != 0) {
+            if (dynamicData.isSouvenir()) {
                 econItem->quality = 12;
+                econItem->setTournamentID(dynamicData.tournamentID);
             } else {
                 if (dynamicData.statTrak > -1) {
                     econItem->setStatTrak(dynamicData.statTrak);

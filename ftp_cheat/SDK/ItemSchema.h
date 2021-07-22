@@ -275,6 +275,7 @@ public:
     void setMusicID(int musicID) noexcept { setAttributeValue(166, &musicID); }
     void setStatTrak(int value) noexcept { setAttributeValue(80, &value); }
     void setStatTrakType(int type) noexcept { setAttributeValue(81, &type); }
+    void setTournamentID(int id) noexcept { setAttributeValue(137, &id); }
     void setTournamentStage(int stage) noexcept { setAttributeValue(138, &stage); }
     void setTournamentStage1(int team) noexcept { setAttributeValue(139, &team); }
     void setTournamentStage2(int team) noexcept { setAttributeValue(140, &team); }
