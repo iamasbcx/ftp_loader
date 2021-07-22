@@ -86,7 +86,7 @@ struct VisualsConfig {
     float rainbowCrosshairSpeed{ 1.0f };
     BulletTracers bulletTracers;
     ColorToggle molotovHull{ 1.0f, 0.27f, 0.0f, 0.3f };
-    ColorToggle smokeTimer{ 0.0f, 00.0f, 1.0f, 1.0f };
+    ColorToggle smokeTimer{ 0.38f, 0.01f, 0.37f, 1.0f };
 
     struct ColorCorrection {
         bool enabled = false;
@@ -1007,13 +1007,14 @@ void Visuals::drawSmokeTimer(ImDrawList* drawList) noexcept
         const auto& smoke = smokes[i];
 
         auto time = smoke.destructionTime - memory->globalVars->realtime;
-        std::ostringstream text; text << std::fixed << std::showpoint << std::setprecision(1) << time << " sec.";
+        std::ostringstream text; text << std::fixed << std::showpoint << std::setprecision(1) << time / SMOKEGRENADE_LIFETIME << " sec.";
         auto textSize = ImGui::CalcTextSize(text.str().c_str());
 
         ImVec2 pos;
 
         if (time >= 0.0f) {
             if (worldToScreen(smoke.pos, pos)) {
+               
                 ImRect rect_out(
                     pos.x + (textSize.x / 2) + 2.f,
                     pos.y + (textSize.y / 2) + 10.f,
@@ -1026,9 +1027,9 @@ void Visuals::drawSmokeTimer(ImDrawList* drawList) noexcept
                     pos.x - (textSize.x / 2),
                     pos.y + (textSize.y));
 
-                drawList->AddRectFilled(rect_out.Min, rect_out.Max, IM_COL32_WHITE);
+                drawList->AddRectFilled(rect_out.Min, rect_out.Max, IM_COL32_BLACK_TRANS);
                 drawList->AddRectFilled(rect_in.Min, rect_in.Max, Helpers::calculateColor(visualsConfig.smokeTimer.asColor4()));
-                drawList->AddText({ pos.x - (textSize.x / 2), pos.y - (textSize.y / 2) }, IM_COL32_BLACK, text.str().c_str());
+                drawList->AddText({ pos.x - (textSize.x / 2), pos.y - (textSize.y / 2) }, IM_COL32_PINK, text.str().c_str());
             }
         }
         else
