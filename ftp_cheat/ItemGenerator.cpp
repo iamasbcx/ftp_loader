@@ -1,4 +1,5 @@
 #include <cmath>
+#include <vector>
 
 #include "../Helpers.h"
 #include "../InventoryChanger/Inventory.h"
@@ -57,6 +58,11 @@ struct Match {
     TournamentTeam team1;
     TournamentTeam team2;
     std::vector<int> mvpPlayersIDs;
+};
+
+struct Tournament {
+    std::uint32_t tournamentID;
+    const std::vector<Match>& matches;
 };
 
 std::size_t ItemGenerator::createDefaultDynamicData(std::size_t gameItemIndex) noexcept
