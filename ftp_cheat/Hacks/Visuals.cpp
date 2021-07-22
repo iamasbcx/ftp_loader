@@ -39,13 +39,13 @@
 
 #define SMOKEGRENADE_LIFETIME 17.5f
 
-static std::vector<smokeData> smokes;
-
 struct smokeData
 {
     float destructionTime;
     Vector pos;
 };
+
+static std::vector<smokeData> smokes;
 
 struct VisualsConfig {
     bool disablePostProcessing{ false };
