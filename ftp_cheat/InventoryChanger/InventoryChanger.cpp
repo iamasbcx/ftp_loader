@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <charconv>
 #include <fstream>
+#include <cmath>
 #include <random>
 #include <string_view>
 #include <type_traits>
