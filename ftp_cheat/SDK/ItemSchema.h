@@ -289,8 +289,8 @@ public:
     void setStatTrakType(int type) noexcept { setAttributeValue(81, &type); }
     void setTournamentID(int id) noexcept { setAttributeValue(137, &id); }
     void setTournamentStage(int stage) noexcept { setAttributeValue(138, &stage); }
-    void setTournamentStage1(int team) noexcept { setAttributeValue(139, &team); }
-    void setTournamentStage2(int team) noexcept { setAttributeValue(140, &team); }
+    void setTournamentTeam1(int team) noexcept { setAttributeValue(139, &team); }
+    void setTournamentTeam2(int team) noexcept { setAttributeValue(140, &team); }
 
     void setStickerID(int slot, int stickerID) noexcept
     {
