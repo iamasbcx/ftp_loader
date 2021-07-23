@@ -82,7 +82,7 @@ static_assert(std::ranges::is_sorted(tournaments, {}, & Tournament::tournamentID
 {
     if (const auto it = std::ranges::lower_bound(tournaments, tournamentID, {}, &Tournament::tournamentID); it != tournaments.end())
         return &it->matches;
-    assert(false && "Missing tournament match data!");
+    //assert(false && "Missing tournament match data!");
     return nullptr;
 }
 
