@@ -230,6 +230,7 @@ public:
 
     NETVAR(accountID, "CBaseAttributableItem", "m_iAccountID", int)
     NETVAR(ItemDefinitionIndex, "CBaseAttributableItem", "m_iItemDefinitionIndex", WeaponId)
+    NETVAR(itemDefinitionIndex2, "CBaseAttributableItem", "m_iItemDefinitionIndex", WeaponId)
     NETVAR(itemIDHigh, "CBaseAttributableItem", "m_iItemIDHigh", std::uint32_t)
     NETVAR(itemIDLow, "CBaseAttributableItem", "m_iItemIDLow", std::uint32_t)
     NETVAR(entityQuality, "CBaseAttributableItem", "m_iEntityQuality", int)
@@ -297,5 +298,8 @@ public:
         return (std::uint64_t(itemIDHigh()) << 32) | itemIDLow();
     }
 };
+
+//Entity* ahahHAHA = get;
+//auto isSmoke() noexcept { return ahahHAHA->ItemDefinitionIndex() == WeaponId::SmokeGrenade; }
 
 static_assert(sizeof(Entity) == 1);

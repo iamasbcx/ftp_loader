@@ -1,5 +1,7 @@
 #pragma once
+#include <vector>
 
+#include "../SDK/Vector.h"
 #include "../JsonForward.h"
 
 enum class FrameStage;
@@ -59,6 +61,7 @@ namespace Misc
     void voteRevealer(GameEvent& event) noexcept;
     void drawOffscreenEnemies(ImDrawList* drawList) noexcept;
     void autoAccept(const char* soundEntry) noexcept;
+    void SmokeHelper(ImDrawList* drawList);
 
     void updateEventListeners(bool forceRemove = false) noexcept;
     void updateInput() noexcept;
@@ -73,3 +76,15 @@ namespace Misc
     void fromJson(const json& j) noexcept;
     void resetConfig() noexcept;
 }
+
+struct Vector;
+
+class GrenadeData
+{
+public:
+    std::string info;
+    std::string type;
+    Vector pos;
+    Vector ang;
+    float ring_width;
+};
