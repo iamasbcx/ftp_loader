@@ -75,6 +75,7 @@ namespace Misc
     json toJson() noexcept;
     void fromJson(const json& j) noexcept;
     void resetConfig() noexcept;
+
 }
 
 struct Vector;
