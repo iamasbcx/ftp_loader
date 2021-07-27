@@ -118,6 +118,15 @@ public:
     auto isPistol() noexcept { return getWeaponType() == WeaponType::Pistol; }
     auto isSniperRifle() noexcept { return getWeaponType() == WeaponType::SniperRifle; }
     auto isGrenade() noexcept { return getWeaponType() == WeaponType::Grenade; }
+    bool isSmoke()
+    {
+        if (!this)
+            return false;
+
+        auto index = ItemDefinitionIndex();
+
+        return index == WeaponId::SmokeGrenade;
+    }
 
     auto isFullAuto() noexcept
     {
@@ -297,6 +306,8 @@ public:
     {
         return (std::uint64_t(itemIDHigh()) << 32) | itemIDLow();
     }
+
+
 };
 
 //Entity* ahahHAHA = get;

@@ -272,6 +272,9 @@
     <ClCompile Include="ItemGenerator.cpp">
       <Filter>InventoryChanger</Filter>
     </ClCompile>
+    <ClCompile Include="SmokeHelper.cpp">
+      <Filter>Hacks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GUI.h">

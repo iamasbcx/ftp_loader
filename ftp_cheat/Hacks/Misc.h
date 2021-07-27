@@ -80,9 +80,8 @@ namespace Misc
 
 struct Vector;
 
-class GrenadeData
+struct GrenadeData
 {
-public:
     std::string info;
     std::string type;
     Vector pos;

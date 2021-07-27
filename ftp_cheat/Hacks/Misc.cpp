@@ -60,6 +60,7 @@
 #include "../GrenadeData.h"
 
 #include "../imguiCustom.h"
+#include <SDK/Input.h>
 
 struct MiscConfig {
     MiscConfig() { clanTag[0] = '\0'; }
@@ -416,70 +417,38 @@ static void Draw3DFilledCircle(ImDrawList* drawList, const Vector& origin, float
     }
 }
 
+bool can_shoot()
+{
+    const int centerx = GetSystemMetrics(SM_CXSCREEN) / 2;
+    const int centery = GetSystemMetrics(SM_CYSCREEN) / 2;
+    const int difference = 15;
+    const int one = centerx - difference;
+    const int two = centerx + difference;
+    const int three = centery - difference;
+    const int four = centery + difference;
+    POINT cursor_position;
+    GetCursorPos(&cursor_position);
+
+    if (cursor_position.x < one || cursor_position.x > two || cursor_position.y < three || cursor_position.y > four)
+        return false;
+
+    return true;
+}
+
 void Misc::SmokeHelper(ImDrawList* drawList)
 {
     if (!localPlayer || !localPlayer->isAlive() || !miscConfig.smokeHelper)
         return;
 
-    if (strstr(interfaces->engine->getLevelName(), "dust2"))
+    if (interfaces->engine->isConsoleVisible())
+        return;
+
+    if (!can_shoot())
+        return;
+
+    if (strstr(interfaces->engine->getLevelName(), "mirage"))
     {
-        if (!localPlayer->getActiveWeapon()->isGrenade())
-            return;
-
-        //if (!strstr(interfaces->engine->getLevelName(), "dust2"))
-        //    return;
-        for (const auto& it : Dust2)
-        {
-
-            if (const float dist = localPlayer->origin().distTo(it.pos); dist > 500.0f)
-                continue;
-
-
-            //draw circle
-            //const bool in_pos = (round(localPlayer->getEyePosition().x) - round(it.pos.x) <= it.ring_width && round(localPlayer->getEyePosition().y) - round(it.pos.y) <= it.ring_width);
-
-
-            //Vector Crosshair = (localPlayer->getEyePosition()) + (Helpers::CalcDir(it.ang) * 250.f);
-
-            const ImVec2 size = ImGui::CalcTextSize(it.info.c_str());
-            const float radius = 1.0;
-
-            const Vector ring_target = { radius * cosf(0) + it.ang.x, radius * sinf(0) + it.ang.y, (it.ang.z) };
-
-            ImVec2 ring_target_angle;
-
-            const Vector ring_ground = { radius * cosf(0) + it.pos.x, radius * sinf(0) + it.pos.y, it.pos.z }; // -60 compensation for player height
-            ImVec2 ring_ground_angle;
-
-            if (worldToScreen(ring_target, ring_target_angle))
-            {
-                // target
-                //bool in_angle = (round(interfaces->engine->getViewAngles().x) == round(it.ang.x) && round(interfaces->engine->getViewAngles().y) == round(it.ang.y));
-                bool in_angle = true;
-                drawList->AddRectFilled(ImVec2(ring_target_angle.x - 10.f, ring_target_angle.y - 10.f), ImVec2(ring_target_angle.x + size.x + 25.f, ring_target_angle.y + 26.f), IM_COL32(0, 0, 0, 80), 10.f);
-                drawList->AddCircleFilled(ring_target_angle, 8.f, IM_COL32(255, 255, 255, 100));
-                drawList->AddText(ImVec2(ring_target_angle.x + 12.f, ring_target_angle.y - 7.f), IM_COL32(0, 0, 0, 255), it.info.c_str());
-                drawList->AddText(ImVec2(ring_target_angle.x + 13.f, ring_target_angle.y - 8.f), IM_COL32(255, 255, 255, 255), it.info.c_str());
-                drawList->AddText(ImVec2(ring_target_angle.x + 12.f, ring_target_angle.y - -7.f), IM_COL32(0, 0, 0, 255), it.type.c_str());
-                drawList->AddText(ImVec2(ring_target_angle.x + 13.f, ring_target_angle.y - -8.f), IM_COL32(255, 255, 255, 255), it.type.c_str());
-
-                Draw3DFilledCircle(drawList, it.pos, 10.f, IM_COL32(255, 255, 255, 250));
-
-                //if (worldToScreen(ring_ground, ring_ground_angle))
-                //{
-                    //ground
-                //	drawList->AddCircleFilled(ring_ground_angle, 8.f, IM_COL32(255, 255, 255, 80));
-                    //line
-                //	drawList->AddLine(ring_target_angle, ring_ground_angle, IM_COL32(0, 0, 0, 255), 2.f);
-                //}
-                //else if (in_pos)
-                //	drawList->AddLine(ImGui::GetIO().DisplaySize / 2.0f, ring_target_angle, IM_COL32(0, 0, 0, 255), 2.f);
-            }
-
-        }
-    }else if (strstr(interfaces->engine->getLevelName(), "mirage"))
-    {
-        if (!localPlayer->getActiveWeapon()->isGrenade())
+        if (!localPlayer->getActiveWeapon()->isSmoke())
             return;
 
         for (const auto& it : Mirage)
@@ -498,8 +467,18 @@ void Misc::SmokeHelper(ImDrawList* drawList)
             const Vector ring_ground = { radius * cosf(0) + it.pos.x, radius * sinf(0) + it.pos.y, it.pos.z }; // -60 compensation for player height
             ImVec2 ring_ground_angle;
 
+            const bool in_pos = (round(localPlayer->getEyePosition().x) - round(it.pos.x) <= it.ring_width && round(localPlayer->getEyePosition().y) - round(it.pos.y) <= it.ring_width);
+
+            int xx, yy;
+            interfaces->engine->getScreenSize(xx, yy);
+
+            int cy = yy / 2;
+		    int cx = xx / 2;
+
             if (worldToScreen(ring_target, ring_target_angle))
             {
+                // target
+                //bool in_angle = (round(interfaces->engine->getViewAngles().x) == round(it.ang.x) && round(interfaces->engine->getViewAngles().y) == round(it.ang.y));
                 bool in_angle = true;
                 drawList->AddRectFilled(ImVec2(ring_target_angle.x - 10.f, ring_target_angle.y - 10.f), ImVec2(ring_target_angle.x + size.x + 25.f, ring_target_angle.y + 26.f), IM_COL32(0, 0, 0, 80), 10.f);
                 drawList->AddCircleFilled(ring_target_angle, 8.f, IM_COL32(255, 255, 255, 100));
@@ -507,15 +486,80 @@ void Misc::SmokeHelper(ImDrawList* drawList)
                 drawList->AddText(ImVec2(ring_target_angle.x + 13.f, ring_target_angle.y - 8.f), IM_COL32(255, 255, 255, 255), it.info.c_str());
                 drawList->AddText(ImVec2(ring_target_angle.x + 12.f, ring_target_angle.y - -7.f), IM_COL32(0, 0, 0, 255), it.type.c_str());
                 drawList->AddText(ImVec2(ring_target_angle.x + 13.f, ring_target_angle.y - -8.f), IM_COL32(255, 255, 255, 255), it.type.c_str());
+                drawList->AddCircle(ImVec2(cx, cy), 10.f, IM_COL32_WHITE, 255);
 
+                Draw3DFilledCircle(drawList, it.pos, 10.f, IM_COL32(255, 255, 255, 250));
+                
+                if (in_pos)
+                	drawList->AddLine(ImGui::GetIO().DisplaySize / 2.0f, ring_target_angle, IM_COL32(0, 0, 0, 255), 2.f);
+            }
+            else if (worldToScreen(ring_ground, ring_ground_angle))
+            {
+                //ground
+                drawList->AddCircleFilled(ring_ground_angle, 8.f, IM_COL32(255, 255, 255, 80));
                 Draw3DFilledCircle(drawList, it.pos, 10.f, IM_COL32(255, 255, 255, 250));
             }
 
         }
     }
+    else if (strstr(interfaces->engine->getLevelName(), "dust2"))
+    {
+        if (!localPlayer->getActiveWeapon()->isSmoke())
+            return;
+
+        for (const auto& it : Dust2)
+        {
+
+            if (const float dist = localPlayer->origin().distTo(it.pos); dist > 500.0f)
+                continue;
+
+            const ImVec2 size = ImGui::CalcTextSize(it.info.c_str());
+            const float radius = 1.0;
+
+            const Vector ring_target = { radius * cosf(0) + it.ang.x, radius * sinf(0) + it.ang.y, (it.ang.z) };
+
+            ImVec2 ring_target_angle;
+
+            const Vector ring_ground = { radius * cosf(0) + it.pos.x, radius * sinf(0) + it.pos.y, it.pos.z }; // -60 compensation for player height
+            ImVec2 ring_ground_angle;
+
+            const bool in_pos = (round(localPlayer->getEyePosition().x) - round(it.pos.x) <= it.ring_width && round(localPlayer->getEyePosition().y) - round(it.pos.y) <= it.ring_width);
+
+            int xx, yy;
+            interfaces->engine->getScreenSize(xx, yy);
+
+            int cy = yy / 2;
+            int cx = xx / 2;
+
+            if (worldToScreen(ring_target, ring_target_angle))
+            {
+                // target
+                //bool in_angle = (round(interfaces->engine->getViewAngles().x) == round(it.ang.x) && round(interfaces->engine->getViewAngles().y) == round(it.ang.y));
+                bool in_angle = true;
+                drawList->AddRectFilled(ImVec2(ring_target_angle.x - 10.f, ring_target_angle.y - 10.f), ImVec2(ring_target_angle.x + size.x + 25.f, ring_target_angle.y + 26.f), IM_COL32(0, 0, 0, 80), 10.f);
+                drawList->AddCircleFilled(ring_target_angle, 8.f, IM_COL32(255, 255, 255, 100));
+                drawList->AddText(ImVec2(ring_target_angle.x + 12.f, ring_target_angle.y - 7.f), IM_COL32(0, 0, 0, 255), it.info.c_str());
+                drawList->AddText(ImVec2(ring_target_angle.x + 13.f, ring_target_angle.y - 8.f), IM_COL32(255, 255, 255, 255), it.info.c_str());
+                drawList->AddText(ImVec2(ring_target_angle.x + 12.f, ring_target_angle.y - -7.f), IM_COL32(0, 0, 0, 255), it.type.c_str());
+                drawList->AddText(ImVec2(ring_target_angle.x + 13.f, ring_target_angle.y - -8.f), IM_COL32(255, 255, 255, 255), it.type.c_str());
+                drawList->AddCircle(ImVec2(cx, cy), 10.f, IM_COL32_WHITE, 255);
+
+                Draw3DFilledCircle(drawList, it.pos, 10.f, IM_COL32(255, 255, 255, 250));
+
+                if (in_pos)
+                    drawList->AddLine(ImGui::GetIO().DisplaySize / 2.0f, ring_target_angle, IM_COL32(0, 0, 0, 255), 2.f);
+            }
+            else if (worldToScreen(ring_ground, ring_ground_angle))
+            {
+                //ground
+                drawList->AddCircleFilled(ring_ground_angle, 8.f, IM_COL32(255, 255, 255, 80));
+                Draw3DFilledCircle(drawList, it.pos, 10.f, IM_COL32(255, 255, 255, 250));
+            }
+        }
+    }
     else if (strstr(interfaces->engine->getLevelName(), "nuke"))
     {
-        if (!localPlayer->getActiveWeapon()->isGrenade())
+        if (!localPlayer->getActiveWeapon()->isSmoke())
             return;
 
         for (const auto& it : Nuke)
@@ -534,8 +578,18 @@ void Misc::SmokeHelper(ImDrawList* drawList)
             const Vector ring_ground = { radius * cosf(0) + it.pos.x, radius * sinf(0) + it.pos.y, it.pos.z }; // -60 compensation for player height
             ImVec2 ring_ground_angle;
 
+            const bool in_pos = (round(localPlayer->getEyePosition().x) - round(it.pos.x) <= it.ring_width && round(localPlayer->getEyePosition().y) - round(it.pos.y) <= it.ring_width);
+
+            int xx, yy;
+            interfaces->engine->getScreenSize(xx, yy);
+
+            int cy = yy / 2;
+            int cx = xx / 2;
+
             if (worldToScreen(ring_target, ring_target_angle))
             {
+                // target
+                //bool in_angle = (round(interfaces->engine->getViewAngles().x) == round(it.ang.x) && round(interfaces->engine->getViewAngles().y) == round(it.ang.y));
                 bool in_angle = true;
                 drawList->AddRectFilled(ImVec2(ring_target_angle.x - 10.f, ring_target_angle.y - 10.f), ImVec2(ring_target_angle.x + size.x + 25.f, ring_target_angle.y + 26.f), IM_COL32(0, 0, 0, 80), 10.f);
                 drawList->AddCircleFilled(ring_target_angle, 8.f, IM_COL32(255, 255, 255, 100));
@@ -543,15 +597,79 @@ void Misc::SmokeHelper(ImDrawList* drawList)
                 drawList->AddText(ImVec2(ring_target_angle.x + 13.f, ring_target_angle.y - 8.f), IM_COL32(255, 255, 255, 255), it.info.c_str());
                 drawList->AddText(ImVec2(ring_target_angle.x + 12.f, ring_target_angle.y - -7.f), IM_COL32(0, 0, 0, 255), it.type.c_str());
                 drawList->AddText(ImVec2(ring_target_angle.x + 13.f, ring_target_angle.y - -8.f), IM_COL32(255, 255, 255, 255), it.type.c_str());
+                drawList->AddCircle(ImVec2(cx, cy), 10.f, IM_COL32_WHITE, 255);
 
                 Draw3DFilledCircle(drawList, it.pos, 10.f, IM_COL32(255, 255, 255, 250));
-            }
 
+                if (in_pos)
+                    drawList->AddLine(ImGui::GetIO().DisplaySize / 2.0f, ring_target_angle, IM_COL32(0, 0, 0, 255), 2.f);
+            }
+            else if (worldToScreen(ring_ground, ring_ground_angle))
+            {
+                //ground
+                drawList->AddCircleFilled(ring_ground_angle, 8.f, IM_COL32(255, 255, 255, 80));
+                Draw3DFilledCircle(drawList, it.pos, 10.f, IM_COL32(255, 255, 255, 250));
+            }
+        }
+    }
+    if (strstr(interfaces->engine->getLevelName(), "train"))
+    {
+        if (!localPlayer->getActiveWeapon()->isSmoke())
+            return;
+
+        for (const auto& it : Train)
+        {
+
+            if (const float dist = localPlayer->origin().distTo(it.pos); dist > 500.0f)
+                continue;
+
+            const ImVec2 size = ImGui::CalcTextSize(it.info.c_str());
+            const float radius = 1.0;
+
+            const Vector ring_target = { radius * cosf(0) + it.ang.x, radius * sinf(0) + it.ang.y, (it.ang.z) };
+
+            ImVec2 ring_target_angle;
+
+            const Vector ring_ground = { radius * cosf(0) + it.pos.x, radius * sinf(0) + it.pos.y, it.pos.z }; // -60 compensation for player height
+            ImVec2 ring_ground_angle;
+
+            const bool in_pos = (round(localPlayer->getEyePosition().x) - round(it.pos.x) <= it.ring_width && round(localPlayer->getEyePosition().y) - round(it.pos.y) <= it.ring_width);
+
+            int xx, yy;
+            interfaces->engine->getScreenSize(xx, yy);
+
+            int cy = yy / 2;
+            int cx = xx / 2;
+
+            if (worldToScreen(ring_target, ring_target_angle))
+            {
+                // target
+                //bool in_angle = (round(interfaces->engine->getViewAngles().x) == round(it.ang.x) && round(interfaces->engine->getViewAngles().y) == round(it.ang.y));
+                bool in_angle = true;
+                drawList->AddRectFilled(ImVec2(ring_target_angle.x - 10.f, ring_target_angle.y - 10.f), ImVec2(ring_target_angle.x + size.x + 25.f, ring_target_angle.y + 26.f), IM_COL32(0, 0, 0, 80), 10.f);
+                drawList->AddCircleFilled(ring_target_angle, 8.f, IM_COL32(255, 255, 255, 100));
+                drawList->AddText(ImVec2(ring_target_angle.x + 12.f, ring_target_angle.y - 7.f), IM_COL32(0, 0, 0, 255), it.info.c_str());
+                drawList->AddText(ImVec2(ring_target_angle.x + 13.f, ring_target_angle.y - 8.f), IM_COL32(255, 255, 255, 255), it.info.c_str());
+                drawList->AddText(ImVec2(ring_target_angle.x + 12.f, ring_target_angle.y - -7.f), IM_COL32(0, 0, 0, 255), it.type.c_str());
+                drawList->AddText(ImVec2(ring_target_angle.x + 13.f, ring_target_angle.y - -8.f), IM_COL32(255, 255, 255, 255), it.type.c_str());
+                drawList->AddCircle(ImVec2(cx, cy), 10.f, IM_COL32_WHITE, 255);
+
+                Draw3DFilledCircle(drawList, it.pos, 10.f, IM_COL32(255, 255, 255, 250));
+
+                if (in_pos)
+                    drawList->AddLine(ImGui::GetIO().DisplaySize / 2.0f, ring_target_angle, IM_COL32(0, 0, 0, 255), 2.f);
+            }
+            else if (worldToScreen(ring_ground, ring_ground_angle))
+            {
+                //ground
+                drawList->AddCircleFilled(ring_ground_angle, 8.f, IM_COL32(255, 255, 255, 80));
+                Draw3DFilledCircle(drawList, it.pos, 10.f, IM_COL32(255, 255, 255, 250));
+            }
         }
     }
     else if (strstr(interfaces->engine->getLevelName(), "inferno"))
     {
-        if (!localPlayer->getActiveWeapon()->isGrenade())
+        if (!localPlayer->getActiveWeapon()->isSmoke())
             return;
 
         for (const auto& it : Inferno)
@@ -570,8 +688,18 @@ void Misc::SmokeHelper(ImDrawList* drawList)
             const Vector ring_ground = { radius * cosf(0) + it.pos.x, radius * sinf(0) + it.pos.y, it.pos.z }; // -60 compensation for player height
             ImVec2 ring_ground_angle;
 
+            const bool in_pos = (round(localPlayer->getEyePosition().x) - round(it.pos.x) <= it.ring_width && round(localPlayer->getEyePosition().y) - round(it.pos.y) <= it.ring_width);
+
+            int xx, yy;
+            interfaces->engine->getScreenSize(xx, yy);
+
+            int cy = yy / 2;
+            int cx = xx / 2;
+
             if (worldToScreen(ring_target, ring_target_angle))
             {
+                // target
+                //bool in_angle = (round(interfaces->engine->getViewAngles().x) == round(it.ang.x) && round(interfaces->engine->getViewAngles().y) == round(it.ang.y));
                 bool in_angle = true;
                 drawList->AddRectFilled(ImVec2(ring_target_angle.x - 10.f, ring_target_angle.y - 10.f), ImVec2(ring_target_angle.x + size.x + 25.f, ring_target_angle.y + 26.f), IM_COL32(0, 0, 0, 80), 10.f);
                 drawList->AddCircleFilled(ring_target_angle, 8.f, IM_COL32(255, 255, 255, 100));
@@ -579,10 +707,19 @@ void Misc::SmokeHelper(ImDrawList* drawList)
                 drawList->AddText(ImVec2(ring_target_angle.x + 13.f, ring_target_angle.y - 8.f), IM_COL32(255, 255, 255, 255), it.info.c_str());
                 drawList->AddText(ImVec2(ring_target_angle.x + 12.f, ring_target_angle.y - -7.f), IM_COL32(0, 0, 0, 255), it.type.c_str());
                 drawList->AddText(ImVec2(ring_target_angle.x + 13.f, ring_target_angle.y - -8.f), IM_COL32(255, 255, 255, 255), it.type.c_str());
+                drawList->AddCircle(ImVec2(cx, cy), 10.f, IM_COL32_WHITE, 255);
 
                 Draw3DFilledCircle(drawList, it.pos, 10.f, IM_COL32(255, 255, 255, 250));
-            }
 
+                if (in_pos)
+                    drawList->AddLine(ImGui::GetIO().DisplaySize / 2.0f, ring_target_angle, IM_COL32(0, 0, 0, 255), 2.f);
+            }
+            else if (worldToScreen(ring_ground, ring_ground_angle))
+            {
+                //ground
+                drawList->AddCircleFilled(ring_ground_angle, 8.f, IM_COL32(255, 255, 255, 80));
+                Draw3DFilledCircle(drawList, it.pos, 10.f, IM_COL32(255, 255, 255, 250));
+            }
         }
     }
 }
