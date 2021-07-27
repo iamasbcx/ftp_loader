@@ -498,6 +498,7 @@ void Misc::SmokeHelper(ImDrawList* drawList)
                 //ground
                 drawList->AddCircleFilled(ring_ground_angle, 8.f, IM_COL32(255, 255, 255, 80));
                 Draw3DFilledCircle(drawList, it.pos, 10.f, IM_COL32(255, 255, 255, 250));
+                drawList->AddText(ImVec2(ring_ground_angle.x + 13.f, ring_ground_angle.y - 8.f), IM_COL32(255, 255, 255, 255), it.info.c_str());
             }
 
         }
@@ -554,6 +555,7 @@ void Misc::SmokeHelper(ImDrawList* drawList)
                 //ground
                 drawList->AddCircleFilled(ring_ground_angle, 8.f, IM_COL32(255, 255, 255, 80));
                 Draw3DFilledCircle(drawList, it.pos, 10.f, IM_COL32(255, 255, 255, 250));
+                drawList->AddText(ImVec2(ring_ground_angle.x + 13.f, ring_ground_angle.y - 8.f), IM_COL32(255, 255, 255, 255), it.info.c_str());
             }
         }
     }
@@ -609,6 +611,7 @@ void Misc::SmokeHelper(ImDrawList* drawList)
                 //ground
                 drawList->AddCircleFilled(ring_ground_angle, 8.f, IM_COL32(255, 255, 255, 80));
                 Draw3DFilledCircle(drawList, it.pos, 10.f, IM_COL32(255, 255, 255, 250));
+                drawList->AddText(ImVec2(ring_ground_angle.x + 13.f, ring_ground_angle.y - 8.f), IM_COL32(255, 255, 255, 255), it.info.c_str());
             }
         }
     }
@@ -664,6 +667,7 @@ void Misc::SmokeHelper(ImDrawList* drawList)
                 //ground
                 drawList->AddCircleFilled(ring_ground_angle, 8.f, IM_COL32(255, 255, 255, 80));
                 Draw3DFilledCircle(drawList, it.pos, 10.f, IM_COL32(255, 255, 255, 250));
+                drawList->AddText(ImVec2(ring_ground_angle.x + 13.f, ring_ground_angle.y - 8.f), IM_COL32(255, 255, 255, 255), it.info.c_str());
             }
         }
     }
@@ -719,6 +723,7 @@ void Misc::SmokeHelper(ImDrawList* drawList)
                 //ground
                 drawList->AddCircleFilled(ring_ground_angle, 8.f, IM_COL32(255, 255, 255, 80));
                 Draw3DFilledCircle(drawList, it.pos, 10.f, IM_COL32(255, 255, 255, 250));
+                drawList->AddText(ImVec2(ring_ground_angle.x + 13.f, ring_ground_angle.y - 8.f), IM_COL32(255, 255, 255, 255), it.info.c_str());
             }
         }
     }
@@ -1625,6 +1630,7 @@ void Misc::updateInput() noexcept
 {
 
 }
+
 
 static bool windowOpen = false;
 
