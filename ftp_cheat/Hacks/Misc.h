@@ -62,6 +62,8 @@ namespace Misc
     void drawOffscreenEnemies(ImDrawList* drawList) noexcept;
     void autoAccept(const char* soundEntry) noexcept;
     void SmokeHelper(ImDrawList* drawList);
+    //void drawBombDamage() noexcept
+
 
     void updateEventListeners(bool forceRemove = false) noexcept;
     void updateInput() noexcept;

@@ -19,7 +19,13 @@
 
 
 //std::deque<Backtrack::Record> Backtrack::records[65];
-// static Backtrack::Cvars cvars; // From Master, but this breaks code in hooks.cpp line 132 max() function
+// static Backtrack::Cvars cvars; // From Master, but this breaks code in hooks.cpp line 132 
+// 
+// 
+// 
+// 
+// 
+// ) function
 //Backtrack::Cvars Backtrack::cvars;
 
 static std::deque<Backtrack::IncomingSequence>Backtrack::sequences;

@@ -61,6 +61,7 @@
 
 #include "../imguiCustom.h"
 #include <SDK/Input.h>
+#include <Helpers.cpp>
 
 struct MiscConfig {
     MiscConfig() { clanTag[0] = '\0'; }
@@ -99,6 +100,7 @@ struct MiscConfig {
     bool prepareRevolver{ false };
     bool oppositeHandKnife = false;
     bool smokeHelper{ false };
+    bool bombDamage{ false };
     PreserveKillfeed preserveKillfeed;
     char clanTag[16];
     KeyBind edgejumpkey;
@@ -130,6 +132,7 @@ struct MiscConfig {
     int quickHealthshotKey{ 0 };
     float maxAngleDelta{ 255.0f };
     int killSound{ 0 };
+    int hopsHitchance{ 100 };
     std::string customKillSound;
     std::string customHitSound;
     PurchaseList purchaseList;
@@ -1038,6 +1041,29 @@ bool Misc::changeName(bool reconnect, const char* newName, float delay) noexcept
 
 void Misc::bunnyHop(UserCmd* cmd) noexcept
 {
+    int hopsRestricted = 0;
+    int hopsHit = 0;
+
+    if (!localPlayer)
+        return;
+
+    if (miscConfig.bunnyHop && localPlayer->moveType() != MoveType::LADDER) {
+
+        if (cmd->buttons & UserCmd::IN_JUMP && !(localPlayer->flags() & 1)) {
+            cmd->buttons &= ~UserCmd::IN_JUMP;
+            hopsRestricted = 0;
+        }
+        else if ((rand() % 100 > miscConfig.hopsHitchance && hopsRestricted < 12)) {
+            cmd->buttons &= ~UserCmd::IN_JUMP;
+            hopsRestricted++;
+            hopsHit = 0;
+        }
+        else
+            hopsHit++;
+    }
+}
+/*void Misc::bunnyHop(UserCmd* cmd) noexcept
+{
     if (!localPlayer)
         return;
 
@@ -1047,7 +1073,7 @@ void Misc::bunnyHop(UserCmd* cmd) noexcept
         cmd->buttons &= ~UserCmd::IN_JUMP;
 
     wasLastTimeOnGround = localPlayer->flags() & 1;
-}
+}*/
 
 void Misc::fakeBan(bool set) noexcept
 {
@@ -1213,6 +1239,7 @@ void Misc::playHitSound(GameEvent& event) noexcept
     else if (miscConfig.hitSound == 5)
         interfaces->engine->clientCmdUnrestricted(("play " + miscConfig.customHitSound).c_str());
 }
+
 
 void Misc::killSound(GameEvent& event) noexcept
 {
@@ -1665,7 +1692,17 @@ void Misc::drawGUI(bool contentOnly) noexcept
     ImGui::hotkey("Menu Key", miscConfig.menuKey);
     ImGui::Checkbox("Anti AFK kick", &miscConfig.antiAfkKick);
     ImGui::Checkbox("Auto strafe", &miscConfig.autoStrafe);
-    ImGui::Checkbox("Bunny hop", &miscConfig.bunnyHop);
+    ImGui::Checkbox("Bunny Hop", &miscConfig.bunnyHop);
+    ImGui::SameLine();
+    ImGui::PushID("Bunny Hop");
+    if (ImGui::Button("..."))
+        ImGui::OpenPopup("");
+
+    if (ImGui::BeginPopup("")) {
+        ImGui::SliderInt("", &miscConfig.hopsHitchance, 0, 100, "Bunny Hop Hitchance: %d%");
+        ImGui::EndPopup();
+    }
+    ImGui::PopID();
     ImGui::Checkbox("Fast duck", &miscConfig.fastDuck);
     ImGui::Checkbox("Moonwalk", &miscConfig.moonwalk);
     ImGui::Checkbox("Edge Jump", &miscConfig.edgejump);
@@ -1854,6 +1891,7 @@ void Misc::drawGUI(bool contentOnly) noexcept
     ImGui::PopID();
 
     ImGui::Checkbox("BYPASS SV_PURE", &miscConfig.bypassSvPure);
+    //ImGui::Checkbox("Bomb Damage Indicator", &miscConfig.bombDamage);
     if (ImGui::Button("Unhook"))
         hooks->uninstall();
 
@@ -1909,6 +1947,7 @@ static void from_json(const json& j, MiscConfig& m)
     read(j, "Anti AFK kick", m.antiAfkKick);
     read(j, "Auto strafe", m.autoStrafe);
     read(j, "Bunny hop", m.bunnyHop);
+    read(j, "BHOP Hitchance", m.hopsHitchance);
     read(j, "Custom clan tag", m.customClanTag);
     read(j, "Clock tag", m.clocktag);
     read(j, "Clan tag", m.clanTag, sizeof(m.clanTag));
@@ -1966,6 +2005,7 @@ static void from_json(const json& j, MiscConfig& m)
     read(j, "Opposite Hand Knife", m.oppositeHandKnife);
     read<value_t::object>(j, "Preserve Killfeed", m.preserveKillfeed);
     read(j, "BYPASS SV_PURE", m.bypassSvPure);
+   // read(j, "Bomb Damage Indicator", m.bombDamage);
 }
 
 static void from_json(const json& j, MiscConfig::Reportbot& r)
@@ -2046,6 +2086,7 @@ static void to_json(json& j, const MiscConfig& o)
     WRITE("Anti AFK kick", antiAfkKick);
     WRITE("Auto strafe", autoStrafe);
     WRITE("Bunny hop", bunnyHop);
+    WRITE("BHOP Hitchance", hopsHitchance);
     WRITE("Custom clan tag", customClanTag);
     WRITE("Clock tag", clocktag);
 
@@ -2106,6 +2147,7 @@ static void to_json(json& j, const MiscConfig& o)
     WRITE("Opposite Hand Knife", oppositeHandKnife);
     WRITE("Preserve Killfeed", preserveKillfeed);
     WRITE("BYPASS SV_PURE", bypassSvPure);
+    //WRITE("Bomb Damage Indicator", bombDamage);
 }
 
 json Misc::toJson() noexcept
