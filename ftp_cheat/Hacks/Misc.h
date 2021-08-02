@@ -20,6 +20,7 @@ namespace Misc
     bool isMenuKeyPressed() noexcept;
     float maxAngleDelta() noexcept;
     float aspectRatio() noexcept;
+    void settotalFOV(float fov) noexcept;
 
     void edgejump(UserCmd* cmd) noexcept;
     void slowwalk(UserCmd* cmd) noexcept;
@@ -62,6 +63,7 @@ namespace Misc
     void drawOffscreenEnemies(ImDrawList* drawList) noexcept;
     void autoAccept(const char* soundEntry) noexcept;
     void SmokeHelper(ImDrawList* drawList);
+    void drawAimBotFOV(ImDrawList* drawList) noexcept;
     //void drawBombDamage() noexcept
 
 

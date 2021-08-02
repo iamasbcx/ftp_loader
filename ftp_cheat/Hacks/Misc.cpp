@@ -58,6 +58,7 @@
 #include "../Hooks.h"
 #include "../GameData.h"
 #include "../GrenadeData.h"
+#include "../Config.h"
 
 #include "../imguiCustom.h"
 #include <SDK/Input.h>
@@ -100,13 +101,16 @@ struct MiscConfig {
     bool prepareRevolver{ false };
     bool oppositeHandKnife = false;
     bool smokeHelper{ false };
-    bool bombDamage{ false };
+    bool bombDamage{ true };
     PreserveKillfeed preserveKillfeed;
     char clanTag[16];
     KeyBind edgejumpkey;
     KeyBind slowwalkKey;
     ColorToggleThickness noscopeCrosshair;
     ColorToggleThickness recoilCrosshair;
+
+    ColorToggle drawAimFOV{ 0.0f, 0.0f, 1.0f, 1.0f };
+    float totalFov;
 
     struct SpectatorList {
         bool enabled = false;
@@ -152,6 +156,8 @@ struct MiscConfig {
     OffscreenEnemies offscreenEnemies;
     bool bypassSvPure{ false };
 } miscConfig;
+
+
 
 bool Misc::shouldEnableSvPureBypass() noexcept
 {
@@ -438,299 +444,7 @@ bool can_shoot()
     return true;
 }
 
-void Misc::SmokeHelper(ImDrawList* drawList)
-{
-    if (!localPlayer || !localPlayer->isAlive() || !miscConfig.smokeHelper)
-        return;
 
-    if (interfaces->engine->isConsoleVisible())
-        return;
-
-    if (!can_shoot())
-        return;
-
-    if (strstr(interfaces->engine->getLevelName(), "mirage"))
-    {
-        if (!localPlayer->getActiveWeapon()->isSmoke())
-            return;
-
-        for (const auto& it : Mirage)
-        {
-
-            if (const float dist = localPlayer->origin().distTo(it.pos); dist > 500.0f)
-                continue;
-
-            const ImVec2 size = ImGui::CalcTextSize(it.info.c_str());
-            const float radius = 1.0;
-
-            const Vector ring_target = { radius * cosf(0) + it.ang.x, radius * sinf(0) + it.ang.y, (it.ang.z) };
-
-            ImVec2 ring_target_angle;
-
-            const Vector ring_ground = { radius * cosf(0) + it.pos.x, radius * sinf(0) + it.pos.y, it.pos.z }; // -60 compensation for player height
-            ImVec2 ring_ground_angle;
-
-            const bool in_pos = (round(localPlayer->getEyePosition().x) - round(it.pos.x) <= it.ring_width && round(localPlayer->getEyePosition().y) - round(it.pos.y) <= it.ring_width);
-
-            int xx, yy;
-            interfaces->engine->getScreenSize(xx, yy);
-
-            int cy = yy / 2;
-		    int cx = xx / 2;
-
-            if (worldToScreen(ring_target, ring_target_angle))
-            {
-                // target
-                //bool in_angle = (round(interfaces->engine->getViewAngles().x) == round(it.ang.x) && round(interfaces->engine->getViewAngles().y) == round(it.ang.y));
-                bool in_angle = true;
-                drawList->AddRectFilled(ImVec2(ring_target_angle.x - 10.f, ring_target_angle.y - 10.f), ImVec2(ring_target_angle.x + size.x + 25.f, ring_target_angle.y + 26.f), IM_COL32(0, 0, 0, 80), 10.f);
-                drawList->AddCircleFilled(ring_target_angle, 8.f, IM_COL32(255, 255, 255, 100));
-                drawList->AddText(ImVec2(ring_target_angle.x + 12.f, ring_target_angle.y - 7.f), IM_COL32(0, 0, 0, 255), it.info.c_str());
-                drawList->AddText(ImVec2(ring_target_angle.x + 13.f, ring_target_angle.y - 8.f), IM_COL32(255, 255, 255, 255), it.info.c_str());
-                drawList->AddText(ImVec2(ring_target_angle.x + 12.f, ring_target_angle.y - -7.f), IM_COL32(0, 0, 0, 255), it.type.c_str());
-                drawList->AddText(ImVec2(ring_target_angle.x + 13.f, ring_target_angle.y - -8.f), IM_COL32(255, 255, 255, 255), it.type.c_str());
-                drawList->AddCircle(ImVec2(cx, cy), 10.f, IM_COL32_WHITE, 255);
-
-                Draw3DFilledCircle(drawList, it.pos, 10.f, IM_COL32(255, 255, 255, 250));
-                
-                if (in_pos)
-                	drawList->AddLine(ImGui::GetIO().DisplaySize / 2.0f, ring_target_angle, IM_COL32(0, 0, 0, 255), 2.f);
-            }
-            else if (worldToScreen(ring_ground, ring_ground_angle))
-            {
-                //ground
-                drawList->AddCircleFilled(ring_ground_angle, 8.f, IM_COL32(255, 255, 255, 80));
-                Draw3DFilledCircle(drawList, it.pos, 10.f, IM_COL32(255, 255, 255, 250));
-                drawList->AddText(ImVec2(ring_ground_angle.x + 13.f, ring_ground_angle.y - 8.f), IM_COL32(255, 255, 255, 255), it.info.c_str());
-            }
-
-        }
-    }
-    else if (strstr(interfaces->engine->getLevelName(), "dust2"))
-    {
-        if (!localPlayer->getActiveWeapon()->isSmoke())
-            return;
-
-        for (const auto& it : Dust2)
-        {
-
-            if (const float dist = localPlayer->origin().distTo(it.pos); dist > 500.0f)
-                continue;
-
-            const ImVec2 size = ImGui::CalcTextSize(it.info.c_str());
-            const float radius = 1.0;
-
-            const Vector ring_target = { radius * cosf(0) + it.ang.x, radius * sinf(0) + it.ang.y, (it.ang.z) };
-
-            ImVec2 ring_target_angle;
-
-            const Vector ring_ground = { radius * cosf(0) + it.pos.x, radius * sinf(0) + it.pos.y, it.pos.z }; // -60 compensation for player height
-            ImVec2 ring_ground_angle;
-
-            const bool in_pos = (round(localPlayer->getEyePosition().x) - round(it.pos.x) <= it.ring_width && round(localPlayer->getEyePosition().y) - round(it.pos.y) <= it.ring_width);
-
-            int xx, yy;
-            interfaces->engine->getScreenSize(xx, yy);
-
-            int cy = yy / 2;
-            int cx = xx / 2;
-
-            if (worldToScreen(ring_target, ring_target_angle))
-            {
-                // target
-                //bool in_angle = (round(interfaces->engine->getViewAngles().x) == round(it.ang.x) && round(interfaces->engine->getViewAngles().y) == round(it.ang.y));
-                bool in_angle = true;
-                drawList->AddRectFilled(ImVec2(ring_target_angle.x - 10.f, ring_target_angle.y - 10.f), ImVec2(ring_target_angle.x + size.x + 25.f, ring_target_angle.y + 26.f), IM_COL32(0, 0, 0, 80), 10.f);
-                drawList->AddCircleFilled(ring_target_angle, 8.f, IM_COL32(255, 255, 255, 100));
-                drawList->AddText(ImVec2(ring_target_angle.x + 12.f, ring_target_angle.y - 7.f), IM_COL32(0, 0, 0, 255), it.info.c_str());
-                drawList->AddText(ImVec2(ring_target_angle.x + 13.f, ring_target_angle.y - 8.f), IM_COL32(255, 255, 255, 255), it.info.c_str());
-                drawList->AddText(ImVec2(ring_target_angle.x + 12.f, ring_target_angle.y - -7.f), IM_COL32(0, 0, 0, 255), it.type.c_str());
-                drawList->AddText(ImVec2(ring_target_angle.x + 13.f, ring_target_angle.y - -8.f), IM_COL32(255, 255, 255, 255), it.type.c_str());
-                drawList->AddCircle(ImVec2(cx, cy), 10.f, IM_COL32_WHITE, 255);
-
-                Draw3DFilledCircle(drawList, it.pos, 10.f, IM_COL32(255, 255, 255, 250));
-
-                if (in_pos)
-                    drawList->AddLine(ImGui::GetIO().DisplaySize / 2.0f, ring_target_angle, IM_COL32(0, 0, 0, 255), 2.f);
-            }
-            else if (worldToScreen(ring_ground, ring_ground_angle))
-            {
-                //ground
-                drawList->AddCircleFilled(ring_ground_angle, 8.f, IM_COL32(255, 255, 255, 80));
-                Draw3DFilledCircle(drawList, it.pos, 10.f, IM_COL32(255, 255, 255, 250));
-                drawList->AddText(ImVec2(ring_ground_angle.x + 13.f, ring_ground_angle.y - 8.f), IM_COL32(255, 255, 255, 255), it.info.c_str());
-            }
-        }
-    }
-    else if (strstr(interfaces->engine->getLevelName(), "nuke"))
-    {
-        if (!localPlayer->getActiveWeapon()->isSmoke())
-            return;
-
-        for (const auto& it : Nuke)
-        {
-
-            if (const float dist = localPlayer->origin().distTo(it.pos); dist > 500.0f)
-                continue;
-
-            const ImVec2 size = ImGui::CalcTextSize(it.info.c_str());
-            const float radius = 1.0;
-
-            const Vector ring_target = { radius * cosf(0) + it.ang.x, radius * sinf(0) + it.ang.y, (it.ang.z) };
-
-            ImVec2 ring_target_angle;
-
-            const Vector ring_ground = { radius * cosf(0) + it.pos.x, radius * sinf(0) + it.pos.y, it.pos.z }; // -60 compensation for player height
-            ImVec2 ring_ground_angle;
-
-            const bool in_pos = (round(localPlayer->getEyePosition().x) - round(it.pos.x) <= it.ring_width && round(localPlayer->getEyePosition().y) - round(it.pos.y) <= it.ring_width);
-
-            int xx, yy;
-            interfaces->engine->getScreenSize(xx, yy);
-
-            int cy = yy / 2;
-            int cx = xx / 2;
-
-            if (worldToScreen(ring_target, ring_target_angle))
-            {
-                // target
-                //bool in_angle = (round(interfaces->engine->getViewAngles().x) == round(it.ang.x) && round(interfaces->engine->getViewAngles().y) == round(it.ang.y));
-                bool in_angle = true;
-                drawList->AddRectFilled(ImVec2(ring_target_angle.x - 10.f, ring_target_angle.y - 10.f), ImVec2(ring_target_angle.x + size.x + 25.f, ring_target_angle.y + 26.f), IM_COL32(0, 0, 0, 80), 10.f);
-                drawList->AddCircleFilled(ring_target_angle, 8.f, IM_COL32(255, 255, 255, 100));
-                drawList->AddText(ImVec2(ring_target_angle.x + 12.f, ring_target_angle.y - 7.f), IM_COL32(0, 0, 0, 255), it.info.c_str());
-                drawList->AddText(ImVec2(ring_target_angle.x + 13.f, ring_target_angle.y - 8.f), IM_COL32(255, 255, 255, 255), it.info.c_str());
-                drawList->AddText(ImVec2(ring_target_angle.x + 12.f, ring_target_angle.y - -7.f), IM_COL32(0, 0, 0, 255), it.type.c_str());
-                drawList->AddText(ImVec2(ring_target_angle.x + 13.f, ring_target_angle.y - -8.f), IM_COL32(255, 255, 255, 255), it.type.c_str());
-                drawList->AddCircle(ImVec2(cx, cy), 10.f, IM_COL32_WHITE, 255);
-
-                Draw3DFilledCircle(drawList, it.pos, 10.f, IM_COL32(255, 255, 255, 250));
-
-                if (in_pos)
-                    drawList->AddLine(ImGui::GetIO().DisplaySize / 2.0f, ring_target_angle, IM_COL32(0, 0, 0, 255), 2.f);
-            }
-            else if (worldToScreen(ring_ground, ring_ground_angle))
-            {
-                //ground
-                drawList->AddCircleFilled(ring_ground_angle, 8.f, IM_COL32(255, 255, 255, 80));
-                Draw3DFilledCircle(drawList, it.pos, 10.f, IM_COL32(255, 255, 255, 250));
-                drawList->AddText(ImVec2(ring_ground_angle.x + 13.f, ring_ground_angle.y - 8.f), IM_COL32(255, 255, 255, 255), it.info.c_str());
-            }
-        }
-    }
-    if (strstr(interfaces->engine->getLevelName(), "train"))
-    {
-        if (!localPlayer->getActiveWeapon()->isSmoke())
-            return;
-
-        for (const auto& it : Train)
-        {
-
-            if (const float dist = localPlayer->origin().distTo(it.pos); dist > 500.0f)
-                continue;
-
-            const ImVec2 size = ImGui::CalcTextSize(it.info.c_str());
-            const float radius = 1.0;
-
-            const Vector ring_target = { radius * cosf(0) + it.ang.x, radius * sinf(0) + it.ang.y, (it.ang.z) };
-
-            ImVec2 ring_target_angle;
-
-            const Vector ring_ground = { radius * cosf(0) + it.pos.x, radius * sinf(0) + it.pos.y, it.pos.z }; // -60 compensation for player height
-            ImVec2 ring_ground_angle;
-
-            const bool in_pos = (round(localPlayer->getEyePosition().x) - round(it.pos.x) <= it.ring_width && round(localPlayer->getEyePosition().y) - round(it.pos.y) <= it.ring_width);
-
-            int xx, yy;
-            interfaces->engine->getScreenSize(xx, yy);
-
-            int cy = yy / 2;
-            int cx = xx / 2;
-
-            if (worldToScreen(ring_target, ring_target_angle))
-            {
-                // target
-                //bool in_angle = (round(interfaces->engine->getViewAngles().x) == round(it.ang.x) && round(interfaces->engine->getViewAngles().y) == round(it.ang.y));
-                bool in_angle = true;
-                drawList->AddRectFilled(ImVec2(ring_target_angle.x - 10.f, ring_target_angle.y - 10.f), ImVec2(ring_target_angle.x + size.x + 25.f, ring_target_angle.y + 26.f), IM_COL32(0, 0, 0, 80), 10.f);
-                drawList->AddCircleFilled(ring_target_angle, 8.f, IM_COL32(255, 255, 255, 100));
-                drawList->AddText(ImVec2(ring_target_angle.x + 12.f, ring_target_angle.y - 7.f), IM_COL32(0, 0, 0, 255), it.info.c_str());
-                drawList->AddText(ImVec2(ring_target_angle.x + 13.f, ring_target_angle.y - 8.f), IM_COL32(255, 255, 255, 255), it.info.c_str());
-                drawList->AddText(ImVec2(ring_target_angle.x + 12.f, ring_target_angle.y - -7.f), IM_COL32(0, 0, 0, 255), it.type.c_str());
-                drawList->AddText(ImVec2(ring_target_angle.x + 13.f, ring_target_angle.y - -8.f), IM_COL32(255, 255, 255, 255), it.type.c_str());
-                drawList->AddCircle(ImVec2(cx, cy), 10.f, IM_COL32_WHITE, 255);
-
-                Draw3DFilledCircle(drawList, it.pos, 10.f, IM_COL32(255, 255, 255, 250));
-
-                if (in_pos)
-                    drawList->AddLine(ImGui::GetIO().DisplaySize / 2.0f, ring_target_angle, IM_COL32(0, 0, 0, 255), 2.f);
-            }
-            else if (worldToScreen(ring_ground, ring_ground_angle))
-            {
-                //ground
-                drawList->AddCircleFilled(ring_ground_angle, 8.f, IM_COL32(255, 255, 255, 80));
-                Draw3DFilledCircle(drawList, it.pos, 10.f, IM_COL32(255, 255, 255, 250));
-                drawList->AddText(ImVec2(ring_ground_angle.x + 13.f, ring_ground_angle.y - 8.f), IM_COL32(255, 255, 255, 255), it.info.c_str());
-            }
-        }
-    }
-    else if (strstr(interfaces->engine->getLevelName(), "inferno"))
-    {
-        if (!localPlayer->getActiveWeapon()->isSmoke())
-            return;
-
-        for (const auto& it : Inferno)
-        {
-
-            if (const float dist = localPlayer->origin().distTo(it.pos); dist > 500.0f)
-                continue;
-
-            const ImVec2 size = ImGui::CalcTextSize(it.info.c_str());
-            const float radius = 1.0;
-
-            const Vector ring_target = { radius * cosf(0) + it.ang.x, radius * sinf(0) + it.ang.y, (it.ang.z) };
-
-            ImVec2 ring_target_angle;
-
-            const Vector ring_ground = { radius * cosf(0) + it.pos.x, radius * sinf(0) + it.pos.y, it.pos.z }; // -60 compensation for player height
-            ImVec2 ring_ground_angle;
-
-            const bool in_pos = (round(localPlayer->getEyePosition().x) - round(it.pos.x) <= it.ring_width && round(localPlayer->getEyePosition().y) - round(it.pos.y) <= it.ring_width);
-
-            int xx, yy;
-            interfaces->engine->getScreenSize(xx, yy);
-
-            int cy = yy / 2;
-            int cx = xx / 2;
-
-            if (worldToScreen(ring_target, ring_target_angle))
-            {
-                // target
-                //bool in_angle = (round(interfaces->engine->getViewAngles().x) == round(it.ang.x) && round(interfaces->engine->getViewAngles().y) == round(it.ang.y));
-                bool in_angle = true;
-                drawList->AddRectFilled(ImVec2(ring_target_angle.x - 10.f, ring_target_angle.y - 10.f), ImVec2(ring_target_angle.x + size.x + 25.f, ring_target_angle.y + 26.f), IM_COL32(0, 0, 0, 80), 10.f);
-                drawList->AddCircleFilled(ring_target_angle, 8.f, IM_COL32(255, 255, 255, 100));
-                drawList->AddText(ImVec2(ring_target_angle.x + 12.f, ring_target_angle.y - 7.f), IM_COL32(0, 0, 0, 255), it.info.c_str());
-                drawList->AddText(ImVec2(ring_target_angle.x + 13.f, ring_target_angle.y - 8.f), IM_COL32(255, 255, 255, 255), it.info.c_str());
-                drawList->AddText(ImVec2(ring_target_angle.x + 12.f, ring_target_angle.y - -7.f), IM_COL32(0, 0, 0, 255), it.type.c_str());
-                drawList->AddText(ImVec2(ring_target_angle.x + 13.f, ring_target_angle.y - -8.f), IM_COL32(255, 255, 255, 255), it.type.c_str());
-                drawList->AddCircle(ImVec2(cx, cy), 10.f, IM_COL32_WHITE, 255);
-
-                Draw3DFilledCircle(drawList, it.pos, 10.f, IM_COL32(255, 255, 255, 250));
-
-                if (in_pos)
-                    drawList->AddLine(ImGui::GetIO().DisplaySize / 2.0f, ring_target_angle, IM_COL32(0, 0, 0, 255), 2.f);
-            }
-            else if (worldToScreen(ring_ground, ring_ground_angle))
-            {
-                //ground
-                drawList->AddCircleFilled(ring_ground_angle, 8.f, IM_COL32(255, 255, 255, 80));
-                Draw3DFilledCircle(drawList, it.pos, 10.f, IM_COL32(255, 255, 255, 250));
-                drawList->AddText(ImVec2(ring_ground_angle.x + 13.f, ring_ground_angle.y - 8.f), IM_COL32(255, 255, 255, 255), it.info.c_str());
-            }
-        }
-    }
-}
 
 void Misc::recoilCrosshair(ImDrawList* drawList) noexcept
 {
@@ -1198,6 +912,63 @@ void Misc::antiAfkKick(UserCmd* cmd) noexcept
 {
     if (miscConfig.antiAfkKick && cmd->commandNumber % 2)
         cmd->buttons |= 1 << 26;
+}
+
+void Misc::settotalFOV(float fov) noexcept
+{
+    miscConfig.totalFov = fov;
+}
+
+
+void Misc::drawAimBotFOV(ImDrawList* drawList) noexcept
+{
+    if (!miscConfig.drawAimFOV.enabled)
+        return;
+
+    if (!localPlayer || localPlayer->nextAttack() > memory->globalVars->serverTime() || localPlayer->isDefusing() || localPlayer->waitForNoAttack())
+        return;
+
+    const auto activeWeapon = localPlayer->getActiveWeapon();
+    if (!activeWeapon || !activeWeapon->clip())
+        return;
+
+    if (localPlayer->shotsFired() > 0 && !activeWeapon->isFullAuto())
+        return;
+
+    auto weaponIndex = getWeaponIndex(activeWeapon->ItemDefinitionIndex());
+    if (!weaponIndex)
+        return;
+
+    auto weaponClass = getWeaponClass(activeWeapon->ItemDefinitionIndex());
+    if (!config->aimbot[weaponIndex].enabled)
+        weaponIndex = weaponClass;
+
+    if (!config->aimbot[weaponIndex].enabled)
+        weaponIndex = 0;
+
+    if (!config->aimbot[weaponIndex].enabled)
+        return;
+
+    if (!config->aimbot[weaponIndex].betweenShots && (activeWeapon->nextPrimaryAttack() > memory->globalVars->serverTime() || (activeWeapon->isFullAuto() && localPlayer->shotsFired() > 1)))
+        return;
+
+    if (!config->aimbot[weaponIndex].ignoreFlash && localPlayer->isFlashed())
+        return;
+
+    if (config->aimbot[weaponIndex].scopedOnly && activeWeapon->isSniperRifle() && !localPlayer->isScoped())
+        return;
+
+    const auto& screensize = ImGui::GetIO().DisplaySize;
+    float radius = std::tan(Helpers::deg2rad(config->aimbot[weaponIndex].fov) / 2.f) / std::tan(Helpers::deg2rad(localPlayer->isScoped() ? localPlayer->fov() : miscConfig.totalFov) / 2.f) * screensize.x;
+    const ImVec2 screen_mid = { screensize.x / 2.0f, screensize.y / 2.0f };
+
+    const auto aimPunchAngle = localPlayer->getEyePosition() + Vector::fromAngle(interfaces->engine->getViewAngles() + localPlayer->getAimPunch()) * 1000.0f;
+    
+    ImVec2 pos;
+
+    if (can_shoot()) {
+           drawList->AddCircle(localPlayer->shotsFired() > 1 ? pos : screen_mid, radius, Helpers::calculateColor(miscConfig.drawAimFOV.asColor4()), 360);
+    }
 }
 
 void Misc::fixAnimationLOD(FrameStage stage) noexcept
@@ -1744,13 +1515,13 @@ void Misc::drawGUI(bool contentOnly) noexcept
         if (!windowOpen)
             return;
         ImGui::SetNextWindowSize({ 580.0f, 0.0f });
-        ImGui::Begin("Misc", &windowOpen, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize
-            | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::Begin("Misc", &windowOpen, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
     }
     ImGui::Columns(2, nullptr, false);
     ImGui::SetColumnOffset(1, 230.0f);
     ImGui::hotkey("Menu Key", miscConfig.menuKey);
     ImGui::Checkbox("Anti AFK kick", &miscConfig.antiAfkKick);
+    ImGui::Checkbox("Smoke Helper", &miscConfig.smokeHelper);
     ImGui::Checkbox("Auto strafe", &miscConfig.autoStrafe);
     ImGui::Checkbox("Bunny Hop", &miscConfig.bunnyHop);
     ImGui::SameLine();
@@ -1823,7 +1594,6 @@ void Misc::drawGUI(bool contentOnly) noexcept
     ImGui::Checkbox("Fix movement", &miscConfig.fixMovement);
     ImGui::Checkbox("Disable model occlusion", &miscConfig.disableModelOcclusion);
     ImGui::SliderFloat("Aspect Ratio", &miscConfig.aspectratio, 0.0f, 5.0f, "%.2f");
-    ImGui::Checkbox("Smoke Helper", &miscConfig.smokeHelper);
     ImGui::NextColumn();
     ImGui::Checkbox("Disable HUD blur", &miscConfig.disablePanoramablur);
     ImGui::Checkbox("Animated clan tag", &miscConfig.animatedClanTag);
@@ -1857,6 +1627,17 @@ void Misc::drawGUI(bool contentOnly) noexcept
     ImGui::Checkbox("Fast plant", &miscConfig.fastPlant);
     ImGui::Checkbox("Fast Stop", &miscConfig.fastStop);
     ImGuiCustom::colorPicker("Bomb timer", miscConfig.bombTimer);
+    ImGui::SameLine();
+
+    ImGui::PushID("Bomb timer");
+    if (ImGui::Button("..."))
+        ImGui::OpenPopup("");
+
+    if (ImGui::BeginPopup("")) {
+        ImGui::Checkbox("Bomb Damage Indicator", &miscConfig.bombDamage);
+        ImGui::EndPopup();
+    }
+    ImGui::PopID();
     ImGui::Checkbox("Quick reload", &miscConfig.quickReload);
     ImGui::Checkbox("Prepare revolver", &miscConfig.prepareRevolver);
     ImGui::SameLine();
@@ -1951,7 +1732,7 @@ void Misc::drawGUI(bool contentOnly) noexcept
     ImGui::PopID();
 
     ImGui::Checkbox("BYPASS SV_PURE", &miscConfig.bypassSvPure);
-    //ImGui::Checkbox("Bomb Damage Indicator", &miscConfig.bombDamage);
+    //ImGuiCustom::colorPicker("Draw AimBot FOV", miscConfig.drawAimFOV);
     if (ImGui::Button("Unhook"))
         hooks->uninstall();
 
@@ -2064,8 +1845,9 @@ static void from_json(const json& j, MiscConfig& m)
     read<value_t::object>(j, "Reportbot", m.reportbot);
     read(j, "Opposite Hand Knife", m.oppositeHandKnife);
     read<value_t::object>(j, "Preserve Killfeed", m.preserveKillfeed);
+    read<value_t::object>(j, "Draw AimBot FOV", m.drawAimFOV);
     read(j, "BYPASS SV_PURE", m.bypassSvPure);
-    //read(j, "Bomb Damage Indicator", m.bombDamage);
+    read(j, "Bomb Damage Indicator", m.bombDamage);
 }
 
 static void from_json(const json& j, MiscConfig::Reportbot& r)
@@ -2207,7 +1989,8 @@ static void to_json(json& j, const MiscConfig& o)
     WRITE("Opposite Hand Knife", oppositeHandKnife);
     WRITE("Preserve Killfeed", preserveKillfeed);
     WRITE("BYPASS SV_PURE", bypassSvPure);
-    //WRITE("Bomb Damage Indicator", bombDamage);
+    WRITE("Draw AimBot FOV", drawAimFOV);
+    WRITE("Bomb Damage Indicator", bombDamage);
 }
 
 json Misc::toJson() noexcept

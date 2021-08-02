@@ -36,6 +36,7 @@
 #include "../SDK/Surface.h"
 #include "../SDK/ViewRenderBeams.h"
 #include "../SDK/Utils.h"
+#include <Config.h>
 
 #define SMOKEGRENADE_LIFETIME 17.5f
 
@@ -247,7 +248,10 @@ static void to_json(json& j, const VisualsConfig& o)
     WRITE("Bullet Tracers", bulletTracers);
     WRITE("Molotov Hull", molotovHull);
     WRITE("Smoke timer", smokeTimer);
+    
 }
+
+
 
 void Visuals::rainbowCrosshair() noexcept
 {
@@ -960,6 +964,7 @@ void Visuals::drawGUI(bool contentOnly) noexcept
     ImGuiCustom::colorPicker("Bullet Tracers", visualsConfig.bulletTracers.asColor4().color.data(), &visualsConfig.bulletTracers.asColor4().color[3], nullptr, nullptr, &visualsConfig.bulletTracers.enabled);
     ImGuiCustom::colorPicker("Molotov Hull", visualsConfig.molotovHull);
     ImGuiCustom::colorPicker("Smoke Timer", visualsConfig.smokeTimer);
+    //ImGuiCustom::colorPicker("Draw AimBot FOV", visualsConfig.drawAimFOV);
 
     ImGui::Checkbox("Color correction", &visualsConfig.colorCorrection.enabled);
     ImGui::SameLine();
