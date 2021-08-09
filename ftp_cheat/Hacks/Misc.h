@@ -63,6 +63,7 @@ namespace Misc
     void drawOffscreenEnemies(ImDrawList* drawList) noexcept;
     void autoAccept(const char* soundEntry) noexcept;
     void SmokeHelper(ImDrawList* drawList);
+    void MollyHelper(ImDrawList* drawList);
     void drawAimBotFOV(ImDrawList* drawList) noexcept;
     //void drawBombDamage() noexcept
 

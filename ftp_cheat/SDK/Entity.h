@@ -127,6 +127,24 @@ public:
 
         return index == WeaponId::SmokeGrenade;
     }
+    bool isMolly()
+    {
+        if (!this)
+            return false;
+
+        auto index = ItemDefinitionIndex();
+
+        return index == WeaponId::Molotov;
+    }
+    bool isIncGrenade()
+    {
+        if (!this)
+            return false;
+
+        auto index = ItemDefinitionIndex();
+
+        return index == WeaponId::IncGrenade;
+    }
 
     auto isFullAuto() noexcept
     {

@@ -102,6 +102,7 @@ struct MiscConfig {
     bool oppositeHandKnife = false;
     bool smokeHelper{ false };
     bool bombDamage{ true };
+    bool mollyHelper{ false };
     PreserveKillfeed preserveKillfeed;
     char clanTag[16];
     KeyBind edgejumpkey;
@@ -329,7 +330,12 @@ void Misc::spectatorList() noexcept
             continue;
 
         if (const auto it = std::ranges::find(GameData::players(), observer.playerHandle, &PlayerData::handle); it != GameData::players().cend()) {
-            ImGui::TextWrapped("%s", it->name.c_str());
+            if (const auto texture = it->getAvatarTexture()) {
+                const auto text_size = ImGui::CalcTextSize(it->name.c_str());
+                ImGui::Image(texture, ImVec2(text_size.y, text_size.y), ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, 1), ImVec4(1, 1, 1, 0.3f));
+                ImGui::SameLine();
+                ImGui::TextWrapped("%s", it->name.c_str());
+            }
         }
     }
 
@@ -387,7 +393,9 @@ static bool worldToScreen(const Vector& in, ImVec2& out) noexcept
     out.y *= 1.0f - (matrix._21 * in.x + matrix._22 * in.y + matrix._23 * in.z + matrix._24) / w;
     if (miscConfig.smokeHelper)
     {
-    } else { out = ImFloor(out); }
+    } else if (miscConfig.smokeHelper)
+    {
+    }else { out = ImFloor(out); }
     
     return true;
 }
@@ -1732,6 +1740,7 @@ void Misc::drawGUI(bool contentOnly) noexcept
     ImGui::PopID();
 
     ImGui::Checkbox("BYPASS SV_PURE", &miscConfig.bypassSvPure);
+    //ImGui::Checkbox("Molly Helper", &miscConfig.mollyHelper);
     //ImGuiCustom::colorPicker("Draw AimBot FOV", miscConfig.drawAimFOV);
     if (ImGui::Button("Unhook"))
         hooks->uninstall();
@@ -1848,6 +1857,7 @@ static void from_json(const json& j, MiscConfig& m)
     read<value_t::object>(j, "Draw AimBot FOV", m.drawAimFOV);
     read(j, "BYPASS SV_PURE", m.bypassSvPure);
     read(j, "Bomb Damage Indicator", m.bombDamage);
+    read(j, "Molly Helper", m.mollyHelper);
 }
 
 static void from_json(const json& j, MiscConfig::Reportbot& r)
@@ -1991,6 +2001,7 @@ static void to_json(json& j, const MiscConfig& o)
     WRITE("BYPASS SV_PURE", bypassSvPure);
     WRITE("Draw AimBot FOV", drawAimFOV);
     WRITE("Bomb Damage Indicator", bombDamage);
+    WRITE("Molly Helper", mollyHelper);
 }
 
 json Misc::toJson() noexcept

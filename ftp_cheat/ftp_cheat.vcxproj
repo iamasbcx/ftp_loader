@@ -165,6 +165,7 @@
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)$(TargetName)-c.pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)$(TargetName)-c.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
+    <ClCompile Include="MollyHelper.cpp" />
     <ClCompile Include="Netvars.cpp" />
     <ClCompile Include="FTP.cpp" />
     <ClCompile Include="GUI.cpp" />

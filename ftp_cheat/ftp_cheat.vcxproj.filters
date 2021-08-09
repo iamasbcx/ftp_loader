@@ -275,6 +275,9 @@
     <ClCompile Include="SmokeHelper.cpp">
       <Filter>Hacks</Filter>
     </ClCompile>
+    <ClCompile Include="MollyHelper.cpp">
+      <Filter>Hacks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GUI.h">
