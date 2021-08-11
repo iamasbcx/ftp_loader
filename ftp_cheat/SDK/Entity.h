@@ -117,7 +117,7 @@ public:
 
     auto isPistol() noexcept { return getWeaponType() == WeaponType::Pistol; }
     auto isSniperRifle() noexcept { return getWeaponType() == WeaponType::SniperRifle; }
-    auto isGrenade() noexcept { return getWeaponType() == WeaponType::Grenade; }
+    auto isGrenade() noexcept { return getWeaponType() == WeaponType::Grenade;  }
     bool isSmoke()
     {
         if (!this)
@@ -127,7 +127,7 @@ public:
 
         return index == WeaponId::SmokeGrenade;
     }
-    bool isMolly()
+    auto isMolly()
     {
         if (!this)
             return false;

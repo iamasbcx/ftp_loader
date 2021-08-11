@@ -120,6 +120,7 @@ static HRESULT __stdcall present(IDirect3DDevice9* device, const RECT* src, cons
     Visuals::drawSmokeTimer(ImGui::GetBackgroundDrawList());
     Misc::SmokeHelper(ImGui::GetBackgroundDrawList());
     Misc::drawAimBotFOV(ImGui::GetBackgroundDrawList());
+    Misc::MollyHelper(ImGui::GetBackgroundDrawList());
 
     Aimbot::updateInput();
     Visuals::updateInput();

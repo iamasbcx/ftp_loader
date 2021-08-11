@@ -393,7 +393,7 @@ static bool worldToScreen(const Vector& in, ImVec2& out) noexcept
     out.y *= 1.0f - (matrix._21 * in.x + matrix._22 * in.y + matrix._23 * in.z + matrix._24) / w;
     if (miscConfig.smokeHelper)
     {
-    } else if (miscConfig.smokeHelper)
+    } else if (miscConfig.mollyHelper)
     {
     }else { out = ImFloor(out); }
     
@@ -1740,7 +1740,7 @@ void Misc::drawGUI(bool contentOnly) noexcept
     ImGui::PopID();
 
     ImGui::Checkbox("BYPASS SV_PURE", &miscConfig.bypassSvPure);
-    //ImGui::Checkbox("Molly Helper", &miscConfig.mollyHelper);
+    ImGui::Checkbox("Molly Helper", &miscConfig.mollyHelper);
     //ImGuiCustom::colorPicker("Draw AimBot FOV", miscConfig.drawAimFOV);
     if (ImGui::Button("Unhook"))
         hooks->uninstall();

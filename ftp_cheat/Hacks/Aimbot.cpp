@@ -68,6 +68,7 @@ bool traceToExit(Trace* enter_trace, Vector start, Vector dir, Trace* exit_trace
     signed int distCheck = 23;
     int firstContents = 0;
 
+
     do
     {
         distance += 4.f;
