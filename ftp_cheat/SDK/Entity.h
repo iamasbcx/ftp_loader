@@ -120,7 +120,7 @@ public:
     auto isGrenade() noexcept { return getWeaponType() == WeaponType::Grenade;  }
     auto isSmoke() noexcept { return itemDefinitionIndex2() == WeaponId::SmokeGrenade; }
     auto isMolotov() noexcept { return itemDefinitionIndex2() == WeaponId::Molotov; }
-    auto isIncGrenade() noexcept { return itemDefinitionIndex2() == WeaponId::Molotov; }
+    auto isIncGrenade() noexcept { return itemDefinitionIndex2() == WeaponId::IncGrenade; }
 
     auto isFullAuto() noexcept
     {
