@@ -116,6 +116,7 @@ struct MiscConfig {
     struct SpectatorList {
         bool enabled = false;
         bool noTitleBar = false;
+        bool showAvatars = true;
         ImVec2 pos;
         ImVec2 size{ 200.0f, 200.0f };
     };
@@ -332,7 +333,10 @@ void Misc::spectatorList() noexcept
         if (const auto it = std::ranges::find(GameData::players(), observer.playerHandle, &PlayerData::handle); it != GameData::players().cend()) {
             if (const auto texture = it->getAvatarTexture()) {
                 const auto text_size = ImGui::CalcTextSize(it->name.c_str());
-                ImGui::Image(texture, ImVec2(text_size.y, text_size.y), ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, 1), ImVec4(1, 1, 1, 0.3f));
+                
+                if(miscConfig.spectatorList.showAvatars)
+                    ImGui::Image(texture, ImVec2(text_size.y, text_size.y), ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, 1), ImVec4(1, 1, 1, 0.3f));
+
                 ImGui::SameLine();
                 ImGui::TextWrapped("%s", it->name.c_str());
             }
@@ -1525,11 +1529,12 @@ void Misc::drawGUI(bool contentOnly) noexcept
         ImGui::SetNextWindowSize({ 580.0f, 0.0f });
         ImGui::Begin("Misc", &windowOpen, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
     }
-    ImGui::Columns(2, nullptr, false);
+    ImGui::Columns(3, nullptr, false);
     ImGui::SetColumnOffset(1, 230.0f);
     ImGui::hotkey("Menu Key", miscConfig.menuKey);
     ImGui::Checkbox("Anti AFK kick", &miscConfig.antiAfkKick);
     ImGui::Checkbox("Smoke Helper", &miscConfig.smokeHelper);
+    ImGui::Checkbox("Molly Helper", &miscConfig.mollyHelper);
     ImGui::Checkbox("Auto strafe", &miscConfig.autoStrafe);
     ImGui::Checkbox("Bunny Hop", &miscConfig.bunnyHop);
     ImGui::SameLine();
@@ -1574,11 +1579,10 @@ void Misc::drawGUI(bool contentOnly) noexcept
 
     if (ImGui::BeginPopup("")) {
         ImGui::Checkbox("No Title Bar", &miscConfig.spectatorList.noTitleBar);
+        ImGui::Checkbox("Show Avatars", &miscConfig.spectatorList.showAvatars);
         ImGui::EndPopup();
     }
     ImGui::PopID();
-
-    ImGui::Checkbox("Watermark", &miscConfig.watermark.enabled);
     ImGuiCustom::colorPicker("Offscreen Enemies", miscConfig.offscreenEnemies.asColor4(), &miscConfig.offscreenEnemies.enabled);
     ImGui::SameLine();
     ImGui::PushID("Offscreen Enemies");
@@ -1740,8 +1744,9 @@ void Misc::drawGUI(bool contentOnly) noexcept
     ImGui::PopID();
 
     ImGui::Checkbox("BYPASS SV_PURE", &miscConfig.bypassSvPure);
-    ImGui::Checkbox("Molly Helper", &miscConfig.mollyHelper);
-    //ImGuiCustom::colorPicker("Draw AimBot FOV", miscConfig.drawAimFOV);
+    ImGui::Checkbox("Watermark", &miscConfig.watermark.enabled);
+    ImGui::NextColumn();
+    ImGuiCustom::colorPicker("Draw AimBot FOV", miscConfig.drawAimFOV);
     if (ImGui::Button("Unhook"))
         hooks->uninstall();
 
@@ -1819,6 +1824,7 @@ static void from_json(const json& j, MiscConfig& m)
     read(j, "Reveal suspect", m.revealSuspect);
     read(j, "Reveal votes", m.revealVotes);
     read<value_t::object>(j, "Spectator list", m.spectatorList);
+    read(j, "Show Avatars", m.spectatorList.showAvatars);
     read<value_t::object>(j, "Watermark", m.watermark);
     read<value_t::object>(j, "Offscreen Enemies", m.offscreenEnemies);
     read(j, "Fix animation LOD", m.fixAnimationLOD);
@@ -1963,6 +1969,7 @@ static void to_json(json& j, const MiscConfig& o)
     WRITE("Reveal suspect", revealSuspect);
     WRITE("Reveal votes", revealVotes);
     WRITE("Spectator list", spectatorList);
+    WRITE("Show Avatars", spectatorList.showAvatars);
     WRITE("Watermark", watermark);
     WRITE("Offscreen Enemies", offscreenEnemies);
     WRITE("Fix animation LOD", fixAnimationLOD);
