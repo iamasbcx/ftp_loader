@@ -118,33 +118,9 @@ public:
     auto isPistol() noexcept { return getWeaponType() == WeaponType::Pistol; }
     auto isSniperRifle() noexcept { return getWeaponType() == WeaponType::SniperRifle; }
     auto isGrenade() noexcept { return getWeaponType() == WeaponType::Grenade;  }
-    bool isSmoke()
-    {
-        if (!this)
-            return false;
-
-        auto index = ItemDefinitionIndex();
-
-        return index == WeaponId::SmokeGrenade;
-    }
-    auto isMolly()
-    {
-        if (!this)
-            return false;
-
-        auto index = ItemDefinitionIndex();
-
-        return index == WeaponId::Molotov;
-    }
-    bool isIncGrenade()
-    {
-        if (!this)
-            return false;
-
-        auto index = ItemDefinitionIndex();
-
-        return index == WeaponId::IncGrenade;
-    }
+    auto isSmoke() noexcept { return itemDefinitionIndex2() == WeaponId::SmokeGrenade; }
+    auto isMolotov() noexcept { return itemDefinitionIndex2() == WeaponId::Molotov; }
+    auto isIncGrenade() noexcept { return itemDefinitionIndex2() == WeaponId::Molotov; }
 
     auto isFullAuto() noexcept
     {

@@ -60,7 +60,7 @@ void Misc::MollyHelper(ImDrawList* drawList)
 
     if (strstr(interfaces->engine->getLevelName(), "mirage"))
     {
-        if (!localPlayer->getActiveWeapon()->isMolly() || !localPlayer->getActiveWeapon()->isIncGrenade())
+        if (!localPlayer->getActiveWeapon()->isMolotov() || !localPlayer->getActiveWeapon()->isIncGrenade())
             return;
 
         for (const auto& it : MirageMolly)
