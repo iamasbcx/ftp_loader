@@ -2,11 +2,12 @@
 
 #include <cstddef>
 #include <utility>
+#include "../InventoryChanger/StaticData.h"
 
 struct InventoryItem;
 
 namespace ItemGenerator
 {
-    std::pair<std::size_t, std::size_t> generateItemFromContainer(const InventoryItem& caseItem) noexcept;
-    std::size_t createDefaultDynamicData(std::size_t gameItemIndex) noexcept;
+    std::pair<StaticData::ItemIndex, std::size_t> generateItemFromContainer(const InventoryItem& caseItem) noexcept;
+    std::size_t createDefaultDynamicData(StaticData::ItemIndex gameItemIndex) noexcept;
 }
