@@ -2,6 +2,7 @@
 
 #include <cassert>
 
+#include "../SDK/ItemSchema.h"
 #include "StaticData.h"
 
 enum class Team;
@@ -11,6 +12,10 @@ struct StickerConfig {
     float wear = 0.0f;
 };
 
+enum TournamentTeam : std::uint8_t;
+enum TournamentStage : std::uint8_t;
+enum ProPlayer;
+
 struct DynamicSkinData {
     float wear = 0.0f;
     int seed = 1;
@@ -18,7 +23,11 @@ struct DynamicSkinData {
     std::uint32_t tournamentID = 0;
     std::array<StickerConfig, 5> stickers;
     std::string nameTag;
-    
+    TournamentStage tournamentStage{};
+    TournamentTeam tournamentTeam1{};
+    TournamentTeam tournamentTeam2{};
+    ProPlayer proPlayer{};
+
     [[nodiscard]] bool isSouvenir() const noexcept { return tournamentID != 0; }
 };
 
@@ -39,13 +48,15 @@ struct DynamicMusicData {
     int statTrak = -1;
 };
 
-enum class TournamentTeam : std::uint8_t;
-enum class TournamentStage : std::uint8_t;
-
 struct DynamicSouvenirPackageData {
     TournamentStage tournamentStage{};
     TournamentTeam tournamentTeam1{};
     TournamentTeam tournamentTeam2{};
+    ProPlayer proPlayer{};
+};
+
+struct DynamicServiceMedalData {
+    std::uint32_t issueDateTimestamp = 0;
 };
 
 struct InventoryItem {
@@ -75,6 +86,7 @@ public:
     bool isPatch() const noexcept { return isValid() && get().isPatch(); }
     bool isStatTrakSwapTool() const noexcept { return isValid() && get().isStatTrakSwapTool(); }
     bool isViewerPass() const noexcept { return isValid() && get().isViewerPass(); }
+    bool isServiceMedal() const noexcept { return isValid() && get().isServiceMedal(); }
 
     std::size_t getDynamicDataIndex() const noexcept { assert(dynamicDataIndex != static_cast<std::size_t>(-1)); return dynamicDataIndex; }
 
@@ -102,10 +114,12 @@ namespace Inventory
     DynamicAgentData& dynamicAgentData(std::size_t index) noexcept;
     DynamicMusicData& dynamicMusicData(std::size_t index) noexcept;
     DynamicSouvenirPackageData& dynamicSouvenirPackageData(std::size_t index) noexcept;
+    DynamicServiceMedalData& dynamicServiceMedalData(std::size_t index) noexcept;
 
     std::size_t emplaceDynamicData(DynamicSkinData&& data) noexcept;
     std::size_t emplaceDynamicData(DynamicGloveData&& data) noexcept;
     std::size_t emplaceDynamicData(DynamicAgentData&& data) noexcept;
     std::size_t emplaceDynamicData(DynamicMusicData&& data) noexcept;
     std::size_t emplaceDynamicData(DynamicSouvenirPackageData&& data) noexcept;
+    std::size_t emplaceDynamicData(DynamicServiceMedalData&& data) noexcept;
 }

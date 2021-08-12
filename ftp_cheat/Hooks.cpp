@@ -19,7 +19,6 @@
 
 #include <SDL2/SDL.h>
 
-#include "imgui/GL/gl3w.h"
 #include "imgui/imgui_impl_sdl.h"
 #include "imgui/imgui_impl_opengl3.h"
 #endif
@@ -598,7 +597,13 @@ static bool __STDCALL dispatchUserMessage(LINUX_ARGS(void* thisptr, ) UserMessag
 {
     if (type == UserMessageType::Text)
         InventoryChanger::onUserTextMsg(data, size);
-
+    else if (type == UserMessageType::VoteStart)
+        Misc::onVoteStart(data, size);
+    else if (type == UserMessageType::VotePass)
+        Misc::onVotePass();
+    else if (type == UserMessageType::VoteFailed)
+        Misc::onVoteFailed();
+    
     return hooks->client.callOriginal<bool, 38>(type, passthroughFlags, size, data);
 }
 
@@ -683,7 +688,6 @@ void Hooks::install() noexcept
     if constexpr (std::is_same_v<HookType, MinHook>)
         MH_Initialize();
 #else
-    gl3wInit();
     ImGui_ImplOpenGL3_Init();
 
     swapWindow = *reinterpret_cast<decltype(swapWindow)*>(memory->swapWindow);

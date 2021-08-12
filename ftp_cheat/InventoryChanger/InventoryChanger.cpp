@@ -42,7 +42,6 @@
 #include "../SDK/Localize.h"
 #include "../SDK/LocalPlayer.h"
 #include "../SDK/ModelInfo.h"
-#include "../SDK/Panorama.h"
 #include "../SDK/PlayerResource.h"
 #include "../SDK/Platform.h"
 #include "../SDK/WeaponId.h"
@@ -284,7 +283,7 @@ static void applyWeapons(CSPlayerInventory& localInventory, Entity* local) noexc
             continue;
 
         const auto soc = memory->getSOCData(itemView);
-        if (!soc || !Inventory::getItem(soc->itemID))
+        if (!soc || soc->weaponId != definitionIndex || !Inventory::getItem(soc->itemID))
             continue;
 
         weapon->accountID() = localInventory.getAccountID();
@@ -466,39 +465,6 @@ void InventoryChanger::run(FrameStage stage) noexcept
     Inventory::runFrame();
 }
 
-void loadEquipmentFromJson(const json& j) noexcept
-{
-    if (!j.contains("Equipment"))
-        return;
-
-    const auto& equipment = j["Equipment"];
-    if (!equipment.is_array())
-        return;
-
-    for (const auto& equipped : equipment) {
-        if (!equipped.contains("Slot"))
-            continue;
-
-        const auto& slot = equipped["Slot"];
-        if (!slot.is_number_integer())
-            continue;
-
-        if (equipped.contains("CT")) {
-            if (const auto& ct = equipped["CT"]; ct.is_number_integer())
-                Inventory::equipItem(Team::CT, slot, ct);
-        }
-
-        if (equipped.contains("TT")) {
-            if (const auto& tt = equipped["TT"]; tt.is_number_integer())
-                Inventory::equipItem(Team::TT, slot, tt);
-        }
-
-        if (equipped.contains("NOTEAM")) {
-            if (const auto& noteam = equipped["NOTEAM"]; noteam.is_number_integer())
-                Inventory::equipItem(Team::None, slot, noteam);
-        }
-    }
-}
 
 void InventoryChanger::scheduleHudUpdate() noexcept
 {
@@ -681,7 +647,7 @@ namespace ImGui
         ImGuiContext& g = *GImGui;
         const ImGuiStyle& style = g.Style;
 
-        const auto itemName = StaticData::getWeaponName(item.weaponID).c_str();
+        const auto itemName = StaticData::getWeaponName(item.weaponID).data();
         const auto itemNameSize = CalcTextSize(itemName, nullptr);
 
         const auto paintKitName = item.hasPaintKit() ? StaticData::paintKits()[item.dataIndex].name.c_str() : "";
@@ -797,7 +763,7 @@ namespace ImGui
         const ImGuiContext& g = *GImGui;
         const ImGuiStyle& style = g.Style;
 
-        const auto itemName = StaticData::getWeaponName(item.weaponID).c_str();
+        const auto itemName = StaticData::getWeaponName(item.weaponID).data();
         const auto itemNameSize = CalcTextSize(itemName, nullptr);
 
         const auto paintKitName = item.hasPaintKit() ? StaticData::paintKits()[item.dataIndex].name.c_str() : "";
@@ -883,22 +849,6 @@ namespace ImGui
     }
 }
 
-[[nodiscard]] std::size_t loadDynamicGloveDataFromJson(const json& j) noexcept
-{
-    DynamicGloveData dynamicData;
-
-    if (j.contains("Wear")) {
-        if (const auto& wear = j["Wear"]; wear.is_number_float())
-            dynamicData.wear = wear;
-    }
-
-    if (j.contains("Seed")) {
-        if (const auto& seed = j["Seed"]; seed.is_number_integer())
-            dynamicData.seed = seed;
-    }
-
-    return Inventory::emplaceDynamicData(std::move(dynamicData));
-}
 
 void InventoryChanger::drawGUI(bool contentOnly) noexcept
 {
@@ -980,7 +930,7 @@ void InventoryChanger::drawGUI(bool contentOnly) noexcept
             const auto& gameItems = StaticData::gameItems();
             const std::wstring filterWide = Helpers::toUpper(Helpers::toWideString(filter));
             for (std::size_t i = 0; i < gameItems.size(); ++i) {
-                if (!filter.empty() && !passesFilter(StaticData::getWeaponNameUpper(gameItems[i].weaponID), filterWide) && (!gameItems[i].hasPaintKit() || !passesFilter(StaticData::paintKits()[gameItems[i].dataIndex].nameUpperCase, filterWide)))
+                if (!filter.empty() && !passesFilter(std::wstring(StaticData::getWeaponNameUpper(gameItems[i].weaponID)), filterWide) && (!gameItems[i].hasPaintKit() || !passesFilter(StaticData::paintKits()[gameItems[i].dataIndex].nameUpperCase, filterWide)))
                     continue;
                 ImGui::PushID(i);
 
@@ -1085,6 +1035,13 @@ json InventoryChanger::toJson() noexcept
                 stickerConfig["Slot"] = i;
                 stickers.push_back(std::move(stickerConfig));
             }
+
+            if (dynamicData.tournamentStage != TournamentStage{}) {
+                itemConfig["Tournament Stage"] = dynamicData.tournamentStage;
+                itemConfig["Tournament Team 1"] = dynamicData.tournamentTeam1;
+                itemConfig["Tournament Team 2"] = dynamicData.tournamentTeam2;
+                itemConfig["Tournament Player"] = dynamicData.proPlayer;
+            }
             break;
         }
         case StaticData::Type::Music: {
@@ -1133,6 +1090,13 @@ json InventoryChanger::toJson() noexcept
             }
             break;
         }
+        case StaticData::Type::ServiceMedal: {
+            if (const auto& dynamicData = Inventory::dynamicServiceMedalData(item.getDynamicDataIndex()); dynamicData.issueDateTimestamp != 0)
+                itemConfig["Issue Date Timestamp"] = dynamicData.issueDateTimestamp;
+            break;
+        }
+        default:
+            break;
         }
 
         items.push_back(std::move(itemConfig));
@@ -1206,6 +1170,36 @@ json InventoryChanger::toJson() noexcept
     return skinStickers;
 }
 
+
+[[nodiscard]] std::size_t loadDynamicGloveDataFromJson(const json& j) noexcept
+{
+    DynamicGloveData dynamicData;
+
+    if (j.contains("Wear")) {
+        if (const auto& wear = j["Wear"]; wear.is_number_float())
+            dynamicData.wear = wear;
+    }
+
+    if (j.contains("Seed")) {
+        if (const auto& seed = j["Seed"]; seed.is_number_integer())
+            dynamicData.seed = seed;
+    }
+
+    return Inventory::emplaceDynamicData(std::move(dynamicData));
+}
+
+[[nodiscard]] std::size_t loadDynamicMusicDataFromJson(const json& j) noexcept
+{
+    DynamicMusicData dynamicData;
+
+    if (j.contains("StatTrak")) {
+        if (const auto& statTrak = j["StatTrak"]; statTrak.is_number_integer() && statTrak > -1)
+            dynamicData.statTrak = statTrak;
+    }
+
+    return Inventory::emplaceDynamicData(std::move(dynamicData));
+}
+
 [[nodiscard]] auto loadAgentPatchesFromJson(const json& j) noexcept
 {
     std::array<PatchConfig, 5> agentPatches;
@@ -1244,16 +1238,50 @@ json InventoryChanger::toJson() noexcept
     return Inventory::emplaceDynamicData(std::move(dynamicData));
 }
 
-[[nodiscard]] std::size_t loadDynamicMusicDataFromJson(const json& j) noexcept
+[[nodiscard]] std::size_t loadDynamicServiceMedalDataFromJson(const json& j) noexcept
 {
-    DynamicMusicData dynamicData;
+    DynamicServiceMedalData dynamicData;
 
-    if (j.contains("StatTrak")) {
-        if (const auto& statTrak = j["StatTrak"]; statTrak.is_number_integer() && statTrak > -1)
-            dynamicData.statTrak = statTrak;
+    if (j.contains("Issue Date Timestamp")) {
+        if (const auto& issueDateTimestamp = j["Issue Date Timestamp"]; issueDateTimestamp.is_number_unsigned())
+            dynamicData.issueDateTimestamp = issueDateTimestamp;
     }
 
     return Inventory::emplaceDynamicData(std::move(dynamicData));
+}
+
+void loadEquipmentFromJson(const json& j) noexcept
+{
+    if (!j.contains("Equipment"))
+        return;
+
+    const auto& equipment = j["Equipment"];
+    if (!equipment.is_array())
+        return;
+
+    for (const auto& equipped : equipment) {
+        if (!equipped.contains("Slot"))
+            continue;
+
+        const auto& slot = equipped["Slot"];
+        if (!slot.is_number_integer())
+            continue;
+
+        if (equipped.contains("CT")) {
+            if (const auto& ct = equipped["CT"]; ct.is_number_integer())
+                Inventory::equipItem(Team::CT, slot, ct);
+        }
+
+        if (equipped.contains("TT")) {
+            if (const auto& tt = equipped["TT"]; tt.is_number_integer())
+                Inventory::equipItem(Team::TT, slot, tt);
+        }
+
+        if (equipped.contains("NOTEAM")) {
+            if (const auto& noteam = equipped["NOTEAM"]; noteam.is_number_integer())
+                Inventory::equipItem(Team::None, slot, noteam);
+        }
+    }
 }
 
 [[nodiscard]] std::size_t loadDynamicSkinDataFromJson(const json& j) noexcept
@@ -1345,6 +1373,8 @@ void InventoryChanger::fromJson(const json& j) noexcept
             }
             else if (item.isAgent()) {
                 dynamicDataIdx = loadDynamicAgentDataFromJson(jsonItem);
+            } else if (item.isServiceMedal()) {
+                dynamicDataIdx = loadDynamicServiceMedalDataFromJson(jsonItem);
             }
 
             Inventory::addItemAcknowledged(itemIndex, dynamicDataIdx);
@@ -1474,6 +1504,34 @@ void InventoryChanger::clearInventory() noexcept
     resetConfig();
 }
 
+static std::size_t lastEquippedCount = 0;
+
+
+[[nodiscard]] static bool isDefaultKnifeNameLocalizationString(std::string_view string) noexcept
+{
+    return string == "#SFUI_WPNHUD_Knife" || string == "#SFUI_WPNHUD_Knife_T";
+}
+
+static void appendProtobufString(std::string_view string, std::vector<char>& buffer) noexcept
+{
+    assert(string.length() < 128);
+    buffer.push_back(0x1A);
+    buffer.push_back(static_cast<char>(string.length()));
+    std::ranges::copy(string, std::back_inserter(buffer));
+}
+
+[[nodiscard]] static std::vector<char> buildTextUserMessage(int destination, std::string_view string1, std::string_view string2, std::string_view string3 = {}) noexcept
+{
+    std::vector<char> buffer{ 0x8, static_cast<char>(destination) };
+    appendProtobufString(string1, buffer);
+    appendProtobufString(string2, buffer);
+    appendProtobufString(string3, buffer);
+    // game client expects text protobuf to contain 5 strings
+    appendProtobufString("", buffer);
+    appendProtobufString("", buffer);
+    return buffer;
+}
+
 void InventoryChanger::onUserTextMsg(const void*& data, int& size) noexcept
 {
     if (!localPlayer)
@@ -1494,50 +1552,65 @@ void InventoryChanger::onUserTextMsg(const void*& data, int& size) noexcept
     if (const auto item = Inventory::getItem(soc->itemID); !item || !item->isSkin())
         return;
 
+    constexpr auto HUD_PRINTTALK = 3;
     constexpr auto HUD_PRINTCENTER = 4;
 
     // https://github.com/SteamDatabase/Protobufs/blob/017f1710737b7026cdd6d7e602f96a66dddb7b2e/csgo/cstrike15_usermessages.proto#L128-L131
 
     const auto reader = ProtobufReader{ static_cast<const std::uint8_t*>(data), size };
-    if (reader.readInt32(1) != HUD_PRINTCENTER)
-        return;
+    
+    if (reader.readInt32(1) == HUD_PRINTCENTER) {
+        const auto strings = reader.readRepeatedString(3);
+        if (strings.size() < 2)
+            return;
 
-    const auto strings = reader.readRepeatedString(3);
-    if (strings.size() < 2)
-        return;
+        if (strings[0] != "#SFUI_Notice_CannotDropWeapon" &&
+            strings[0] != "#SFUI_Notice_YouDroppedWeapon")
+            return;
 
-    if (strings[0] != "#SFUI_Notice_CannotDropWeapon" && strings[0] != "#SFUI_Notice_YouDroppedWeapon")
-        return;
+        if (!isDefaultKnifeNameLocalizationString(strings[1]))
+            return;
 
-    if (strings[1] != "#SFUI_WPNHUD_Knife" && strings[1] != "#SFUI_WPNHUD_Knife_T")
-        return;
+        const auto itemSchema = memory->itemSystem()->getItemSchema();
+        if (!itemSchema)
+            return;
 
-    const auto itemSchema = memory->itemSystem()->getItemSchema();
-    if (!itemSchema)
-        return;
+        const auto def = itemSchema->getItemDefinitionInterface(soc->weaponId);
+        if (!def)
+            return;
 
-    const auto def = itemSchema->getItemDefinitionInterface(soc->weaponId);
-    if (!def)
-        return;
+        static std::vector<char> buffer;
+        buffer = buildTextUserMessage(HUD_PRINTCENTER, strings[0], def->getItemBaseName());
+        data = buffer.data();
+        size = static_cast<int>(buffer.size());
+    } else if (reader.readInt32(1) == HUD_PRINTTALK) {
+        const auto strings = reader.readRepeatedString(3);
+        if (strings.size() < 3)
+            return;
 
-    const auto itemBaseName = std::string_view{ def->getItemBaseName() };
+        if (strings[0] != "#Player_Cash_Award_Killed_Enemy" &&
+            strings[0] != "#Player_Point_Award_Killed_Enemy" &&
+            strings[0] != "#Player_Point_Award_Killed_Enemy_Plural")
+            return;
 
-    static std::vector<char> buffer;
-    buffer = std::vector<char>{ 0x8, HUD_PRINTCENTER, 0x1A, static_cast<char>(strings[0].length()) };
-    std::ranges::copy(strings[0], std::back_inserter(buffer));
-    buffer.push_back(0x1A);
-    buffer.push_back(static_cast<char>(itemBaseName.length()));
-    std::ranges::copy(itemBaseName, std::back_inserter(buffer));
+        if (!isDefaultKnifeNameLocalizationString(strings[2]))
+            return;
 
-    // Add three empty strings, like UTIL_ClientPrintFilter() does
-    constexpr auto emptyStrings = std::to_array<char>({ 0x1A, 0, 0x1A, 0, 0x1A, 0 });
-    std::ranges::copy(emptyStrings, std::back_inserter(buffer));
+        const auto itemSchema = memory->itemSystem()->getItemSchema();
+        if (!itemSchema)
+            return;
 
-    data = buffer.data();
-    size = static_cast<int>(buffer.size());
+        const auto def = itemSchema->getItemDefinitionInterface(soc->weaponId);
+        if (!def)
+            return;
+
+        static std::vector<char> buffer;
+        buffer = buildTextUserMessage(HUD_PRINTTALK, strings[0], strings[1], def->getItemBaseName());
+        data = buffer.data();
+        size = static_cast<int>(buffer.size());
+    }
 }
 
-static std::size_t lastEquippedCount = 0;
 void InventoryChanger::onItemEquip(Team team, int slot, std::uint64_t itemID) noexcept
 {
     const auto localInventory = memory->inventoryManager->getLocalInventory();
@@ -1778,7 +1851,7 @@ static int remapKnifeAnim(WeaponId weaponID, const int sequence) noexcept
         case SEQUENCE_DEFAULT_DRAW:
             return Helpers::random(SEQUENCE_BUTTERFLY_DRAW, SEQUENCE_BUTTERFLY_DRAW2);
         case SEQUENCE_DEFAULT_LOOKAT01:
-            return Helpers::random(SEQUENCE_BUTTERFLY_LOOKAT01, 14);
+            return Helpers::random(SEQUENCE_BUTTERFLY_LOOKAT01, Sequence(14));
         default:
             return sequence + 1;
         }

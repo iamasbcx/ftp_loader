@@ -48,6 +48,10 @@ struct smokeData
 
 static std::vector<smokeData> smokes;
 
+struct BulletTracers : ColorToggle {
+    BulletTracers() : ColorToggle{ 0.0f, 0.75f, 1.0f, 1.0f } {}
+};
+
 struct VisualsConfig {
     bool disablePostProcessing{ false };
     bool inverseRagdollGravity{ false };

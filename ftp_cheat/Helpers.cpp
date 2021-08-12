@@ -104,26 +104,26 @@ ImWchar* Helpers::getFontGlyphRanges() noexcept
 
 std::wstring Helpers::toWideString(const std::string& str) noexcept
 {
-    std::wstring upperCase(str.length(), L'\0');
-    if (const auto newLen = std::mbstowcs(upperCase.data(), str.c_str(), upperCase.length()); newLen != static_cast<std::size_t>(-1))
-        upperCase.resize(newLen);
-    return upperCase;
+    std::wstring wide(str.length(), L'\0');
+    if (const auto newLen = std::mbstowcs(wide.data(), str.c_str(), wide.length()); newLen != static_cast<std::size_t>(-1))
+        wide.resize(newLen);
+    return wide;
 }
 
 static void toUpper(std::span<wchar_t> str) noexcept
 {
     static std::unordered_map<wchar_t, wchar_t> upperCache;
 
-    for (std::size_t i = 0; i < str.size(); ++i) {
-        if (str[i] >= 'a' && str[i] <= 'z') {
-            str[i] -= ('a' - 'A');
-        } else if (str[i] > 127) {
-            if (const auto it = upperCache.find(str[i]); it != upperCache.end()) {
-                str[i] = it->second;
+    for (auto& c : str) {
+        if (c >= 'a' && c <= 'z') {
+            c -= ('a' - 'A');
+        } else if (c > 127) {
+            if (const auto it = upperCache.find(c); it != upperCache.end()) {
+                c = it->second;
             } else {
-                const auto upper = std::towupper(str[i]);
-                upperCache.emplace(str[i], upper);
-                str[i] = upper;
+                const auto upper = std::towupper(c);
+                upperCache.emplace(c, upper);
+                c = upper;
             }
         }
     }
@@ -189,18 +189,4 @@ std::size_t Helpers::calculateVmtLength(const std::uintptr_t* vmt) noexcept
         ++length;
 #endif
     return length;
-}
-
-float Helpers::random(float min, float max) noexcept
-{
-    std::mt19937 gen{ std::random_device{}() };
-    std::uniform_real_distribution dis{ min, max };
-    return dis(gen);
-}
-
-int Helpers::random(int min, int max) noexcept
-{
-    std::mt19937 gen{ std::random_device{}() };
-    std::uniform_int_distribution dis{ min, max };
-    return dis(gen);
 }
