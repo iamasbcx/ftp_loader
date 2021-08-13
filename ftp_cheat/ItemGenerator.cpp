@@ -930,6 +930,7 @@ constexpr auto iemKatowice2019Matches = std::to_array<Match>({
     { TournamentMap::Nuke, GroupStage, ComplexityGaming, NRG, {} },
     { TournamentMap::Cache, GroupStage, ComplexityGaming, NRG, {} },
 
+
      // Round 4
     { TournamentMap::Dust2, GroupStage, Vitality, Renegades, {} },
     { TournamentMap::Cache, GroupStage, Vitality, Renegades, {} },
@@ -951,7 +952,8 @@ constexpr auto iemKatowice2019Matches = std::to_array<Match>({
     { TournamentMap::Inferno, GroupStage, Cloud9, HellRaisers, {} },
     { TournamentMap::Cache, GroupStage, HellRaisers, Cloud9, {} },
 
-        // Round 5
+
+    // Round 5
     { TournamentMap::Mirage, GroupStage, ENCE, Avangar, {} },
     { TournamentMap::Train, GroupStage, ENCE, Avangar, {} },
 
@@ -961,6 +963,20 @@ constexpr auto iemKatowice2019Matches = std::to_array<Match>({
 
     { TournamentMap::Cache, GroupStage, FaZeClan, Cloud9, {} },
     { TournamentMap::Dust2, GroupStage, Cloud9, FaZeClan, {} },
+
+
+    // Quarterfinals
+    { TournamentMap::Inferno, Quarterfinal, NatusVincere, FaZeClan, {} },
+    { TournamentMap::Mirage, Quarterfinal, FaZeClan, NatusVincere, {} },
+
+    { TournamentMap::Mirage, Quarterfinal, TeamLiquid, ENCE, {} },
+    { TournamentMap::Inferno, Quarterfinal, ENCE, TeamLiquid, {} },
+
+    { TournamentMap::Dust2, Quarterfinal, MIBR, Renegades, {} },
+    { TournamentMap::Train, Quarterfinal, Renegades, MIBR, {} },
+
+    { TournamentMap::Mirage, Quarterfinal, Astralis, NinjasInPyjamas, {} },
+    { TournamentMap::Dust2, Quarterfinal, NinjasInPyjamas, Astralis, {} },
 });
 
 constexpr auto tournaments = std::to_array<Tournament>({
