@@ -816,7 +816,7 @@ constexpr auto iemKatowice2019Matches = std::to_array<Match>({
     // Challengers Stage
 
     // Round 1
-    { TournamentMap::Train, ChallengersStage, Renegades, Avangar, {} },
+    { TournamentMap::Train, ChallengersStage, Renegades, Avangar, { AZR, Gratisfaction, jkaem, jks, Liazz } },
     { TournamentMap::Overpass, ChallengersStage, Fnatic, ViCiGaming, {} },
     { TournamentMap::Inferno, ChallengersStage, Tyloo, Vitality, {} },
     { TournamentMap::Mirage, ChallengersStage, GrayhoundGaming, Cloud9, {} },
@@ -828,7 +828,7 @@ constexpr auto iemKatowice2019Matches = std::to_array<Match>({
     // Round 2
     { TournamentMap::Overpass, ChallengersStage, Tyloo, Cloud9, {} },
     { TournamentMap::Overpass, ChallengersStage, ENCE, G2Esports, {} },
-    { TournamentMap::Mirage, ChallengersStage, Renegades, NinjasInPyjamas, {} },
+    { TournamentMap::Mirage, ChallengersStage, Renegades, NinjasInPyjamas, { AZR, Gratisfaction, jkaem, jks, Liazz } },
     { TournamentMap::Overpass, ChallengersStage, ViCiGaming, NRG, {} },
     { TournamentMap::Mirage, ChallengersStage, VegaSquadron, TeamSpirit, {} },
     { TournamentMap::Nuke, ChallengersStage, GrayhoundGaming, Vitality, {} },
@@ -836,8 +836,8 @@ constexpr auto iemKatowice2019Matches = std::to_array<Match>({
     { TournamentMap::Train, ChallengersStage, WinstrikeTeam, Fnatic, {} },
 
     // Round 3
-    { TournamentMap::Nuke, ChallengersStage, Renegades, ENCE, {} },
-    { TournamentMap::Mirage, ChallengersStage, Renegades, ENCE, {} },
+    { TournamentMap::Nuke, ChallengersStage, Renegades, ENCE, { AZR, Gratisfaction, jkaem, jks, Liazz } },
+    { TournamentMap::Mirage, ChallengersStage, Renegades, ENCE, { AZR, Gratisfaction, jkaem, jks, Liazz } },
 
     { TournamentMap::Inferno, ChallengersStage, NRG, Tyloo, {} },
     { TournamentMap::Mirage, ChallengersStage, NRG, Tyloo, {} },
@@ -891,7 +891,7 @@ constexpr auto iemKatowice2019Matches = std::to_array<Match>({
     // Group Stage
 
     // Round 1
-    { TournamentMap::Inferno, GroupStage, ENCE, Renegades, {} },
+    { TournamentMap::Inferno, GroupStage, ENCE, Renegades, { AZR, Gratisfaction, jkaem, jks, Liazz } },
     { TournamentMap::Mirage, GroupStage, BIG, Vitality, {} },
     { TournamentMap::Inferno, GroupStage, NatusVincere, G2Esports, {} },
     { TournamentMap::Train, GroupStage, FaZeClan, HellRaisers, {} },
@@ -902,7 +902,7 @@ constexpr auto iemKatowice2019Matches = std::to_array<Match>({
 
     // Round 2
     { TournamentMap::Mirage, GroupStage, NatusVincere, Vitality, {} },
-    { TournamentMap::Inferno, GroupStage, FaZeClan, Renegades, {} },
+    { TournamentMap::Inferno, GroupStage, FaZeClan, Renegades, { AZR, Gratisfaction, jkaem, jks, Liazz } },
     { TournamentMap::Overpass, GroupStage, TeamLiquid, NinjasInPyjamas, {} },
     { TournamentMap::Train, GroupStage, Astralis, Cloud9, {} },
     { TournamentMap::Dust2, GroupStage, ENCE, HellRaisers, {} },
@@ -911,9 +911,9 @@ constexpr auto iemKatowice2019Matches = std::to_array<Match>({
     { TournamentMap::Mirage, GroupStage, MIBR, ComplexityGaming, {} },
 
     // Round 3
-    { TournamentMap::Mirage, GroupStage, Renegades, Astralis, {} },
-    { TournamentMap::Nuke, GroupStage, Renegades, Astralis, {} },
-    { TournamentMap::Inferno, GroupStage, Astralis, Renegades, {} },
+    { TournamentMap::Mirage, GroupStage, Renegades, Astralis, { AZR, Gratisfaction, jkaem, jks, Liazz } },
+    { TournamentMap::Nuke, GroupStage, Renegades, Astralis, { Gratisfaction, jkaem, jks, Liazz } },
+    { TournamentMap::Inferno, GroupStage, Astralis, Renegades, { jkaem, Liazz } },
 
     { TournamentMap::Mirage, GroupStage, TeamLiquid, NatusVincere, {} },
     { TournamentMap::Dust2, GroupStage, TeamLiquid, NatusVincere, {} },
@@ -972,8 +972,8 @@ constexpr auto iemKatowice2019Matches = std::to_array<Match>({
     { TournamentMap::Mirage, Quarterfinal, TeamLiquid, ENCE, {} },
     { TournamentMap::Inferno, Quarterfinal, ENCE, TeamLiquid, {} },
 
-    { TournamentMap::Dust2, Quarterfinal, MIBR, Renegades, {} },
-    { TournamentMap::Train, Quarterfinal, Renegades, MIBR, {} },
+    { TournamentMap::Dust2, Quarterfinal, MIBR, Renegades, { jks, Gratisfaction } },
+    { TournamentMap::Train, Quarterfinal, Renegades, MIBR, { AZR, Gratisfaction, jkaem, Liazz } },
 
     { TournamentMap::Mirage, Quarterfinal, Astralis, NinjasInPyjamas, {} },
     { TournamentMap::Dust2, Quarterfinal, NinjasInPyjamas, Astralis, {} },
