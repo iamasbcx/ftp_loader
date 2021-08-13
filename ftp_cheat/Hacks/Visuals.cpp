@@ -968,7 +968,6 @@ void Visuals::drawGUI(bool contentOnly) noexcept
     ImGuiCustom::colorPicker("Bullet Tracers", visualsConfig.bulletTracers.asColor4().color.data(), &visualsConfig.bulletTracers.asColor4().color[3], nullptr, nullptr, &visualsConfig.bulletTracers.enabled);
     ImGuiCustom::colorPicker("Molotov Hull", visualsConfig.molotovHull);
     ImGuiCustom::colorPicker("Smoke Timer", visualsConfig.smokeTimer);
-    //ImGuiCustom::colorPicker("Draw AimBot FOV", visualsConfig.drawAimFOV);
 
     ImGui::Checkbox("Color correction", &visualsConfig.colorCorrection.enabled);
     ImGui::SameLine();

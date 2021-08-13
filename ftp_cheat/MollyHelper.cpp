@@ -114,7 +114,8 @@ void Misc::MollyHelper(ImDrawList* drawList)
 
             }
         }
-        else if (localPlayer->getActiveWeapon()->isIncGrenade()) {
+        
+        if (localPlayer->getActiveWeapon()->isIncGrenade()) {
             
             for (const auto& it : MirageMolly)
             {

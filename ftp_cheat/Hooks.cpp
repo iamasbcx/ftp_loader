@@ -118,8 +118,8 @@ static HRESULT __stdcall present(IDirect3DDevice9* device, const RECT* src, cons
     Misc::watermark();
     Visuals::drawSmokeTimer(ImGui::GetBackgroundDrawList());
     Misc::SmokeHelper(ImGui::GetBackgroundDrawList());
-    Misc::drawAimBotFOV(ImGui::GetBackgroundDrawList());
     Misc::MollyHelper(ImGui::GetBackgroundDrawList());
+    Aimbot::drawFov(ImGui::GetBackgroundDrawList());
 
     Aimbot::updateInput();
     Visuals::updateInput();
@@ -407,14 +407,12 @@ struct ViewSetup {
 
 static void __STDCALL overrideView(LINUX_ARGS(void* thisptr,) ViewSetup* setup) noexcept
 {
-    //if (localPlayer && !localPlayer->isScoped())
-    //    setup->fov += Visuals::fov();
     if (localPlayer)
     {
         if (!localPlayer->isScoped())
             setup->fov += Visuals::fov();
 
-        Misc::settotalFOV(setup->fov);
+        config->totalFov = setup->fov;
     }
     setup->farZ += Visuals::farZ() * 10;
     hooks->clientMode.callOriginal<void, WIN32_LINUX(18, 19)>(setup);
@@ -648,7 +646,10 @@ static void swapWindow(SDL_Window* window) noexcept
         Visuals::drawMolotovHull(ImGui::GetBackgroundDrawList());
         Misc::watermark();
         Visuals::drawSmokeTimer(ImGui::GetBackgroundDrawList());
-        Visuals::drawAimBotFOV(ImGui::GetBackgroundDrawList());
+        Misc::SmokeHelper(ImGui::GetBackgroundDrawList());
+        Misc::MollyHelper(ImGui::GetBackgroundDrawList());
+        Aimbot::drawFov(ImGui::GetBackgroundDrawList());
+
 
         Aimbot::updateInput();
         Visuals::updateInput();

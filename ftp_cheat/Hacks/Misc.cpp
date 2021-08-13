@@ -134,9 +134,6 @@ struct MiscConfig {
     ColorToggleThickness noscopeCrosshair;
     ColorToggleThickness recoilCrosshair;
 
-    ColorToggle drawAimFOV{ 0.0f, 0.0f, 1.0f, 1.0f };
-    float totalFov;
-
     struct SpectatorList {
         bool enabled = false;
         bool noTitleBar = false;
@@ -950,62 +947,7 @@ void Misc::antiAfkKick(UserCmd* cmd) noexcept
         cmd->buttons |= 1 << 26;
 }
 
-void Misc::settotalFOV(float fov) noexcept
-{
-    miscConfig.totalFov = fov;
-}
 
-
-void Misc::drawAimBotFOV(ImDrawList* drawList) noexcept
-{
-    if (!miscConfig.drawAimFOV.enabled)
-        return;
-
-    if (!localPlayer || localPlayer->nextAttack() > memory->globalVars->serverTime() || localPlayer->isDefusing() || localPlayer->waitForNoAttack())
-        return;
-
-    const auto activeWeapon = localPlayer->getActiveWeapon();
-    if (!activeWeapon || !activeWeapon->clip())
-        return;
-
-    if (localPlayer->shotsFired() > 0 && !activeWeapon->isFullAuto())
-        return;
-
-    auto weaponIndex = getWeaponIndex(activeWeapon->ItemDefinitionIndex());
-    if (!weaponIndex)
-        return;
-
-    auto weaponClass = getWeaponClass(activeWeapon->ItemDefinitionIndex());
-    if (!config->aimbot[weaponIndex].enabled)
-        weaponIndex = weaponClass;
-
-    if (!config->aimbot[weaponIndex].enabled)
-        weaponIndex = 0;
-
-    if (!config->aimbot[weaponIndex].enabled)
-        return;
-
-    if (!config->aimbot[weaponIndex].betweenShots && (activeWeapon->nextPrimaryAttack() > memory->globalVars->serverTime() || (activeWeapon->isFullAuto() && localPlayer->shotsFired() > 1)))
-        return;
-
-    if (!config->aimbot[weaponIndex].ignoreFlash && localPlayer->isFlashed())
-        return;
-
-    if (config->aimbot[weaponIndex].scopedOnly && activeWeapon->isSniperRifle() && !localPlayer->isScoped())
-        return;
-
-    const auto& screensize = ImGui::GetIO().DisplaySize;
-    float radius = std::tan(Helpers::deg2rad(config->aimbot[weaponIndex].fov) / 2.f) / std::tan(Helpers::deg2rad(localPlayer->isScoped() ? localPlayer->fov() : miscConfig.totalFov) / 2.f) * screensize.x;
-    const ImVec2 screen_mid = { screensize.x / 2.0f, screensize.y / 2.0f };
-
-    const auto aimPunchAngle = localPlayer->getEyePosition() + Vector::fromAngle(interfaces->engine->getViewAngles() + localPlayer->getAimPunch()) * 1000.0f;
-    
-    ImVec2 pos;
-
-    if (can_shoot()) {
-           drawList->AddCircle(localPlayer->shotsFired() > 1 ? pos : screen_mid, radius, Helpers::calculateColor(miscConfig.drawAimFOV.asColor4()), 360);
-    }
-}
 
 void Misc::fixAnimationLOD(FrameStage stage) noexcept
 {
@@ -1809,8 +1751,6 @@ void Misc::drawGUI(bool contentOnly) noexcept
 
     ImGui::Checkbox("BYPASS SV_PURE", &miscConfig.bypassSvPure);
     ImGui::Checkbox("Watermark", &miscConfig.watermark.enabled);
-    ImGui::NextColumn();
-    ImGuiCustom::colorPicker("Draw AimBot FOV", miscConfig.drawAimFOV);
     if (ImGui::Button("Unhook"))
         hooks->uninstall();
 
@@ -1924,7 +1864,6 @@ static void from_json(const json& j, MiscConfig& m)
     read<value_t::object>(j, "Reportbot", m.reportbot);
     read(j, "Opposite Hand Knife", m.oppositeHandKnife);
     read<value_t::object>(j, "Preserve Killfeed", m.preserveKillfeed);
-    read<value_t::object>(j, "Draw AimBot FOV", m.drawAimFOV);
     read(j, "BYPASS SV_PURE", m.bypassSvPure);
     read(j, "Bomb Damage Indicator", m.bombDamage);
     read(j, "Molly Helper", m.mollyHelper);
@@ -2070,7 +2009,6 @@ static void to_json(json& j, const MiscConfig& o)
     WRITE("Opposite Hand Knife", oppositeHandKnife);
     WRITE("Preserve Killfeed", preserveKillfeed);
     WRITE("BYPASS SV_PURE", bypassSvPure);
-    WRITE("Draw AimBot FOV", drawAimFOV);
     WRITE("Bomb Damage Indicator", bombDamage);
     WRITE("Molly Helper", mollyHelper);
 }

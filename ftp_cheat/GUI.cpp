@@ -255,6 +255,8 @@ void GUI::renderAimbotWindow(bool contentOnly) noexcept
     ImGui::Combo("", &config->aimbotKeyMode, "Hold\0Toggle\0");
     ImGui::PopItemWidth();
     ImGui::PopID();
+    ImGui::SameLine();
+    ImGuiCustom::colorPicker("Draw Aimbot FOV", config->drawaimbotFov);
     ImGui::Separator();
     static int currentCategory{ 0 };
     ImGui::PushItemWidth(110.0f);
@@ -368,6 +370,7 @@ void GUI::renderAimbotWindow(bool contentOnly) noexcept
     config->aimbot[currentWeapon].minDamage = std::clamp(config->aimbot[currentWeapon].minDamage, 0, 250);
     ImGui::Checkbox("Killshot", &config->aimbot[currentWeapon].killshot);
     ImGui::Checkbox("Between shots", &config->aimbot[currentWeapon].betweenShots);
+
     ImGui::Columns(1);
     if (!contentOnly)
         ImGui::End();
