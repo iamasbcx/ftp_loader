@@ -95,6 +95,17 @@ static LRESULT __stdcall wndProc(HWND window, UINT msg, WPARAM wParam, LPARAM lP
     return CallWindowProcW(hooks->originalWndProc, window, msg, wParam, lParam);
 }
 
+static HRESULT __stdcall reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* params) noexcept
+{
+    ImGui_ImplDX9_InvalidateDeviceObjects();
+    InventoryChanger::clearItemIconTextures();
+    GameData::clearTextures();
+    return hooks->originalReset(device, params);
+}
+
+#endif
+
+#ifdef _WIN32
 static HRESULT __stdcall present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND windowOverride, const RGNDATA* dirtyRegion) noexcept
 {
     [[maybe_unused]] static bool imguiInit{ ImGui_ImplDX9_Init(device) };
@@ -104,82 +115,63 @@ static HRESULT __stdcall present(IDirect3DDevice9* device, const RECT* src, cons
 
     ImGui_ImplDX9_NewFrame();
     ImGui_ImplWin32_NewFrame();
+#else
+static void swapWindow(SDL_Window * window) noexcept
+{
+    static const auto _ = ImGui_ImplSDL2_InitForOpenGL(window, nullptr);
+
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplSDL2_NewFrame(window);
+#endif
     ImGui::NewFrame();
 
-    StreamProofESP::render();
-    Misc::purchaseList();
-    Misc::noscopeCrosshair(ImGui::GetBackgroundDrawList());
-    Misc::recoilCrosshair(ImGui::GetBackgroundDrawList());
-    Misc::drawOffscreenEnemies(ImGui::GetBackgroundDrawList());
-    Misc::drawBombTimer();
-    Misc::spectatorList();
-    Visuals::hitMarker(nullptr, ImGui::GetBackgroundDrawList());
-    Visuals::drawMolotovHull(ImGui::GetBackgroundDrawList());
-    Misc::watermark();
-    Visuals::drawSmokeTimer(ImGui::GetBackgroundDrawList());
-    Misc::SmokeHelper(ImGui::GetBackgroundDrawList());
-    Misc::MollyHelper(ImGui::GetBackgroundDrawList());
-    Aimbot::drawFov(ImGui::GetBackgroundDrawList());
+    if (const auto& displaySize = ImGui::GetIO().DisplaySize; displaySize.x > 0.0f && displaySize.y > 0.0f) {
+        StreamProofESP::render();
+        Misc::purchaseList();
+        Misc::noscopeCrosshair(ImGui::GetBackgroundDrawList());
+        Misc::recoilCrosshair(ImGui::GetBackgroundDrawList());
+        Misc::drawOffscreenEnemies(ImGui::GetBackgroundDrawList());
+        Misc::drawBombTimer();
+        Misc::spectatorList();
+        Visuals::hitMarker(nullptr, ImGui::GetBackgroundDrawList());
+        Visuals::drawMolotovHull(ImGui::GetBackgroundDrawList());
+        Misc::watermark();
 
-    Aimbot::updateInput();
-    Visuals::updateInput();
-    StreamProofESP::updateInput();
-    Misc::updateInput();
-    Triggerbot::updateInput();
-    Chams::updateInput();
-    Glow::updateInput();
+        Aimbot::updateInput();
+        Visuals::updateInput();
+        StreamProofESP::updateInput();
+        Misc::updateInput();
+        Triggerbot::updateInput();
+        Chams::updateInput();
+        Glow::updateInput();
 
-    gui->handleToggle();
+        gui->handleToggle();
 
-    if (gui->isOpen())
-        gui->render();
+        if (gui->isOpen())
+            gui->render();
+    }
 
     ImGui::EndFrame();
     ImGui::Render();
 
+#ifdef _WIN32
     if (device->BeginScene() == D3D_OK) {
         ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
         device->EndScene();
     }
-    
+#else
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+#endif
+
     GameData::clearUnusedAvatars();
     InventoryChanger::clearUnusedItemIconTextures();
 
+#ifdef _WIN32
     return hooks->originalPresent(device, src, dest, windowOverride, dirtyRegion);
-}
-
-static HRESULT __stdcall reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* params) noexcept
-{
-    ImGui_ImplDX9_InvalidateDeviceObjects();
-    InventoryChanger::clearItemIconTextures();
-    GameData::clearTextures();
-    return hooks->originalReset(device, params);
-}
-
-static int __fastcall SendDatagram(NetworkChannel* network, void* edx, void* datagram)
-{
-    auto original = hooks->networkChannel.getOriginal<int, 46, void*>(datagram);
-    if (!Backtrack::backtrackConfig.fakeLatency || datagram || !interfaces->engine->isInGame() || !Backtrack::backtrackConfig.enabled)
-    {
-        return original(network, datagram);
-    }
-    int instate = network->InReliableState;
-    int insequencenr = network->InSequenceNr;
-    int faketimeLimit = Backtrack::backtrackConfig.timeLimit; if (faketimeLimit <= 200) { faketimeLimit = 0; }
-    else { faketimeLimit -= 200; }
-    float delta = std::max(0.f, std::clamp(faketimeLimit / 1000.f, 0.f, 0.2f) - network->getLatency(0));
-
-    Backtrack::AddLatencyToNetwork(network, delta + (delta / 20.0f));
-
-    int result = original(network, datagram);
-
-    network->InReliableState = instate;
-    network->InSequenceNr = insequencenr;
-
-    return result;
-}
-
+#else
+    hooks->swapWindow(window);
 #endif
+}
 
 static bool __STDCALL createMove(LINUX_ARGS(void* thisptr,) float inputSampleTime, UserCmd* cmd) noexcept
 {
@@ -618,62 +610,6 @@ Hooks::Hooks(HMODULE moduleHandle) noexcept : moduleHandle{ moduleHandle }
 
     window = FindWindowW(L"Valve001", nullptr);
     originalWndProc = WNDPROC(SetWindowLongPtrW(window, GWLP_WNDPROC, LONG_PTR(&wndProc)));
-}
-
-
-
-
-#else
-
-static void swapWindow(SDL_Window* window) noexcept
-{
-    static const auto _ = ImGui_ImplSDL2_InitForOpenGL(window, nullptr);
-    
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplSDL2_NewFrame(window);
-
-    ImGui::NewFrame();
-
-    if (const auto& displaySize = ImGui::GetIO().DisplaySize; displaySize.x > 0.0f && displaySize.y > 0.0f) {
-        StreamProofESP::render();
-        Misc::purchaseList();
-        Misc::noscopeCrosshair(ImGui::GetBackgroundDrawList());
-        Misc::recoilCrosshair(ImGui::GetBackgroundDrawList());
-        Misc::drawOffscreenEnemies(ImGui::GetBackgroundDrawList());
-        Misc::drawBombTimer();
-        Misc::spectatorList();
-        Visuals::hitMarker(nullptr, ImGui::GetBackgroundDrawList());
-        Visuals::drawMolotovHull(ImGui::GetBackgroundDrawList());
-        Misc::watermark();
-        Visuals::drawSmokeTimer(ImGui::GetBackgroundDrawList());
-        Misc::SmokeHelper(ImGui::GetBackgroundDrawList());
-        Misc::MollyHelper(ImGui::GetBackgroundDrawList());
-        Aimbot::drawFov(ImGui::GetBackgroundDrawList());
-
-
-        Aimbot::updateInput();
-        Visuals::updateInput();
-        StreamProofESP::updateInput();
-        Misc::updateInput();
-        Triggerbot::updateInput();
-        Chams::updateInput();
-        Glow::updateInput();
-
-        gui->handleToggle();
-
-        if (gui->isOpen())
-            gui->render();
-    }
-
-    ImGui::EndFrame();
-    ImGui::Render();
-
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-    GameData::clearUnusedAvatars();
-    InventoryChanger::clearUnusedItemIconTextures();
-
-    hooks->swapWindow(window);
 }
 
 #endif
