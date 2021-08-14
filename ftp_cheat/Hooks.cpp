@@ -159,6 +159,10 @@ static void swapWindow(SDL_Window * window) noexcept
         Visuals::hitMarker(nullptr, ImGui::GetBackgroundDrawList());
         Visuals::drawMolotovHull(ImGui::GetBackgroundDrawList());
         Misc::watermark();
+        Visuals::drawSmokeTimer(ImGui::GetBackgroundDrawList());
+        Misc::SmokeHelper(ImGui::GetBackgroundDrawList());
+        Misc::MollyHelper(ImGui::GetBackgroundDrawList());
+        Aimbot::drawFov(ImGui::GetBackgroundDrawList());
 
         Aimbot::updateInput();
         Visuals::updateInput();
