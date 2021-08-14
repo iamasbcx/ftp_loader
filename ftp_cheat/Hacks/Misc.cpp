@@ -1539,8 +1539,6 @@ void Misc::drawGUI(bool contentOnly) noexcept
     ImGui::SetColumnOffset(1, 230.0f);
     ImGui::hotkey("Menu Key", miscConfig.menuKey);
     ImGui::Checkbox("Anti AFK kick", &miscConfig.antiAfkKick);
-    ImGui::Checkbox("Smoke Helper", &miscConfig.smokeHelper);
-    ImGui::Checkbox("Molly Helper", &miscConfig.mollyHelper);
     ImGui::Checkbox("Auto strafe", &miscConfig.autoStrafe);
     ImGui::Checkbox("Bunny Hop", &miscConfig.bunnyHop);
     ImGui::SameLine();
@@ -1688,7 +1686,6 @@ void Misc::drawGUI(bool contentOnly) noexcept
     ImGui::SameLine();
     hotkey(miscConfig.quickHealthshotKey);
     */
-    ImGui::Checkbox("Grenade Prediction", &miscConfig.nadePredict);
     ImGui::Checkbox("Fix tablet signal", &miscConfig.fixTabletSignal);
     ImGui::SetNextItemWidth(120.0f);
     ImGui::SliderFloat("Max angle delta", &miscConfig.maxAngleDelta, 0.0f, 255.0f, "%.2f");
@@ -1748,9 +1745,13 @@ void Misc::drawGUI(bool contentOnly) noexcept
         ImGui::EndPopup();
     }
     ImGui::PopID();
-
     ImGui::Checkbox("BYPASS SV_PURE", &miscConfig.bypassSvPure);
     ImGui::Checkbox("Watermark", &miscConfig.watermark.enabled);
+
+    ImGui::NextColumn();
+    ImGui::Checkbox("Grenade Prediction", &miscConfig.nadePredict);
+    ImGui::Checkbox("Smoke Helper", &miscConfig.smokeHelper);
+    ImGui::Checkbox("Molly Helper", &miscConfig.mollyHelper);
     if (ImGui::Button("Unhook"))
         hooks->uninstall();
 
