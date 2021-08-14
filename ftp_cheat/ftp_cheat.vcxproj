@@ -133,6 +133,7 @@
     <ClCompile Include="InputUtil.cpp" />
     <ClCompile Include="InventoryChanger\Inventory.cpp" />
     <ClCompile Include="InventoryChanger\InventoryChanger.cpp" />
+    <ClCompile Include="InventoryChanger\InventoryConfig.cpp" />
     <ClCompile Include="InventoryChanger\StaticData.cpp" />
     <ClCompile Include="ItemGenerator.cpp" />
     <ClCompile Include="MinHook\buffer.c">
