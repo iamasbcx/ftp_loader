@@ -1752,6 +1752,8 @@ void Misc::drawGUI(bool contentOnly) noexcept
     ImGui::Checkbox("Grenade Prediction", &miscConfig.nadePredict);
     ImGui::Checkbox("Smoke Helper", &miscConfig.smokeHelper);
     ImGui::Checkbox("Molly Helper", &miscConfig.mollyHelper);
+    ImGui::SetNextItemWidth(120.0f);
+    ImGui::Separator();
     if (ImGui::Button("Unhook"))
         hooks->uninstall();
 

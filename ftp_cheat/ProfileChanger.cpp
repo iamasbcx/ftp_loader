@@ -163,3 +163,33 @@ void ProfileChanger::drawGUI(bool contentOnly) noexcept
     if (!contentOnly)
         ImGui::End();
 }
+
+static void from_json(const json& j, ProfileChanger::ProfileChanger& pC)
+{  // read(j, "", pC.);
+    read(j, "Enabled (May make MM times longer)##profile", pC.enabled);
+    read(j, "Rank", pC.rank);
+    read(j, "Level", pC.level);
+    read<value_t::string>(j, "##Xp##level", pC.exp);
+    read<value_t::string>(j, "##Wins", pC.wins);
+    read<value_t::string>(j, "##Friend", pC.friendly);
+    read<value_t::string>(j, "##Teach", pC.teach);
+    read<value_t::string>(j, "##Leader", pC.leader);
+    read(j, "##fake-ban", pC.ban_type);
+    read(j, "##fake-ban-time", pC.ban_time);
+}
+
+static void to_json(json& j, const ProfileChanger::ProfileChanger& o)
+{
+    const ProfileChanger::ProfileChanger dummy;
+
+    WRITE("Enabled (May make MM times longer)##profile", enabled);
+    WRITE("Rank", rank);
+    WRITE("Level", level);
+    WRITE("##Xp##level", exp);
+    WRITE("##Wins", wins);
+    WRITE("##Friend", friendly);
+    WRITE("##Teach", teach);
+    WRITE("##Leader", leader);
+    WRITE("##fake-ban", ban_type);
+    WRITE("##fake-ban-time", ban_time);
+}
