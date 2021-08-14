@@ -56,8 +56,6 @@
 
 #include "../imguiCustom.h"
 
-//smoke helper nade data
-
 GrenadeData Mirage[] = //Info, Position, Angle
 {
 	{ "short","S+T", Vector{1422.987548828125, -367.96875, -167.968994140625}, Vector{1094.2816627165446, -386.00306533949265, 275.28430468658763}, 10.f },
