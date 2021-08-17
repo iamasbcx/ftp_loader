@@ -87,7 +87,7 @@ void Misc::SmokeHelper(ImDrawList* drawList)
             int cy = yy / 2;
             int cx = xx / 2;
 
-            if (worldToScreen(ring_target, ring_target_angle))
+            if (Helpers::worldToScreen(ring_target, ring_target_angle))
             {
                 // target
                 //bool in_angle = (round(interfaces->engine->getViewAngles().x) == round(it.ang.x) && round(interfaces->engine->getViewAngles().y) == round(it.ang.y));
@@ -105,7 +105,7 @@ void Misc::SmokeHelper(ImDrawList* drawList)
                 if (in_pos)
                     drawList->AddLine(ImGui::GetIO().DisplaySize / 2.0f, ring_target_angle, IM_COL32(0, 0, 0, 255), 2.f);
             }
-            else if (worldToScreen(ring_ground, ring_ground_angle))
+            else if (Helpers::worldToScreen(ring_ground, ring_ground_angle))
             {
                 //ground
                 drawList->AddCircleFilled(ring_ground_angle, 8.f, IM_COL32(255, 255, 255, 80));
@@ -144,7 +144,7 @@ void Misc::SmokeHelper(ImDrawList* drawList)
             int cy = yy / 2;
             int cx = xx / 2;
 
-            if (worldToScreen(ring_target, ring_target_angle))
+            if (Helpers::worldToScreen(ring_target, ring_target_angle))
             {
                 // target
                 //bool in_angle = (round(interfaces->engine->getViewAngles().x) == round(it.ang.x) && round(interfaces->engine->getViewAngles().y) == round(it.ang.y));
@@ -162,7 +162,7 @@ void Misc::SmokeHelper(ImDrawList* drawList)
                 if (in_pos)
                     drawList->AddLine(ImGui::GetIO().DisplaySize / 2.0f, ring_target_angle, IM_COL32(0, 0, 0, 255), 2.f);
             }
-            else if (worldToScreen(ring_ground, ring_ground_angle))
+            else if (Helpers::worldToScreen(ring_ground, ring_ground_angle))
             {
                 //ground
                 drawList->AddCircleFilled(ring_ground_angle, 8.f, IM_COL32(255, 255, 255, 80));
@@ -200,7 +200,7 @@ void Misc::SmokeHelper(ImDrawList* drawList)
             int cy = yy / 2;
             int cx = xx / 2;
 
-            if (worldToScreen(ring_target, ring_target_angle))
+            if (Helpers::worldToScreen(ring_target, ring_target_angle))
             {
                 // target
                 //bool in_angle = (round(interfaces->engine->getViewAngles().x) == round(it.ang.x) && round(interfaces->engine->getViewAngles().y) == round(it.ang.y));
@@ -218,7 +218,7 @@ void Misc::SmokeHelper(ImDrawList* drawList)
                 if (in_pos)
                     drawList->AddLine(ImGui::GetIO().DisplaySize / 2.0f, ring_target_angle, IM_COL32(0, 0, 0, 255), 2.f);
             }
-            else if (worldToScreen(ring_ground, ring_ground_angle))
+            else if (Helpers::worldToScreen(ring_ground, ring_ground_angle))
             {
                 //ground
                 drawList->AddCircleFilled(ring_ground_angle, 8.f, IM_COL32(255, 255, 255, 80));
@@ -256,7 +256,7 @@ void Misc::SmokeHelper(ImDrawList* drawList)
             int cy = yy / 2;
             int cx = xx / 2;
 
-            if (worldToScreen(ring_target, ring_target_angle))
+            if (Helpers::worldToScreen(ring_target, ring_target_angle))
             {
                 // target
                 //bool in_angle = (round(interfaces->engine->getViewAngles().x) == round(it.ang.x) && round(interfaces->engine->getViewAngles().y) == round(it.ang.y));
@@ -274,7 +274,7 @@ void Misc::SmokeHelper(ImDrawList* drawList)
                 if (in_pos)
                     drawList->AddLine(ImGui::GetIO().DisplaySize / 2.0f, ring_target_angle, IM_COL32(0, 0, 0, 255), 2.f);
             }
-            else if (worldToScreen(ring_ground, ring_ground_angle))
+            else if (Helpers::worldToScreen(ring_ground, ring_ground_angle))
             {
                 //ground
                 drawList->AddCircleFilled(ring_ground_angle, 8.f, IM_COL32(255, 255, 255, 80));
@@ -312,7 +312,7 @@ void Misc::SmokeHelper(ImDrawList* drawList)
             int cy = yy / 2;
             int cx = xx / 2;
 
-            if (worldToScreen(ring_target, ring_target_angle))
+            if (Helpers::worldToScreen(ring_target, ring_target_angle))
             {
                 // target
                 //bool in_angle = (round(interfaces->engine->getViewAngles().x) == round(it.ang.x) && round(interfaces->engine->getViewAngles().y) == round(it.ang.y));
@@ -330,7 +330,7 @@ void Misc::SmokeHelper(ImDrawList* drawList)
                 if (in_pos)
                     drawList->AddLine(ImGui::GetIO().DisplaySize / 2.0f, ring_target_angle, IM_COL32(0, 0, 0, 255), 2.f);
             }
-            else if (worldToScreen(ring_ground, ring_ground_angle))
+            else if (Helpers::worldToScreen(ring_ground, ring_ground_angle))
             {
                 //ground
                 drawList->AddCircleFilled(ring_ground_angle, 8.f, IM_COL32(255, 255, 255, 80));
@@ -368,7 +368,7 @@ void Misc::SmokeHelper(ImDrawList* drawList)
             int cy = yy / 2;
             int cx = xx / 2;
 
-            if (worldToScreen(ring_target, ring_target_angle))
+            if (Helpers::worldToScreen(ring_target, ring_target_angle))
             {
                 // target
                 //bool in_angle = (round(interfaces->engine->getViewAngles().x) == round(it.ang.x) && round(interfaces->engine->getViewAngles().y) == round(it.ang.y));
@@ -386,7 +386,7 @@ void Misc::SmokeHelper(ImDrawList* drawList)
                 if (in_pos)
                     drawList->AddLine(ImGui::GetIO().DisplaySize / 2.0f, ring_target_angle, IM_COL32(0, 0, 0, 255), 2.f);
             }
-            else if (worldToScreen(ring_ground, ring_ground_angle))
+            else if (Helpers::worldToScreen(ring_ground, ring_ground_angle))
             {
                 //ground
                 drawList->AddCircleFilled(ring_ground_angle, 8.f, IM_COL32(255, 255, 255, 80));
@@ -424,7 +424,7 @@ void Misc::SmokeHelper(ImDrawList* drawList)
             int cy = yy / 2;
             int cx = xx / 2;
 
-            if (worldToScreen(ring_target, ring_target_angle))
+            if (Helpers::worldToScreen(ring_target, ring_target_angle))
             {
                 // target
                 //bool in_angle = (round(interfaces->engine->getViewAngles().x) == round(it.ang.x) && round(interfaces->engine->getViewAngles().y) == round(it.ang.y));
@@ -442,7 +442,7 @@ void Misc::SmokeHelper(ImDrawList* drawList)
                 if (in_pos)
                     drawList->AddLine(ImGui::GetIO().DisplaySize / 2.0f, ring_target_angle, IM_COL32(0, 0, 0, 255), 2.f);
             }
-            else if (worldToScreen(ring_ground, ring_ground_angle))
+            else if (Helpers::worldToScreen(ring_ground, ring_ground_angle))
             {
                 //ground
                 drawList->AddCircleFilled(ring_ground_angle, 8.f, IM_COL32(255, 255, 255, 80));
