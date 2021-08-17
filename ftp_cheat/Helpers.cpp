@@ -22,7 +22,7 @@
 #include "SDK/GlobalVars.h"
 #include "SDK/Engine.h"
 
-bool Helpers::worldToScreen(const Vector& worldPosition, ImVec2& screenPosition, bool floor) noexcept
+static bool transformWorldPositionToScreenPosition(const Matrix4x4& matrix, const Vector& worldPosition, ImVec2& screenPosition) noexcept
 {
     const auto& matrix = GameData::toScreenMatrix();
 
@@ -33,10 +33,18 @@ bool Helpers::worldToScreen(const Vector& worldPosition, ImVec2& screenPosition,
     screenPosition = ImGui::GetIO().DisplaySize / 2.0f;
     screenPosition.x *= 1.0f + (matrix._11 * worldPosition.x + matrix._12 * worldPosition.y + matrix._13 * worldPosition.z + matrix._14) / w;
     screenPosition.y *= 1.0f - (matrix._21 * worldPosition.x + matrix._22 * worldPosition.y + matrix._23 * worldPosition.z + matrix._24) / w;
-    if (floor)
-        screenPosition = ImFloor(screenPosition);
+
     return true;
 }
+
+bool Helpers::worldToScreen(const Vector& worldPosition, ImVec2& screenPosition, bool floor) noexcept
+{
+    const bool onScreen = transformWorldPositionToScreenPosition(GameData::toScreenMatrix(), worldPosition, screenPosition);
+    if (floor)
+        screenPosition = ImFloor(screenPosition);
+    return onScreen;
+}
+
 static auto rainbowColor(float time, float speed, float alpha) noexcept
 {
     constexpr float pi = std::numbers::pi_v<float>;
