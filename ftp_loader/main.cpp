@@ -8,13 +8,40 @@ INT WINAPI WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
 	const std::filesystem::path dll_path = argv[1] ? argv[1] : L"FTP.dll";
 
-
 	if ( !std::filesystem::exists( dll_path ) )
 	{
 		log_err( "DLL not found! Place a dll file called FTP.dll in the same folder as the loader, or drag'n'drop the dll into the exe." );
 		return EXIT_FAILURE;
 	}
+	/*
+	std::string userName;
+	std::string userPassword;
+	int loginAttempt = 0;
 
+	while (loginAttempt < 5)
+	{
+		std::cout << "Please enter your user name: ";
+		std::cin >> userName;
+		std::cout << "Please enter your user password: ";
+		std::cin >> userPassword;
+
+		if (userName == "user" && userPassword == "password")
+		{
+			std::cout << "Welcome n0verify!\n";
+			break;
+		}
+		else
+		{
+			std::cout << "Invalid login attempt. Please try again.\n" << '\n';
+			loginAttempt++;
+		}
+	}
+	if (loginAttempt == 5)
+	{
+		std::cout << "Too many login attempts! The program will now terminate.";
+		return 0;
+	}
+	*/
 	std::string str_proc_name;
 	std::string methhead;
 	std::string returnLib;
@@ -24,6 +51,8 @@ INT WINAPI WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	log_design("|__|  |_____|_____|__|__| |_| |__|__|_____|__|  |_____|__|  |_____|_____|__|__| |_| |_____|_____|_|___|");
 	std::cout << "~ developed by n0verify and b1scoito. Thank you DarthTon for making BlackBone memory hacking library." << std::endl;
 	log_raw("DLL path - [ %s ]", std::filesystem::absolute(dll_path).string().c_str());
+	//log_debug("Checking HWID");
+	//std::this_thread::sleep_for(500ms);
 	log_debug("1 ) LoadLibrary");
 	log_debug("2 ) ManualMap");
 	log_prompt("Injection Method: ");

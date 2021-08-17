@@ -395,7 +395,7 @@ void Misc::SmokeHelper(ImDrawList* drawList)
             }
         }
     }
-    else if (strstr(interfaces->engine->getLevelName(), "cbble"))
+    else if (strstr(interfaces->engine->getLevelName(), "cbbl"))
     {
         if (!localPlayer->getActiveWeapon()->isSmoke())
             return;
