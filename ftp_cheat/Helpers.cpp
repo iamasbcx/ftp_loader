@@ -37,11 +37,19 @@ static bool transformWorldPositionToScreenPosition(const Matrix4x4& matrix, cons
     return true;
 }
 
-bool Helpers::worldToScreen(const Vector& worldPosition, ImVec2& screenPosition, bool floor) noexcept
+bool 
+(const Vector& worldPosition, ImVec2& screenPosition, bool floor) noexcept
 {
     const bool onScreen = transformWorldPositionToScreenPosition(GameData::toScreenMatrix(), worldPosition, screenPosition);
     if (floor)
         screenPosition = ImFloor(screenPosition);
+    return onScreen;
+}
+
+bool Helpers::worldToScreenPixelAligned(const Vector& worldPosition, ImVec2& screenPosition) noexcept
+{
+    const bool onScreen = transformWorldPositionToScreenPosition(GameData::toScreenMatrix(), worldPosition, screenPosition);
+    screenPosition = ImFloor(screenPosition);
     return onScreen;
 }
 
@@ -51,7 +59,8 @@ static auto rainbowColor(float time, float speed, float alpha) noexcept
     return std::array{ std::sin(speed * time) * 0.5f + 0.5f,
                        std::sin(speed * time + 2 * pi / 3) * 0.5f + 0.5f,
                        std::sin(speed * time + 4 * pi / 3) * 0.5f + 0.5f,
-                       alpha };
+                       alpha 
+    };
 }
 
 static float alphaFactor = 1.0f;
