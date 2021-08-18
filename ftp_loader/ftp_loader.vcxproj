@@ -61,8 +61,8 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)CHEAT DEBUG</OutDir>
     <IntDir>.\out\debug\obj\</IntDir>
-    <IncludePath>$(ProjectDir)BlackBone Static Library\src;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Aubrey\Desktop\coding\ftp_loader\ftp_loader\TrinitySeal;$(ProjectDir)Blackbone Static Library\build\Win32\Debug;D:\Libs\BlackBone\lib\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)BlackBone Static Library\src;./libs/cryptopp/include;./libs/curl/include;./libs/openssl/include;./libs/json/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)Blackbone Static Library\build\Win32\Debug;D:\Libs\BlackBone\lib\Debug;./libs/curl/lib/libcurl.lib;./libs/cryptopp/lib/cryptopp-static.lib;./libs/openssl/lib/libcrypto.lib;./libs/openssl/lib/libssl.lib;$(LibraryPath)</LibraryPath>
     <TargetName>FTP LOADER</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='gui debug|Win32'">
@@ -78,8 +78,8 @@
     </LinkIncremental>
     <OutDir>.\out\release\</OutDir>
     <IntDir>.\out\release\obj\</IntDir>
-    <LibraryPath>$(ProjectDir)Blackbone Static Library\build\Win32\Debug;D:\Libs\BlackBone\lib\Debug;$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\Users\Aubrey\Desktop\coding\ftp_loader\ftp_loader\Blackbone Static Library\src;D:\Libs\BlackBone\src</IncludePath>
+    <LibraryPath>$(ProjectDir)Blackbone Static Library\build\Win32\Debug;D:\Libs\BlackBone\lib\Debug;./libs/curl/lib/libcurl.lib;./libs/cryptopp/lib/cryptopp-static.lib;./libs/openssl/lib/libcrypto.lib;./libs/openssl/lib/libssl.lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)BlackBone Static Library\src;./libs/cryptopp/include;./libs/curl/include;./libs/openssl/include;./libs/json/include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg">
     <VcpkgEnabled>false</VcpkgEnabled>
@@ -88,7 +88,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;BLACKBONE_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;BLACKBONE_STATIC;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -134,7 +134,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;BLACKBONE_STATIC;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;BLACKBONE_STATIC;NDEBUG;_CONSOLE;USE_PRECOMPILED_HEADERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -149,6 +149,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <DisableSpecificWarnings>26812</DisableSpecificWarnings>
       <OmitFramePointers>true</OmitFramePointers>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
