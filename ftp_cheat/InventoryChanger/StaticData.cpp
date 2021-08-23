@@ -323,7 +323,7 @@ private:
                 if (item.isCollectible() && _collectibles[item.dataIndex].isOriginal) {
                     nameWide += L" (";
                     nameWide += interfaces->localize->findSafe("genuine");
-                    nameWide += L") ";
+                    nameWide += L")";
                 }
                 _weaponNames.emplace(item.weaponID, interfaces->localize->convertUnicodeToAnsi(nameWide.c_str()));
                 _weaponNamesUpper.emplace(item.weaponID, Helpers::toUpper(std::move(nameWide)));
