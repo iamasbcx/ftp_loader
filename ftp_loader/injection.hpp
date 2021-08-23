@@ -1,6 +1,15 @@
 #pragma once
+#include <winsvc.h>
+#pragma warning (disable: 4191 4099)
 
 #include <BlackBone/Process/Process.h>
+#include <iosfwd>
+#include <algorithm>
+#include <winioctl.h>
+#include <winternl.h>
+#include <iostream>
+#include <string>
+#include <random>
 
 class ftp_injector
 {

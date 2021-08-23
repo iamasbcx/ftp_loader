@@ -13,6 +13,8 @@
 #include "memory.hpp"
 #include "vac3_data.hpp"
 #include "injection.hpp"
+#include "xorstr.hpp"
+#include "KeyAuth.hpp"
 
 // other
 using namespace std::chrono_literals;

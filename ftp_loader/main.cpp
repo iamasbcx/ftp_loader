@@ -1,47 +1,92 @@
 #include "pch.hpp"
+#define _CRT_SECURE_NO_WARNING
+#include <string>
+#include <iostream>
+#include <sstream>
+#include <vector>
+#include <stdlib.h>
+#include <time.h>
+#include <stdio.h>
+
+std::string name = XorStr("FTP LOADER"); // application name. right above the blurred text aka the secret on the licenses tab among other tabs
+std::string ownerid = XorStr("NRhlRKKPSR"); // ownerid, found in account settings. click your profile picture on top right of dashboard and then account settings.
+std::string secret = XorStr("681e987a5fca5513537236479524b5830bd0fed76b32101030d45c1ef5e93cbe"); // app secret, the blurred text on licenses tab and other tabs
+std::string version = XorStr("1.0"); // leave alone unless you've changed version on website
+
+//KeyAuth::api KeyAuthApp(name, ownerid, secret, version);
+
 
 INT WINAPI WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd )
 {
-	std::atexit( [] { std::this_thread::sleep_for( 10s ); } );
+	std::atexit([] { std::this_thread::sleep_for(10s); });
 
-	int argc; auto* const argv = CommandLineToArgvW( GetCommandLineW(), &argc );
+	int argc; auto* const argv = CommandLineToArgvW(GetCommandLineW(), &argc);
 
 	const std::filesystem::path dll_path = argv[1] ? argv[1] : L"FTP.dll";
 
-	if ( !std::filesystem::exists( dll_path ) )
-	{
-		log_err( "DLL not found! Place a dll file called FTP.dll in the same folder as the loader, or drag'n'drop the dll into the exe." );
-		return EXIT_FAILURE;
-	}
 	/*
-	std::string userName;
-	std::string userPassword;
-	int loginAttempt = 0;
+	std::string name = XorStr("FTP LOADER"); // application name. right above the blurred text aka the secret on the licenses tab among other tabs
+	std::string ownerid = XorStr("NRhlRKKPSR"); // ownerid, found in account settings. click your profile picture on top right of dashboard and then account settings.
+	std::string secret = XorStr("681e987a5fca5513537236479524b5830bd0fed76b32101030d45c1ef5e93cbe"); // app secret, the blurred text on licenses tab and other tabs
+	std::string version = XorStr("1.0"); // leave alone unless you've changed version on website
 
-	while (loginAttempt < 5)
-	{
-		std::cout << "Please enter your user name: ";
-		std::cin >> userName;
-		std::cout << "Please enter your user password: ";
-		std::cin >> userPassword;
+	KeyAuth::api KeyAuthApp(name, ownerid, secret, version);
 
-		if (userName == "user" && userPassword == "password")
-		{
-			std::cout << "Welcome n0verify!\n";
-			break;
-		}
-		else
-		{
-			std::cout << "Invalid login attempt. Please try again.\n" << '\n';
-			loginAttempt++;
-		}
-	}
-	if (loginAttempt == 5)
+	std::cout << XorStr("\n\n Connecting..");
+	KeyAuthApp.init();
+	system(XorStr("cls").c_str());
+
+	std::cout << XorStr("\n\n [1] Login\n [2] Register\n [3] Upgrade\n [4] License key only\n\n Choose option: ");
+
+	int option;
+	std::string username;
+	std::string password;
+	std::string key;
+
+	std::cin >> option;
+	switch (option)
 	{
-		std::cout << "Too many login attempts! The program will now terminate.";
-		return 0;
+	case 1:
+		std::cout << XorStr("\n\n Enter username: ");
+		std::cin >> username;
+		std::cout << XorStr("\n Enter password: ");
+		std::cin >> password;
+		KeyAuthApp.login(username, password);
+		break;
+	case 2:
+		std::cout << XorStr("\n\n Enter username: ");
+		std::cin >> username;
+		std::cout << XorStr("\n Enter password: ");
+		std::cin >> password;
+		std::cout << XorStr("\n Enter license: ");
+		std::cin >> key;
+		KeyAuthApp.regstr(username, password, key);
+		break;
+	case 3:
+		std::cout << XorStr("\n\n Enter username: ");
+		std::cin >> username;
+		std::cout << XorStr("\n Enter license: ");
+		std::cin >> key;
+		KeyAuthApp.upgrade(username, key);
+		break;
+	case 4:
+		std::cout << XorStr("\n Enter license: ");
+		std::cin >> key;
+		KeyAuthApp.license(key);
+		break;
+	default:
+		std::cout << XorStr("\n\n Status: Failure: Invalid Selection");
+		Sleep(3000);
+		exit(0);
 	}
 	*/
+	
+	if (!std::filesystem::exists(dll_path))
+	{
+		log_err("DLL not found! Place a dll file called ZeraCheat.dll in the same folder as the loader, or drag'n'drop the dll into the exe.");
+		return EXIT_FAILURE;
+	}
+
 	std::string str_proc_name;
 	std::string methhead;
 	std::string returnLib;

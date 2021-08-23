@@ -455,10 +455,10 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)\freetype;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)</IncludePath>
+    <IncludePath>C:\Users\Aubrey\Desktop\coding\ftp_loader\ftp_cheat\libs\openssl\include;C:\Users\Aubrey\Desktop\coding\ftp_loader\ftp_cheat\libs\json\include;C:\Users\Aubrey\Desktop\coding\ftp_loader\ftp_cheat\libs\curl\include;C:\Users\Aubrey\Desktop\coding\ftp_loader\ftp_cheat\libs\cryptopp\include;$(ProjectDir)\freetype;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)</IncludePath>
     <OutDir>$(SolutionDir)CHEAT DEBUG</OutDir>
     <TargetName>FTP</TargetName>
-    <LibraryPath>$(SolutionDir)VMP;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Users\Aubrey\Desktop\coding\ftp_loader\ftp_cheat\libs\openssl\lib;C:\Users\Aubrey\Desktop\coding\ftp_loader\ftp_cheat\libs\curl\lib;C:\Users\Aubrey\Desktop\coding\ftp_loader\ftp_cheat\libs\cryptopp\lib;$(SolutionDir)VMP;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='gui debug|Win32'">
     <LinkIncremental>true</LinkIncremental>

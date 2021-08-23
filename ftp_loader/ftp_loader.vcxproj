@@ -61,8 +61,8 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)CHEAT DEBUG</OutDir>
     <IntDir>.\out\debug\obj\</IntDir>
-    <IncludePath>$(ProjectDir)BlackBone Static Library\src;./libs/cryptopp/include;./libs/curl/include;./libs/openssl/include;./libs/json/include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)Blackbone Static Library\build\Win32\Debug;D:\Libs\BlackBone\lib\Debug;./libs/curl/lib/libcurl.lib;./libs/cryptopp/lib/cryptopp-static.lib;./libs/openssl/lib/libcrypto.lib;./libs/openssl/lib/libssl.lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Aubrey\Desktop\coding\ftp_loader\ftp_loader\auth;$(ProjectDir)BlackBone Static Library\src;libs/cryptopp/include;./libs/curl/include;./libs/openssl/include;./libs/json/include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Aubrey\Desktop\coding\ftp_loader\ftp_loader\auth;$(ProjectDir)Blackbone Static Library\build\Win32\Debug;D:\Libs\BlackBone\lib\Debug;./libs/curl/lib/libcurl.lib;./libs/cryptopp/lib/cryptopp-static.lib;./libs/openssl/lib/libcrypto.lib;./libs/openssl/lib/libssl.lib;$(LibraryPath)</LibraryPath>
     <TargetName>FTP LOADER</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='gui debug|Win32'">
@@ -74,12 +74,11 @@
     <TargetName>FTP LOADER</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>
-    </LinkIncremental>
+    <LinkIncremental>false</LinkIncremental>
     <OutDir>.\out\release\</OutDir>
     <IntDir>.\out\release\obj\</IntDir>
-    <LibraryPath>$(ProjectDir)Blackbone Static Library\build\Win32\Debug;D:\Libs\BlackBone\lib\Debug;./libs/curl/lib/libcurl.lib;./libs/cryptopp/lib/cryptopp-static.lib;./libs/openssl/lib/libcrypto.lib;./libs/openssl/lib/libssl.lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)BlackBone Static Library\src;./libs/cryptopp/include;./libs/curl/include;./libs/openssl/include;./libs/json/include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Aubrey\Desktop\coding\ftp_loader\ftp_loader\auth;$(ProjectDir)Blackbone Static Library\build\Win32\Debug;D:\Libs\BlackBone\lib\Debug;./libs/curl/lib/libcurl.lib;./libs/cryptopp/lib/cryptopp-static.lib;./libs/openssl/lib/libcrypto.lib;./libs/openssl/lib/libssl.lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Aubrey\Desktop\coding\ftp_loader\ftp_loader\auth;$(ProjectDir)BlackBone Static Library\src;./libs/cryptopp/include;./libs/curl/include;./libs/openssl/include;./libs/json/include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg">
     <VcpkgEnabled>false</VcpkgEnabled>
@@ -145,11 +144,11 @@
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <CompileAs>CompileAsCpp</CompileAs>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <DisableSpecificWarnings>26812</DisableSpecificWarnings>
       <OmitFramePointers>true</OmitFramePointers>
-      <Optimization>Disabled</Optimization>
+      <Optimization>MaxSpeed</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -157,8 +156,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
-      <AdditionalDependencies>BlackBone.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;BlackBone.lib;cryptopp-static.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ProgramDatabaseFile />
+      <AdditionalOptions>/FORCE:UNRESOLVED %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -173,6 +173,7 @@
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="KeyAuth.hpp" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="vac3_data.hpp" />
     <ClInclude Include="injection.hpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="memory.hpp" />
     <ClInclude Include="pch.hpp" />
     <ClInclude Include="utils.hpp" />
+    <ClInclude Include="xorstr.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ftp_loader.rc" />
